@@ -1,0 +1,38 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 1e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-21T02:46:38+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 4.6e-05
+    },
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 1e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-21T02:46:38+00:00",
+      "name": "empty",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 1e-05
+    }
+  ],
+  "run_id": "day14-empty-grok",
+  "updated": "2026-11-21T02:46:45+00:00"
+}

@@ -1,0 +1,1 @@
+"""Submission manifest and verification."""

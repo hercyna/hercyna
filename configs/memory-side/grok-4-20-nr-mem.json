@@ -1,0 +1,11 @@
+{
+  "id": "grok-4-20-nr-mem",
+  "chat": {"base_url": "https://api.x.ai/v1", "model": "grok-4.20-0309-non-reasoning",
+           "key": {"command": ["/usr/bin/security", "find-generic-password", "-s", "xai-headless", "-w"]},
+           "price": {"input_per_m": 1.25, "output_per_m": 2.50, "as_of": "2026-11-19", "source": "docs.x.ai/developers/pricing"},
+           "assumed_max_output_tokens": 4000},
+  "embeddings": {"base_url": "http://127.0.0.1:11434/v1", "model": "nomic-embed-text", "dims": 768,
+                 "price": {"input_per_m": 0, "output_per_m": 0, "as_of": "2026-11-19", "source": "local Ollama"}},
+  "timeout_s": 300,
+  "retries": 3
+}

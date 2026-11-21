@@ -1,0 +1,14 @@
+{
+  "id": "grok-4-20-r",
+  "transport": "openai_compat",
+  "base_url": "https://api.x.ai/v1",
+  "model": "grok-4.20-0309-reasoning",
+  "key": {"command": ["/usr/bin/security", "find-generic-password", "-s", "xai-headless", "-w"]},
+  "prompt_version": "v1",
+  "params": {"temperature": 0, "max_tokens": 6000},
+  "assumed_output_tokens": 1500,
+  "price": {"input_per_m": 1.25, "output_per_m": 2.50, "as_of": "2026-11-19", "source": "docs.x.ai/developers/pricing read 2026-11-19, prompts below 200k tokens; cached input is 0.20 per million and is metered here at the full input price"},
+  "timeout_s": 300,
+  "retries": 3,
+  "description": "Decider B (Varma, 2026-11-19): second vendor, reasoning (billed as output), pinned dated model id. The transport runs the key command just before each call; no session reads the key. Spend counts against the bench cap only"
+}

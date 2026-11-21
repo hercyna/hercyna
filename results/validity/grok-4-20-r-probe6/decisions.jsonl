@@ -1,0 +1,6 @@
+{"a_star":"EXPLAIN","action":"EXPLAIN","case_id":"h11-0000","correct":true,"mechanism":"M0"}
+{"a_star":"OPEN_REVIEW","action":"OPEN_REVIEW","case_id":"h11-0005","correct":true,"mechanism":"M1"}
+{"a_star":"CHECK_DEVICE","action":"CHECK_DEVICE","case_id":"h11-0001","correct":true,"mechanism":"M2"}
+{"a_star":"APPLY_CREDIT","action":"APPLY_CREDIT","case_id":"h11-0003","correct":true,"mechanism":"M3"}
+{"a_star":"REQUEST_INFO","action":"REQUEST_INFO","case_id":"h11-0006","correct":true,"mechanism":"U1"}
+{"a_star":"REQUEST_INFO","action":"REQUEST_INFO","case_id":"u3-0000","correct":true,"mechanism":"U2"}

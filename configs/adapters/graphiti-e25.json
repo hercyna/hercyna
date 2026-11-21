@@ -1,0 +1,6 @@
+{
+  "adapter": "graphiti",
+  "config_label": "e25",
+  "config": {"records_per_episode": 25},
+  "description": "Graphiti (graphiti-core 0.31.2) on FalkorDB 6.0.2, package quickstart for OpenAI-compatible endpoints, 25 record(s) per episode. Probe config for the S6.2 chunking rule"
+}

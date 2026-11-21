@@ -1,0 +1,4 @@
+memory-bench
+Copyright 2026 FNU Ratnavarma
+
+Parts of this code were lifted from the author's own Apache-2.0 LENS replication bundle at commit 97a622f. Each lifted file is listed in docs/lift-manifest.md with its source path and sha256.

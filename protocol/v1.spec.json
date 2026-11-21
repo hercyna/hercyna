@@ -1,0 +1,90 @@
+{
+  "schema": "memory_bench.protocol_spec/1",
+  "version": "v1",
+  "steps": {
+    "1": {
+      "title": "metric, deciders, adapter configs, separation rule",
+      "files": [
+        "src/memory_bench/scoring/*.py",
+        "src/memory_bench/deciders/lifted.py",
+        "src/memory_bench/deciders/prompts.py",
+        "src/memory_bench/deciders/model.py",
+        "src/memory_bench/deciders/transports.py",
+        "src/memory_bench/adapters/base.py",
+        "src/memory_bench/adapters/full.py",
+        "src/memory_bench/adapters/bm25.py",
+        "src/memory_bench/adapters/recent.py",
+        "src/memory_bench/adapters/mem0.py",
+        "src/memory_bench/adapters/langmem.py",
+        "src/memory_bench/adapters/graphiti.py",
+        "src/memory_bench/gateway/proxy.py",
+        "configs/deciders/haiku-5-5.json",
+        "configs/deciders/grok-4-20-r.json",
+        "configs/adapters/mem0-k25.json",
+        "configs/adapters/langmem-c25.json",
+        "configs/adapters/graphiti-e25.json",
+        "configs/memory-side/grok-4-20-nr-mem.json",
+        "pyproject.toml",
+        "uv.lock",
+        "protocol/PREREGISTRATION.md"
+      ],
+      "values": {
+        "deciders": [
+          "haiku-5-5",
+          "grok-4-20-r"
+        ],
+        "systems": [
+          "full",
+          "bm25",
+          "recent",
+          "mem0/k25",
+          "langmem/c25",
+          "graphiti/e25"
+        ],
+        "budgets": [
+          1000
+        ],
+        "repeats": 3,
+        "boot_seed": 11,
+        "boot_reps": 1000,
+        "ci_level": 0.95,
+        "validity_gate": {
+          "overall": 0.9,
+          "per_mechanism": 0.8
+        },
+        "token_rule": "ceil(characters / 2.2)",
+        "chunk_rule": 25,
+        "memory_side": {
+          "chat_model": "grok-4.20-0309-non-reasoning",
+          "embedding_model": "nomic-embed-text",
+          "embedding_dims": 768
+        },
+        "product_pins": {
+          "mem0ai": "2.2.1",
+          "langmem": "0.0.30",
+          "graphiti-core": "0.31.2",
+          "falkordb_image": "falkordb/falkordb:6.0.2"
+        },
+        "separation": {
+          "test": "paired bootstrap p-value, Holm-adjusted across product pairs",
+          "alpha": 0.05,
+          "floor_test": "95 percent interval of HEADLINE above zero",
+          "leaderboard": "at least one product pair separates on every frozen decider, same direction"
+        }
+      }
+    },
+    "2": {
+      "title": "generator with Track 2, table cases and table seed",
+      "files": [
+        "src/memory_bench/cases/*.py",
+        "data/table/cases.jsonl"
+      ],
+      "values": {
+        "table_seed": 1283645051,
+        "n_table_cases": 300,
+        "generator_version": 3,
+        "case_id_prefix": "t1283645051"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "adapter": "langmem",
+  "config_label": "c50",
+  "config": {"records_per_chunk": 50},
+  "description": "LangMem 0.0.30, package quickstart, 50 record(s) per memory-manager call. Probe config for the S6.2 chunking rule"
+}

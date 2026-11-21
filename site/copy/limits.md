@@ -1,0 +1,22 @@
+## Limits
+
+Read the table with these limits in mind.
+
+- Bench configuration, not vendor defaults. Every product writes 25 records at a time and uses the same memory-side model and embedder. A product's own quickstart may behave differently. A vendor can send a tuned configuration. The maintainer runs it on the table cases and publishes it as its own row, labelled exploratory.
+- One shared memory-side model. All three products build their memories with Grok 4.20 non-reasoning. Its vendor also makes one of the two deciders. Products that rely on tool calls depend on how well this model makes them.
+- The same stored views for both deciders. Each product reads each history once. Both deciders then judge the same stored views. The two deciders are two readings of one ingest, not two separate ingests.
+- Wrong and withheld trade against each other. A memory that returns little makes the agent withhold more and act wrong less. That is why the board shows wrong, withheld and right side by side and prints no single order. The empty row shows what returning nothing scores.
+- Baselines can beat products. Keyword retrieval is right more often than any product on both deciders. The two deciders also order the two baselines differently, so the baselines carry no rank.
+- Synthetic cases. All 300 table cases come from one generator for one kind of task: account review. Half need only ordinary reasoning. Results may differ on real histories and other tasks.
+- Two deciders. Every claim holds for these two deciders. Other models may read the same views differently.
+- Close calls. One pair sits near the line: Graphiti against Mem0 on Haiku, at a Holm-adjusted p of 0.0599. It is reported as not separated. With 10000 resamples over five seeds it stays between 0.052 and 0.055.
+- Gate close call. Haiku passed the validity gate on one pattern at exactly the 80 percent minimum, 24 of 30.
+- Health counts include stopped attempts. The model account ran out of credit during the table run. The stopped attempts left 836 failed memory calls in the logs. An audit shows that no stored view saw a failed call. The warning counts include every attempt.
+- Engine changes during the run. The table runs span several versions of the run engine. The engine files are not in the v1 freeze list. The scoring, prompts, adapters, configs and cases are. Protocol v2 freezes the engine too.
+- Cost to reproduce. Rebuilding the table from the released files is free. Rerunning it with live models cost about 257 dollars.
+
+## Related benchmarks
+
+Several benchmarks test agent memory. LoCoMo scores question answering over very long conversations. LongMemEval scores question answering over long chat histories. It also scores when to abstain. MemoryAgentBench runs many memory mechanisms through one framework. It scores retrieval, learning, long-range understanding and conflict resolution.
+
+Hercyna asks a narrower question. It scores the action an agent takes from a memory's view. It splits wrong action from withheld action and measures both above the decider's own noise. It reports a product pair as separated only when two deciders from two vendors agree.

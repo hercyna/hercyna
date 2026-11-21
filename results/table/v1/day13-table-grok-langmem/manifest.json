@@ -1,0 +1,86 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "c25",
+      "config_sha256": "a7fbe3b5c833d5dc2737d25b73869fbd6f9f28a69f6483c163a9e56f7c42bbdb",
+      "name": "langmem",
+      "product_version": "0.0.30"
+    }
+  ],
+  "attempts": 2,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 20.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "7d787c201eba8dd39b248a95020f0f7b602508e888b51ad54f870e1797f814c6"
+  },
+  "code": {
+    "git_commit": "9269b158a463a66f309dcac4e59f4a30cd7c03fd",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-20T20:49:10+00:00",
+  "deciders": [
+    {
+      "id": "grok-4-20-r",
+      "key_source": "command",
+      "model": "grok-4.20-0309-reasoning",
+      "params": {
+        "max_tokens": 6000,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-19",
+        "input_per_m": 1.25,
+        "output_per_m": 2.5,
+        "source": "docs.x.ai/developers/pricing read 2026-11-19, prompts below 200k tokens; cached input is 0.20 per million and is metered here at the full input price"
+      },
+      "prompt_version": "v1",
+      "transport": "openai_compat"
+    }
+  ],
+  "error": null,
+  "files": {
+    "calls.jsonl": "033578a5698d132e8dd4a07ceaf806926e02fdcc22047b71f856b6bb2c1ed49f",
+    "health.json": "613ec8f39b1ea14bd0927ceca8260ebc9d817a7d8ee0b5cb66c255fdeecb2a2a",
+    "metrics.jsonl": "631a3ed3801b548b1d191e4099c7c618c7264d2b6c32c04f6628a36a70d835b8",
+    "spend.json": "b48f8128e20aa3966343ec24632610c33f43d1b9576d31fe40f3dee2b136b2d8",
+    "summary.json": "8c35ca8ec655512bc5cda1598897c59b5d91f104ac848b3f38624c57b9b60259",
+    "timings.jsonl": "cbea283445d5db163cb3eeebe7fdacd4f4002a5b1c7afa0f2115919bffa2022e"
+  },
+  "finished": "2026-11-21T00:13:10+00:00",
+  "grade": "table",
+  "incomplete_cells": [],
+  "memory_side": {
+    "chat_model": "grok-4.20-0309-non-reasoning",
+    "config_sha256": "d180d53092af7b1f1ab78e105b0f3e2fd3eab04f644ba83849bd473aa4ad0d13",
+    "embeddings_model": "nomic-embed-text",
+    "id": "grok-4-20-nr-mem"
+  },
+  "protocol": {
+    "path": "protocol/v1.json",
+    "protocol_sha256": "9949459773a12199688b7fa07aa9ba85bc9953d79e3464d98e41f2d8a1aa0149",
+    "steps": [
+      "1",
+      "2"
+    ],
+    "version": "v1"
+  },
+  "repeats": 3,
+  "run_id": "day13-table-grok-langmem",
+  "started": "2026-11-20T21:35:32+00:00",
+  "state": "complete",
+  "track": "account_review"
+}

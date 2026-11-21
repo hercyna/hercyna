@@ -1,0 +1,73 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "empty",
+      "product_version": "builtin"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 4.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "7d787c201eba8dd39b248a95020f0f7b602508e888b51ad54f870e1797f814c6"
+  },
+  "code": {
+    "git_commit": "d3d44d920cfa6cda2cffbff611fbce721ea95bdc",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-21T02:35:21+00:00",
+  "deciders": [
+    {
+      "id": "haiku-5-5",
+      "key_source": null,
+      "model": "claude-haiku-5-5",
+      "params": {
+        "effort": "high",
+        "max_tokens": 6000
+      },
+      "price": {
+        "as_of": "2026-10-16",
+        "input_per_m": 0.1,
+        "output_per_m": 0.5,
+        "source": "live price taken as twice the Haiku 5.5 batch price (0.05 and 0.25) recorded 2026-10-16"
+      },
+      "prompt_version": "v1",
+      "transport": "anthropic_command"
+    }
+  ],
+  "error": null,
+  "files": {
+    "calls.jsonl": "fd2101ac173267f12c4ea592951c0f76b7e6aa58cea397919c8a84b4c237cb0a",
+    "health.json": "9958488a37c1137f6457416bb6554883bc6cbcdd0ca9e6dda31b2021417ec848",
+    "metrics.jsonl": "0876c87e19f2a5e115b0d9272ce6854772c57d2426214f1eeaf5f646c70122e3",
+    "spend.json": "ff4c4d3a2386f10c3e5adf5c8adc13a60b31f622cfea6d730ca61be572cab85f",
+    "summary.json": "dd0d8d1015edca83947f8129b8f0e2e95c427cd90dafd4c2a34fbf332b975312",
+    "timings.jsonl": "c11a74be89ad1a075123e72c6254a1c52640c5615d641f5ea03d320c3457d356"
+  },
+  "finished": "2026-11-21T02:37:59+00:00",
+  "grade": "exploratory",
+  "incomplete_cells": [],
+  "memory_side": null,
+  "protocol": null,
+  "repeats": 3,
+  "run_id": "day14-empty-haiku",
+  "started": "2026-11-21T02:35:21+00:00",
+  "state": "complete",
+  "track": "account_review"
+}

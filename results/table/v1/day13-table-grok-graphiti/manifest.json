@@ -1,0 +1,86 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "e25",
+      "config_sha256": "079bac03e3a802c5b75324fb0d0d13a6c4f1a644ba04ec2561ebd890df3a007b",
+      "name": "graphiti",
+      "product_version": "0.31.2"
+    }
+  ],
+  "attempts": 2,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 20.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "7d787c201eba8dd39b248a95020f0f7b602508e888b51ad54f870e1797f814c6"
+  },
+  "code": {
+    "git_commit": "9269b158a463a66f309dcac4e59f4a30cd7c03fd",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-20T20:49:10+00:00",
+  "deciders": [
+    {
+      "id": "grok-4-20-r",
+      "key_source": "command",
+      "model": "grok-4.20-0309-reasoning",
+      "params": {
+        "max_tokens": 6000,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-19",
+        "input_per_m": 1.25,
+        "output_per_m": 2.5,
+        "source": "docs.x.ai/developers/pricing read 2026-11-19, prompts below 200k tokens; cached input is 0.20 per million and is metered here at the full input price"
+      },
+      "prompt_version": "v1",
+      "transport": "openai_compat"
+    }
+  ],
+  "error": null,
+  "files": {
+    "calls.jsonl": "e400decc6493a5ce0b387b6697d7c9614cc98c04f9fbad5efd8f2aa0b1724b2d",
+    "health.json": "b5f94a253deacb0d1c9ad76ed729232e49d6618823cef6da2412e8774f9c2989",
+    "metrics.jsonl": "183872b73125e1c195c7c11b54977682d96daa36f756b2884fa2bd9143229230",
+    "spend.json": "2106cc1586870353ba7578b50ed6adbce6844b13637c08c8455ed3e5a43e7e3c",
+    "summary.json": "0b89074cc66d62737d87f29b00fb1e987a4dae8dcba46fcfe0616901870184cc",
+    "timings.jsonl": "5f710e4d8a8f9fb2912e1790a2033980c4e8d760099eeac4dd8d0adf3a72d476"
+  },
+  "finished": "2026-11-20T23:42:48+00:00",
+  "grade": "table",
+  "incomplete_cells": [],
+  "memory_side": {
+    "chat_model": "grok-4.20-0309-non-reasoning",
+    "config_sha256": "d180d53092af7b1f1ab78e105b0f3e2fd3eab04f644ba83849bd473aa4ad0d13",
+    "embeddings_model": "nomic-embed-text",
+    "id": "grok-4-20-nr-mem"
+  },
+  "protocol": {
+    "path": "protocol/v1.json",
+    "protocol_sha256": "9949459773a12199688b7fa07aa9ba85bc9953d79e3464d98e41f2d8a1aa0149",
+    "steps": [
+      "1",
+      "2"
+    ],
+    "version": "v1"
+  },
+  "repeats": 3,
+  "run_id": "day13-table-grok-graphiti",
+  "started": "2026-11-20T21:35:32+00:00",
+  "state": "complete",
+  "track": "account_review"
+}

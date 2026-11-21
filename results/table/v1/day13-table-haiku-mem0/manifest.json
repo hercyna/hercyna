@@ -1,0 +1,93 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "recent",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "k25",
+      "config_sha256": "5cdaceedbbdd7265f62eb5a84cf68c2ecaaf160b95308dac3a30547a549655c3",
+      "name": "mem0",
+      "product_version": "2.2.1"
+    }
+  ],
+  "attempts": 2,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 60.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "7d787c201eba8dd39b248a95020f0f7b602508e888b51ad54f870e1797f814c6"
+  },
+  "code": {
+    "git_commit": "8cc5799db1196f9cc4c0617965a1d82543870130",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-20T17:46:24+00:00",
+  "deciders": [
+    {
+      "id": "haiku-5-5",
+      "key_source": null,
+      "model": "claude-haiku-5-5",
+      "params": {
+        "effort": "high",
+        "max_tokens": 6000
+      },
+      "price": {
+        "as_of": "2026-10-16",
+        "input_per_m": 0.1,
+        "output_per_m": 0.5,
+        "source": "live price taken as twice the Haiku 5.5 batch price (0.05 and 0.25) recorded 2026-10-16"
+      },
+      "prompt_version": "v1",
+      "transport": "anthropic_command"
+    }
+  ],
+  "error": null,
+  "files": {
+    "calls.jsonl": "4057be4d847a6b35202ef651f574ab2260fad284cebd9ceb5a044afb59acb3c2",
+    "health.json": "f7f156d836a8e8a9f5d922c0825187feb256cbaf08ba332fbf4f33dc5a6b248c",
+    "memory_calls.jsonl": "c01a921bbb96d40a2083fcb7300af22ce3b4e526f4b931151bc557762ca4a0a0",
+    "metrics.jsonl": "7694269339feb6f1eb08310285786d03e3e5f986d610aca9c4c66cc8bf35e5e9",
+    "spend.json": "a6492d199dcdd02bf8d8d3d2d111f22b14f899139775d5981e24ef9d562cd72c",
+    "summary.json": "7db9d90c4fd18a338c8004684ad1fdd63ad94e563551ab86e3663e5f7108490d",
+    "timings.jsonl": "48767a91977041c2c726cdc74891e75f7d0784177a1fbc98f9423bcf60594115"
+  },
+  "finished": "2026-11-20T20:32:54+00:00",
+  "grade": "table",
+  "incomplete_cells": [],
+  "memory_side": {
+    "chat_model": "grok-4.20-0309-non-reasoning",
+    "config_sha256": "d180d53092af7b1f1ab78e105b0f3e2fd3eab04f644ba83849bd473aa4ad0d13",
+    "embeddings_model": "nomic-embed-text",
+    "id": "grok-4-20-nr-mem"
+  },
+  "protocol": {
+    "path": "protocol/v1.json",
+    "protocol_sha256": "9949459773a12199688b7fa07aa9ba85bc9953d79e3464d98e41f2d8a1aa0149",
+    "steps": [
+      "1",
+      "2"
+    ],
+    "version": "v1"
+  },
+  "repeats": 3,
+  "run_id": "day13-table-haiku-mem0",
+  "started": "2026-11-20T18:13:37+00:00",
+  "state": "complete",
+  "track": "account_review"
+}

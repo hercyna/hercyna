@@ -1,0 +1,66 @@
+{
+  "by_adapter": {
+    "bm25": {
+      "cached_calls": 2,
+      "calls": 902,
+      "input_tokens": 1139310,
+      "memory_side": {
+        "embed_calls": 0,
+        "input_tokens": 0,
+        "model_calls": 0,
+        "output_tokens": 0
+      },
+      "output_tokens": 3464960,
+      "usd": 10.086553
+    },
+    "full": {
+      "cached_calls": 4,
+      "calls": 1204,
+      "input_tokens": 9270584,
+      "output_tokens": 3171658,
+      "usd": 19.517372
+    }
+  },
+  "by_decider": {
+    "grok-4-20-r": {
+      "cached_calls": 6,
+      "calls": 2106,
+      "input_tokens": 10409894,
+      "output_tokens": 6636618,
+      "usd": 29.603925
+    }
+  },
+  "by_stage": {
+    "floor": {
+      "cached_calls": 3,
+      "calls": 903,
+      "input_tokens": 6952938,
+      "output_tokens": 2371816,
+      "usd": 14.620709
+    },
+    "gate": {
+      "cached_calls": 1,
+      "calls": 301,
+      "input_tokens": 2317646,
+      "output_tokens": 799842,
+      "usd": 4.896663
+    },
+    "view": {
+      "cached_calls": 2,
+      "calls": 902,
+      "input_tokens": 1139310,
+      "output_tokens": 3464960,
+      "usd": 10.086553
+    }
+  },
+  "cached_calls": 6,
+  "cached_input_tokens": 50196,
+  "cached_output_tokens": 16300,
+  "calls": 2106,
+  "cap_usd": 50.0,
+  "estimated_calls": 0,
+  "input_tokens": 10409894,
+  "output_tokens": 6636618,
+  "total_usd": 29.603925,
+  "unpriced_calls": 0
+}

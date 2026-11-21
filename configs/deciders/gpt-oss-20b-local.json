@@ -1,0 +1,11 @@
+{
+  "id": "gpt-oss-20b-local",
+  "transport": "ollama",
+  "base_url": "http://localhost:11434",
+  "model": "gpt-oss:20b",
+  "prompt_version": "v1",
+  "params": {"temperature": 0, "num_ctx": 32768},
+  "price": {"input_per_m": 0, "output_per_m": 0, "as_of": "2026-11-19", "source": "local model, no per-token charge"},
+  "timeout_s": 900,
+  "retries": 2
+}

@@ -1,0 +1,52 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 2e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-20T21:17:36+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 4.9e-05
+    },
+    {
+      "attempts": {
+        "items": 563,
+        "stored_views": 300
+      },
+      "cases_done": 300,
+      "config_label": "c25",
+      "errors": 0,
+      "ingest_seconds_mean": 72.969936,
+      "last_error": null,
+      "last_ok_at": "2026-11-20T20:44:55+00:00",
+      "name": "langmem",
+      "ok": true,
+      "product_version": "0.0.30",
+      "product_warnings": {
+        "by_logger": {
+          "_unknown": 45,
+          "extraction": 1933
+        },
+        "total": 1978
+      },
+      "retrieve_seconds_mean": 0.002925
+    }
+  ],
+  "rebuilt": {
+    "from": [
+      "timings.jsonl",
+      "metrics.jsonl"
+    ],
+    "timing_rows": 2326
+  },
+  "run_id": "day13-table-haiku-langmem",
+  "updated": "2026-11-21T02:51:18+00:00"
+}

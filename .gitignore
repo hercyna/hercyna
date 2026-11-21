@@ -1,0 +1,15 @@
+.DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+results/cache/
+*.sqlite
+results/runs/
+hub/dist/
+results/*.log
+.venv-langmem/
+.venv-graphiti/
+.venv-build/
+site/dist/
+site/preview/
+banned_words.local.txt

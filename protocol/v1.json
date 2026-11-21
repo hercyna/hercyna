@@ -1,0 +1,137 @@
+{
+  "protocol_sha256": "9949459773a12199688b7fa07aa9ba85bc9953d79e3464d98e41f2d8a1aa0149",
+  "schema": "memory_bench.protocol/1",
+  "spec": "protocol/v1.spec.json",
+  "steps": {
+    "1": {
+      "files": {
+        "configs/adapters/graphiti-e25.json": "d8a7d57224467063d184749e1e2c57b03e907f59ef75736becb3e7a98a962876",
+        "configs/adapters/langmem-c25.json": "0db1953d0636e4f4dfc681cdc8d96f3e6a9842de38089003d6d6bff39300fb1d",
+        "configs/adapters/mem0-k25.json": "60c69bee0556ca0eb8058391262fae4a25ef624f8fb600c875b853d077ce497f",
+        "configs/deciders/grok-4-20-r.json": "ca9cfb5e62c443e1de2f005447372f5c98f00b3409519ef95c3243e10956d0a8",
+        "configs/deciders/haiku-5-5.json": "42c8f17ed017f19c7abb0d97157f475f957254fb2f929b1431e7e952edd47a9f",
+        "configs/memory-side/grok-4-20-nr-mem.json": "ed6ce5668409f96abca0874bf70ff75e185c45a88d8fdee6a81181450173e19f",
+        "protocol/PREREGISTRATION.md": "8bea40307efbd970fabcc1d1dfed46e99b6c0e09f713400e005a4f048ce6ac33",
+        "pyproject.toml": "751db0c006cc6cddbe68b851b09fc420e8f38de9373c4cf81fbbf79579d712a4",
+        "src/memory_bench/adapters/base.py": "c610bee4aac1ff3fc866e744218594f4751d8fe9671e003adbc5f52b0f967288",
+        "src/memory_bench/adapters/bm25.py": "dacdada8c9cc97e47c9a2035a496e144485e80e04126d79c996da9cce48f7126",
+        "src/memory_bench/adapters/full.py": "f0283e6c56ca5ae0f86fc9fc8394d2f3f447987741994b23491c3fdd7d96b39f",
+        "src/memory_bench/adapters/graphiti.py": "6549ec380cddb2f7afecac50fcb7b1331991921f2796897fc44e08606ddaae6c",
+        "src/memory_bench/adapters/langmem.py": "63b815fb5cac9167ade2fe2b8dee2082d3d842c4809da0b8cdce4d9787dbbb15",
+        "src/memory_bench/adapters/mem0.py": "9ae0691110a861c2bfa312cafbc5f647fe463a5d73cfaa7619d68f6e4d395a45",
+        "src/memory_bench/adapters/recent.py": "3207aeb413ab110b0ac30ed5a929159f3cefec0484df303d3928a0a68c8b7714",
+        "src/memory_bench/deciders/lifted.py": "01b29d11f7b3fc4a2cfadba9aa94c3609170e42ce43fe940f86831cfd0b5f920",
+        "src/memory_bench/deciders/model.py": "cf1ca8788d940e88c7a3bfa4bd1217ac2a0adc8588e3969ea1fc2ee3558598f7",
+        "src/memory_bench/deciders/prompts.py": "631fde74c0a0ee57be360fa550ffc452d7c726414e8975ea7729a2d6baf9548c",
+        "src/memory_bench/deciders/transports.py": "1c3e01e28809895d0aa930a50ba2c6e1af0b323ae70f44bb86302af743bbee45",
+        "src/memory_bench/gateway/proxy.py": "6fd273e5b805aac88e5de09b40199515209e31aa0de1d88314a0149118c83043",
+        "src/memory_bench/scoring/__init__.py": "d484429ae9487f6f8d066beddd3d5c0fbf57ae8a154c364bb9421d7608bb1ecb",
+        "src/memory_bench/scoring/bootstrap.py": "0e66cc5dbc4c8012fd20338f8fe66ebca84ffb6061c308a65cf75d4a40384bb6",
+        "src/memory_bench/scoring/gates.py": "2d0024a8867c3e83afd393d9f20aa56b24b81f5ca2d6adb4cb7f6e3850366962",
+        "src/memory_bench/scoring/metrics.py": "6c9ce20c45361255d5d6395395d8e1b2b19b7335f39af3d2c8cd43a6cb1261f0",
+        "src/memory_bench/scoring/power.py": "aba19848d1fd7259d3fafd1b686f206e1c89b9ccd6126209023d2be7fcc76d25",
+        "src/memory_bench/scoring/separation.py": "80b9bf4f14c54b0e917f9c0c5eb0d7b05a981efa8715f9220f3ddaf3a17169f3",
+        "src/memory_bench/scoring/stability.py": "58ca10b227327cda73f2613d09bc115f1034caa12345d73d1af6a4d6f21889ed",
+        "uv.lock": "f553706d4862f3c83c629783b0833c5f5e489fdb07c71c4993d90f9383489412"
+      },
+      "frozen_at": "2026-11-20T02:27:33+00:00",
+      "git_commit": "f2f22eeb16457e59594acd1de33bfe0e9c1171ad",
+      "patterns": [
+        "src/memory_bench/scoring/*.py",
+        "src/memory_bench/deciders/lifted.py",
+        "src/memory_bench/deciders/prompts.py",
+        "src/memory_bench/deciders/model.py",
+        "src/memory_bench/deciders/transports.py",
+        "src/memory_bench/adapters/base.py",
+        "src/memory_bench/adapters/full.py",
+        "src/memory_bench/adapters/bm25.py",
+        "src/memory_bench/adapters/recent.py",
+        "src/memory_bench/adapters/mem0.py",
+        "src/memory_bench/adapters/langmem.py",
+        "src/memory_bench/adapters/graphiti.py",
+        "src/memory_bench/gateway/proxy.py",
+        "configs/deciders/haiku-5-5.json",
+        "configs/deciders/grok-4-20-r.json",
+        "configs/adapters/mem0-k25.json",
+        "configs/adapters/langmem-c25.json",
+        "configs/adapters/graphiti-e25.json",
+        "configs/memory-side/grok-4-20-nr-mem.json",
+        "pyproject.toml",
+        "uv.lock",
+        "protocol/PREREGISTRATION.md"
+      ],
+      "step_sha256": "46d3df6378eca209fdcccc63ebc16314cc3fc98fd6382405ef2025f6b1705245",
+      "title": "metric, deciders, adapter configs, separation rule",
+      "values": {
+        "boot_reps": 1000,
+        "boot_seed": 11,
+        "budgets": [
+          1000
+        ],
+        "chunk_rule": 25,
+        "ci_level": 0.95,
+        "deciders": [
+          "haiku-5-5",
+          "grok-4-20-r"
+        ],
+        "memory_side": {
+          "chat_model": "grok-4.20-0309-non-reasoning",
+          "embedding_dims": 768,
+          "embedding_model": "nomic-embed-text"
+        },
+        "product_pins": {
+          "falkordb_image": "falkordb/falkordb:6.0.2",
+          "graphiti-core": "0.31.2",
+          "langmem": "0.0.30",
+          "mem0ai": "2.2.1"
+        },
+        "repeats": 3,
+        "separation": {
+          "alpha": 0.05,
+          "floor_test": "95 percent interval of HEADLINE above zero",
+          "leaderboard": "at least one product pair separates on every frozen decider, same direction",
+          "test": "paired bootstrap p-value, Holm-adjusted across product pairs"
+        },
+        "systems": [
+          "full",
+          "bm25",
+          "recent",
+          "mem0/k25",
+          "langmem/c25",
+          "graphiti/e25"
+        ],
+        "token_rule": "ceil(characters / 2.2)",
+        "validity_gate": {
+          "overall": 0.9,
+          "per_mechanism": 0.8
+        }
+      }
+    },
+    "2": {
+      "files": {
+        "data/table/cases.jsonl": "7d787c201eba8dd39b248a95020f0f7b602508e888b51ad54f870e1797f814c6",
+        "src/memory_bench/cases/__init__.py": "3c1d1ab8670190ea51cd00c93ae5b29dcab470414d50c943db21376391fb9e1d",
+        "src/memory_bench/cases/generator.py": "8878e1b4e1e854bfaa7bb82831dc5915a21592b2a00bbf2778c36a5a3076570a",
+        "src/memory_bench/cases/quickstart.py": "89bbf8f3ffb45c644aeb67992531691a935d45b4952e5a6906fdeca5982112c4",
+        "src/memory_bench/cases/render.py": "46567cebd52980297247f58f1c46ad315eac94ff3736427fe092bcb85dc6dfaf",
+        "src/memory_bench/cases/sample.py": "ec4338823ded7b8a107fa45f7303a68651bdd8d2e9b04979afb85e88f8d8dbe8",
+        "src/memory_bench/cases/schema.py": "fa4f1f395de27f29acf0b738362f6c43e6a973ac4379abad0c2cb2e09fee38f1"
+      },
+      "frozen_at": "2026-11-20T02:42:13+00:00",
+      "git_commit": "6625c30ec02fdb3419f122a24ff626cd6446c1aa",
+      "patterns": [
+        "src/memory_bench/cases/*.py",
+        "data/table/cases.jsonl"
+      ],
+      "step_sha256": "eeb8cc43247bc9f3f83250aec33d4da2b4b9bc8637785358a7050075706c90e1",
+      "title": "generator with Track 2, table cases and table seed",
+      "values": {
+        "case_id_prefix": "t1283645051",
+        "generator_version": 3,
+        "n_table_cases": 300,
+        "table_seed": 1283645051
+      }
+    }
+  },
+  "version": "v1"
+}

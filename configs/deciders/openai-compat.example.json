@@ -1,0 +1,13 @@
+{
+  "id": "example-model",
+  "transport": "openai_compat",
+  "base_url": "https://api.example.com/v1",
+  "model": "REPLACE-WITH-MODEL-ID",
+  "key": {"env": "BENCH_API_KEY"},
+  "prompt_version": "v1",
+  "params": {"temperature": 0, "max_tokens": 6000},
+  "price": null,
+  "timeout_s": 300,
+  "retries": 3,
+  "description": "Template. Set base_url, model and price; the key is read from BENCH_API_KEY at call time and never written anywhere"
+}

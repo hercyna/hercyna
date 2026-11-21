@@ -1,0 +1,94 @@
+{
+  "accuracy": {
+    "overall": {
+      "accuracy": 0.3333333333333333,
+      "correct": 2,
+      "n": 6
+    },
+    "per_mechanism": {
+      "M0": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "n": 1
+      },
+      "M1": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "n": 1
+      },
+      "M2": {
+        "accuracy": 1.0,
+        "correct": 1,
+        "n": 1
+      },
+      "M3": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "n": 1
+      },
+      "U1": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "n": 1
+      },
+      "U2": {
+        "accuracy": 0.0,
+        "correct": 0,
+        "n": 1
+      }
+    }
+  },
+  "complete": true,
+  "confusion": {
+    "APPLY_CREDIT": {
+      "OPEN_REVIEW": 1
+    },
+    "CHECK_DEVICE": {
+      "CHECK_DEVICE": 1
+    },
+    "EXPLAIN": {
+      "OPEN_REVIEW": 1
+    },
+    "OPEN_REVIEW": {
+      "OPEN_REVIEW": 1
+    },
+    "REQUEST_INFO": {
+      "OPEN_REVIEW": 2
+    }
+  },
+  "decider": {
+    "id": "grok-4-20-nr",
+    "key_source": "command",
+    "model": "grok-4.20-0309-non-reasoning",
+    "params": {
+      "max_tokens": 2000,
+      "temperature": 0
+    },
+    "price": {
+      "as_of": "2026-11-19",
+      "input_per_m": 1.25,
+      "output_per_m": 2.5,
+      "source": "docs.x.ai/developers/pricing read 2026-11-19, prompts below 200k tokens; cached input is 0.20 per million and is metered here at the full input price"
+    },
+    "prompt_version": "v1",
+    "transport": "openai_compat"
+  },
+  "gate": {
+    "overall_min": 0.9,
+    "passes": false,
+    "per_mechanism_min": 0.8
+  },
+  "n": 6,
+  "n_planned": 6,
+  "parse_errors": 0,
+  "schema": "memory_bench.validity/1",
+  "seconds_per_call": 1.055088,
+  "stop_reason": null,
+  "tokens": {
+    "cached_calls": 0,
+    "calls": 6,
+    "input": 55180,
+    "output": 313
+  },
+  "usd": 0.069757
+}

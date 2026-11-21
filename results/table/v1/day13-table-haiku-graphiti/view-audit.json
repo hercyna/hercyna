@@ -1,0 +1,28 @@
+{
+  "cases_failed_without_view": 0,
+  "failed_calls": 246,
+  "failed_calls_by_status": {
+    "402": 246
+  },
+  "margin_seconds": 5.0,
+  "memory_calls": 34594,
+  "run_id": "day13-table-haiku-graphiti",
+  "schema": "memory_bench.view_audit/1",
+  "systems": {
+    "graphiti/e25": {
+      "case_ids": [],
+      "cases_failed_without_view": [],
+      "failed_calls": 246,
+      "failed_calls_by_status": {
+        "402": 246
+      },
+      "failed_calls_in_window": 0,
+      "n_cases_failed_without_view": 0,
+      "views_checked": 300,
+      "views_unchecked": 0,
+      "views_with_failed_call": 0
+    }
+  },
+  "views_checked": 300,
+  "views_with_failed_call": 0
+}

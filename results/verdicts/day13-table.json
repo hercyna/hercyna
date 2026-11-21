@@ -1,0 +1,252 @@
+{
+  "pool": {
+    "cases_sha256": "7d787c201eba8dd39b248a95020f0f7b602508e888b51ad54f870e1797f814c6",
+    "deciders": [
+      "grok-4-20-r",
+      "haiku-5-5"
+    ],
+    "differing_view_cells": 0,
+    "grade": "table",
+    "products": [
+      [
+        "graphiti",
+        "e25",
+        1000
+      ],
+      [
+        "langmem",
+        "c25",
+        1000
+      ],
+      [
+        "mem0",
+        "k25",
+        1000
+      ]
+    ],
+    "protocol_sha256": "9949459773a12199688b7fa07aa9ba85bc9953d79e3464d98e41f2d8a1aa0149",
+    "runs": [
+      {
+        "new_rows": 2100,
+        "run": "day13-table-grok-graphiti"
+      },
+      {
+        "new_rows": 900,
+        "run": "day13-table-grok-langmem"
+      },
+      {
+        "new_rows": 1800,
+        "run": "day13-table-grok-mem0"
+      },
+      {
+        "new_rows": 900,
+        "run": "day13-table-grok-prime"
+      },
+      {
+        "new_rows": 2100,
+        "run": "day13-table-haiku-graphiti"
+      },
+      {
+        "new_rows": 900,
+        "run": "day13-table-haiku-langmem"
+      },
+      {
+        "new_rows": 1800,
+        "run": "day13-table-haiku-mem0"
+      },
+      {
+        "new_rows": 900,
+        "run": "day13-table-haiku-prime"
+      }
+    ],
+    "shared_view_cells": 2700,
+    "shared_views": true
+  },
+  "separation": {
+    "deciders": {
+      "grok-4-20-r": {
+        "floor": true,
+        "from_floor": {
+          "graphiti/e25@1000": {
+            "ci95": [
+              0.101787,
+              0.172298
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.1367231638418079
+          },
+          "langmem/c25@1000": {
+            "ci95": [
+              0.206608,
+              0.291247
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.2485875706214689
+          },
+          "mem0/k25@1000": {
+            "ci95": [
+              0.053283,
+              0.1024
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.07683615819209039
+          }
+        },
+        "missing_products": [],
+        "n_cases": 300,
+        "n_gated": 295,
+        "pairs": {
+          "graphiti/e25@1000 | langmem/c25@1000": {
+            "ci95": [
+              -0.168947,
+              -0.062147
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.007992007992007992,
+            "n_resamples": 1000,
+            "p": 0.003996003996003996,
+            "separates": true,
+            "value": -0.111864406779661
+          },
+          "graphiti/e25@1000 | mem0/k25@1000": {
+            "ci95": [
+              0.020474,
+              0.097651
+            ],
+            "direction": "b_lower",
+            "holm_p": 0.007992007992007992,
+            "n_resamples": 1000,
+            "p": 0.003996003996003996,
+            "separates": true,
+            "value": 0.05988700564971752
+          },
+          "langmem/c25@1000 | mem0/k25@1000": {
+            "ci95": [
+              0.122737,
+              0.22112
+            ],
+            "direction": "b_lower",
+            "holm_p": 0.005994005994005994,
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.17175141242937852
+          }
+        }
+      },
+      "haiku-5-5": {
+        "floor": true,
+        "from_floor": {
+          "graphiti/e25@1000": {
+            "ci95": [
+              0.068249,
+              0.136159
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.10069444444444443
+          },
+          "langmem/c25@1000": {
+            "ci95": [
+              0.116091,
+              0.194933
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.15509259259259262
+          },
+          "mem0/k25@1000": {
+            "ci95": [
+              0.037412,
+              0.087963
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.0625
+          }
+        },
+        "missing_products": [],
+        "n_cases": 300,
+        "n_gated": 288,
+        "pairs": {
+          "graphiti/e25@1000 | langmem/c25@1000": {
+            "ci95": [
+              -0.097052,
+              -0.009258
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.03996003996003996,
+            "n_resamples": 1000,
+            "p": 0.01998001998001998,
+            "separates": true,
+            "value": -0.05439814814814817
+          },
+          "graphiti/e25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.001158,
+              0.075231
+            ],
+            "direction": "b_lower",
+            "holm_p": 0.059940059940059943,
+            "n_resamples": 1000,
+            "p": 0.059940059940059943,
+            "separates": false,
+            "value": 0.038194444444444434
+          },
+          "langmem/c25@1000 | mem0/k25@1000": {
+            "ci95": [
+              0.048887,
+              0.139591
+            ],
+            "direction": "b_lower",
+            "holm_p": 0.005994005994005994,
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.0925925925925926
+          }
+        }
+      }
+    },
+    "leaderboard": true,
+    "products": [
+      "graphiti/e25@1000",
+      "langmem/c25@1000",
+      "mem0/k25@1000"
+    ],
+    "rule": {
+      "alpha": 0.05,
+      "correction": "holm",
+      "from_floor": "a product separates from the floor when the lower bound of the 95 percent interval of headline (wrong_commit - floor) is above zero",
+      "interval": "percentile interval over the paired case bootstrap of summarise (same seed, same resamples)",
+      "leaderboard": "true only if at least one pair separates on every decider present, in the same direction; false publishes the null; null with a single decider",
+      "level": 0.95,
+      "p_value": "two-sided bootstrap p = min(1, 2 * min((k_le + 1) / (B + 1), (k_ge + 1) / (B + 1))), B = resamples where both rates are defined",
+      "pairs": "for each unordered product pair a | b: wrong_commit(a) - wrong_commit(b) (the floor cancels); separates when the Holm-adjusted p across the decider's pairs is below alpha; direction a_lower means a has the lower wrong-commit rate",
+      "reps": 1000,
+      "seed": 11,
+      "source": "CHARTER section 4.6"
+    },
+    "schema": "memory_bench.separation/1",
+    "separating_pairs": [
+      {
+        "direction": "a_lower",
+        "pair": "graphiti/e25@1000 | langmem/c25@1000"
+      },
+      {
+        "direction": "b_lower",
+        "pair": "langmem/c25@1000 | mem0/k25@1000"
+      }
+    ],
+    "verdict": "leaderboard"
+  }
+}

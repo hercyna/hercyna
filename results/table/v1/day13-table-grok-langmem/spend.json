@@ -1,0 +1,69 @@
+{
+  "by_adapter": {
+    "full": {
+      "cached_calls": 1204,
+      "calls": 1204,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "langmem": {
+      "cached_calls": 0,
+      "calls": 900,
+      "input_tokens": 1072839,
+      "memory_side": {
+        "cached_calls": 0,
+        "calls": 0,
+        "embed_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0.0
+      },
+      "output_tokens": 3819312,
+      "usd": 10.889316
+    }
+  },
+  "by_decider": {
+    "grok-4-20-r": {
+      "cached_calls": 1204,
+      "calls": 2104,
+      "input_tokens": 1072839,
+      "output_tokens": 3819312,
+      "usd": 10.889316
+    }
+  },
+  "by_stage": {
+    "floor": {
+      "cached_calls": 903,
+      "calls": 903,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "gate": {
+      "cached_calls": 301,
+      "calls": 301,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "view": {
+      "cached_calls": 0,
+      "calls": 900,
+      "input_tokens": 1072839,
+      "output_tokens": 3819312,
+      "usd": 10.889316
+    }
+  },
+  "cached_calls": 1204,
+  "cached_input_tokens": 9318880,
+  "cached_output_tokens": 3179631,
+  "calls": 2104,
+  "cap_usd": 20.0,
+  "estimated_calls": 0,
+  "input_tokens": 1072839,
+  "memory_side_usd": 0.0,
+  "output_tokens": 3819312,
+  "total_usd": 10.889316,
+  "unpriced_calls": 0
+}

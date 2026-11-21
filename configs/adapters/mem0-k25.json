@@ -1,0 +1,6 @@
+{
+  "adapter": "mem0",
+  "config_label": "k25",
+  "config": {"records_per_add": 25},
+  "description": "Mem0 2.2.1, package defaults, 25 record(s) per add. Probe config for the S6.2 chunking rule"
+}

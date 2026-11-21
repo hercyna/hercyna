@@ -1,0 +1,73 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "empty",
+      "product_version": "builtin"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 15.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "7d787c201eba8dd39b248a95020f0f7b602508e888b51ad54f870e1797f814c6"
+  },
+  "code": {
+    "git_commit": "d3d44d920cfa6cda2cffbff611fbce721ea95bdc",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-21T02:35:21+00:00",
+  "deciders": [
+    {
+      "id": "grok-4-20-r",
+      "key_source": "command",
+      "model": "grok-4.20-0309-reasoning",
+      "params": {
+        "max_tokens": 6000,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-19",
+        "input_per_m": 1.25,
+        "output_per_m": 2.5,
+        "source": "docs.x.ai/developers/pricing read 2026-11-19, prompts below 200k tokens; cached input is 0.20 per million and is metered here at the full input price"
+      },
+      "prompt_version": "v1",
+      "transport": "openai_compat"
+    }
+  ],
+  "error": null,
+  "files": {
+    "calls.jsonl": "04e5dc231ba49f5471391abb1c6743179f64a8b1bd210e05763180419e6dbf0f",
+    "health.json": "39a36cf86c3bfd367ca0612c715b7494b70065029f8e211f9fe3a6fddbea3c4f",
+    "metrics.jsonl": "ddd1c781507ce1957a4bab4e8fd7f10f9ea9d9b20b4c0cefe7aa698fe8b4ad8b",
+    "spend.json": "b04ae9046fd86699ac42cdf6e2742e8ca5508dd9ebd83111beaecce2fc17f449",
+    "summary.json": "f10cd40ea109b31d14ed837db5ec6d31d7f19bd0882078bbb286a2397ae984fb",
+    "timings.jsonl": "07057cfe087caa23620b89bc4fb21cad4111a8bd9c836db5b5746b7c2fbd61b9"
+  },
+  "finished": "2026-11-21T02:46:45+00:00",
+  "grade": "exploratory",
+  "incomplete_cells": [],
+  "memory_side": null,
+  "protocol": null,
+  "repeats": 3,
+  "run_id": "day14-empty-grok",
+  "started": "2026-11-21T02:35:21+00:00",
+  "state": "complete",
+  "track": "account_review"
+}

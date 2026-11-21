@@ -1,0 +1,95 @@
+{
+  "accuracy": {
+    "overall": {
+      "accuracy": 0.9666666666666667,
+      "correct": 58,
+      "n": 60
+    },
+    "per_mechanism": {
+      "M0": {
+        "accuracy": 1.0,
+        "correct": 10,
+        "n": 10
+      },
+      "M1": {
+        "accuracy": 1.0,
+        "correct": 10,
+        "n": 10
+      },
+      "M2": {
+        "accuracy": 1.0,
+        "correct": 10,
+        "n": 10
+      },
+      "M3": {
+        "accuracy": 1.0,
+        "correct": 10,
+        "n": 10
+      },
+      "U1": {
+        "accuracy": 0.8,
+        "correct": 8,
+        "n": 10
+      },
+      "U2": {
+        "accuracy": 1.0,
+        "correct": 10,
+        "n": 10
+      }
+    }
+  },
+  "complete": true,
+  "confusion": {
+    "APPLY_CREDIT": {
+      "APPLY_CREDIT": 10
+    },
+    "CHECK_DEVICE": {
+      "CHECK_DEVICE": 10
+    },
+    "EXPLAIN": {
+      "EXPLAIN": 10
+    },
+    "OPEN_REVIEW": {
+      "OPEN_REVIEW": 10
+    },
+    "REQUEST_INFO": {
+      "EXPLAIN": 2,
+      "REQUEST_INFO": 18
+    }
+  },
+  "decider": {
+    "id": "haiku-5-5",
+    "key_source": null,
+    "model": "claude-haiku-5-5",
+    "params": {
+      "effort": "high",
+      "max_tokens": 6000
+    },
+    "price": {
+      "as_of": "2026-10-16",
+      "input_per_m": 0.1,
+      "output_per_m": 0.5,
+      "source": "live price taken as twice the Haiku 5.5 batch price (0.05 and 0.25) recorded 2026-10-16"
+    },
+    "prompt_version": "v1",
+    "transport": "anthropic_command"
+  },
+  "gate": {
+    "overall_min": 0.9,
+    "passes": true,
+    "per_mechanism_min": 0.8
+  },
+  "n": 60,
+  "n_planned": 60,
+  "parse_errors": 0,
+  "schema": "memory_bench.validity/1",
+  "seconds_per_call": 5.172424,
+  "stop_reason": null,
+  "tokens": {
+    "cached_calls": 1,
+    "calls": 60,
+    "input": 556350,
+    "output": 59083
+  },
+  "usd": 0.085177
+}
