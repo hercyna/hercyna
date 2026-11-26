@@ -1,0 +1,38 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 2e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T17:35:27+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 2.3e-05
+    },
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 0.0,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T17:35:27+00:00",
+      "name": "recent",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 1.5e-05
+    }
+  ],
+  "run_id": "v2-step8-table-opencode-glm-5.3-flash-recent",
+  "updated": "2026-11-24T17:35:45+00:00"
+}

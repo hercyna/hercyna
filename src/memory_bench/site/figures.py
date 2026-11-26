@@ -131,7 +131,13 @@ def whisker_svg(ex: dict | None, ha: dict | None) -> str:
     def X(v: float) -> float:
         return ml + (v - a) / (z - a) * (W - ml - mr)
 
-    out = [f'<svg class="whisk" viewBox="0 0 {W} 92" aria-hidden="true" focusable="false">']
+    aria_parts = []
+    if ex and ex.get("t"):
+        aria_parts.append(f'excess wrong action {ex["t"]}' + (f' {ex["iv"]}' if ex.get("iv") else ""))
+    if ha and ha.get("t"):
+        aria_parts.append(f'withheld above floor {ha["t"]}' + (f' {ha["iv"]}' if ha.get("iv") else ""))
+    aria_desc = "95% intervals against the floor: " + (", ".join(aria_parts) if aria_parts else "none")
+    out = [f'<svg class="whisk" viewBox="0 0 {W} 92" role="img" aria-label="{E(aria_desc)}">']
     for t in ticks(a, z, 4):
         out.append(f'<text x="{_n(X(t))}" y="88" text-anchor="middle">{_fmt_tick(t)}</text>')
     out.append(f'<line x1="{ml}" x2="{W - mr}" y1="74" y2="74" stroke="var(--line)"/>'
@@ -165,23 +171,23 @@ def flow_svg(deciders: list[tuple[str, str]], budget: Any) -> str:
                 f'<text class="tag" x="{x + 14}" y="{y + 22}">{E(tag)}</text>'
                 f'<text class="ttl" x="{x + 14}" y="{y + 44}">{E(title)}</text>{t}</g>')
 
-    wires = [("w0", "M175 125 C 195 125, 195 125, 215 125"), ("w1", "M375 125 C 395 125, 395 125, 415 125"),
-             ("w2", "M575 125 C 600 125, 590 72, 615 72"), ("w2", "M575 125 C 600 125, 590 182, 615 182"),
-             ("w3", "M785 72 C 805 72, 800 112, 820 112"), ("w3", "M785 182 C 805 182, 800 140, 820 140")]
+    wires = [("w0", "M185 125 C 202 125, 202 125, 220 125"), ("w1", "M395 125 C 412 125, 412 125, 430 125"),
+             ("w2", "M625 125 C 645 125, 640 72, 660 72"), ("w2", "M625 125 C 645 125, 640 182, 660 182"),
+             ("w3", "M840 72 C 858 72, 856 112, 875 112"), ("w3", "M840 182 C 858 182, 856 140, 875 140")]
     paths = "".join(f'<path class="wire {c}" d="{d}"/>' for c, d in wires)
     pulses = "".join(f'<rect class="pulse p{c[1]}" x="-3.5" y="-3.5" width="7" height="7">'
                      f'<animateMotion dur="1.6s" repeatCount="indefinite" path="{d}"/></rect>' for c, d in wires)
-    lethe = "".join(f'<circle cx="{280 + (k * 37) % 46}" cy="{186 + (k * 11) % 9}" r="{2.4 - k * .15:.2f}" '
-                    f'style="animation-delay:{k * .3:.1f}s"/>' for k in range(8))
-    return ('<svg class="flow" data-s="0" viewBox="0 0 1000 250" role="img" aria-labelledby="flow-t">'
+    lethe = "".join(f'<circle cx="{290 + (k * 37) % 46}" cy="{186 + (k * 11) % 9}" r="{2.4 - k * .15:.2f}"/>'
+                    for k in range(8))
+    return ('<svg class="flow" data-s="0" viewBox="0 0 1080 250" role="img" aria-labelledby="flow-t">'
             '<title id="flow-t">The five stages: history, memory, view, two deciders, action.</title>'
             + paths
-            + node("n0", 10, 55, 165, 140, "01 HISTORY", "Dated records", ["100 or 400 per case", "a rule oracle knows", "the right action"])
-            + node("n1", 215, 70, 160, 110, "02 MEMORY", "Blind adapter", ["reset, ingest, view", f"at most {b}"])
-            + node("n2", 415, 70, 160, 110, "03 VIEW", "What the agent sees", ["only the returned view", "never the oracle"])
-            + node("n3", 615, 25, 170, 95, "04 DECIDER", decs[0][0], [decs[0][1]])
-            + node("n3", 615, 135, 170, 95, "04 DECIDER", decs[1][0], [decs[1][1]])
-            + node("n4", 820, 55, 170, 140, "05 ACTION", "Scored", ["right, withheld or wrong", "measured above", "the decider's floor"])
+            + node("n0", 10, 55, 175, 140, "01 HISTORY", "Dated records", ["100 or 400 per case", "a rule oracle knows", "the right action"])
+            + node("n1", 220, 70, 175, 110, "02 MEMORY", "Blind adapter", ["reset, ingest, view", f"at most {b}"])
+            + node("n2", 430, 70, 195, 110, "03 VIEW", "What the agent sees", ["only the returned view", "never the oracle"])
+            + node("n3", 660, 25, 180, 95, "04 DECIDER", decs[0][0], [decs[0][1]])
+            + node("n3", 660, 135, 180, 95, "04 DECIDER", decs[1][0], [decs[1][1]])
+            + node("n4", 875, 55, 195, 140, "05 ACTION", "Scored", ["right, withheld or wrong", "measured above", "the decider's floor"])
             + f'<g class="lethe" aria-hidden="true">{lethe}</g>' + pulses + "</svg>")
 
 
@@ -213,7 +219,7 @@ def anatomy_html(case: Any, reduced: str, n_cases: int) -> str:
                              "The record was in the history, so the bench counts it as withheld.")
     else:
         cls, what = "wrong", f"An agent that acts on this view picks {reduced}, a wrong action."
-    dropped = "".join(f'<p class="rec drop">{_rec_text(e)}</p>' for e in shown if e.id in keys)
+    dropped = "".join(f'<p class="rec drop"><span class="drop-t">{_rec_text(e)}</span></p>' for e in shown if e.id in keys)
     return (
         '<div class="ana">'
         '<div class="ana-col"><h3>The request</h3>'

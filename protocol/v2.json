@@ -1,0 +1,729 @@
+{
+  "protocol_sha256": "68af8d8ea25b806618efc7ed9e1517a193ecae5269a1b762cf04ac2fa96c0bb3",
+  "schema": "memory_bench.protocol/1",
+  "spec": "protocol/v2.spec.json",
+  "steps": {
+    "1": {
+      "files": {
+        "configs/v2/deciders/haiku-5-5.json": "d4a2b7d9dbe63315682fe95ae117cc522212e6f81b2558ddd7d8b2a34965ae1e",
+        "configs/v2/deciders/opencode-beam-free.json": "043b31a0846b6dedf98876b321e64a25c6abb78aab8c2d9867467c1e5baa078e",
+        "configs/v2/deciders/opencode-big-pickle.json": "97299066f4a2517c0687d82df51c13603e8cb439d6819192e9d9e0f03c9c9402",
+        "configs/v2/deciders/opencode-deepseek-v4.1-flash-free.json": "13e702035e1e2c099bef5069f26d1d3e4427defa0eb3319ca6ffd3cadb1c84a2",
+        "configs/v2/deciders/opencode-flint-40b-free.json": "65ac3abb1a8df7cbf32feea10b07bf0338813855bcbc23f2be6856e398ca3e71",
+        "configs/v2/deciders/opencode-hy4-flash-free.json": "56b09aef52c5e5eec8c778fbd9cff2c01827c82423cf7b4feb966669fef67ac4",
+        "configs/v2/deciders/opencode-iceman-free.json": "0f9618e44a947931571d33799d7c77c6386946dc4672c850973510ee696e036a",
+        "configs/v2/deciders/opencode-mimo-v2.6-flash-free.json": "e45ca33cbc5407bf2c8a216cdf68f5186c62be0469ad245fb6c945e229d00f33",
+        "configs/v2/deciders/opencode-nemotron-3.5-lightning-free.json": "f69fa231c9426a72f651c74768957eddc277618bf57f43449c978318f5fec1dc",
+        "configs/v2/deciders/opencode-nemotron-3.5-super-vl-free.json": "469dd6d2bce844f30426d2d158365954cf6a06bd1d6e1990830b5549a4c8b159",
+        "configs/v2/deciders/opencode-tidepool-alpha-free.json": "3501b26b486536486121eb901e229dccf4664fe0659c0d11ef3f5aa03a35f8ee",
+        "pyproject.toml": "751db0c006cc6cddbe68b851b09fc420e8f38de9373c4cf81fbbf79579d712a4",
+        "src/memory_bench/adapters/base.py": "c2ff0db00e28f51a1e97eddfb1fe3e75693686f68b6b80aa4c3b9979732e45d2",
+        "src/memory_bench/adapters/bm25.py": "dacdada8c9cc97e47c9a2035a496e144485e80e04126d79c996da9cce48f7126",
+        "src/memory_bench/adapters/dense_raw.py": "638730e231f80a3ae077010388d719e61ff7eb5c5fc764be89907ff8d51a966f",
+        "src/memory_bench/adapters/empty.py": "bd2d6e31cb86ab2b90c7c4bcbbe8e543218a9cf0e6d4055e4ec5393f6fe0e2c0",
+        "src/memory_bench/adapters/full.py": "f0283e6c56ca5ae0f86fc9fc8394d2f3f447987741994b23491c3fdd7d96b39f",
+        "src/memory_bench/adapters/graphiti.py": "6549ec380cddb2f7afecac50fcb7b1331991921f2796897fc44e08606ddaae6c",
+        "src/memory_bench/adapters/hybrid_bm25_dense.py": "fc5df544cf6ada55e67ac5bf48806d6474ff3b67526651b862dc8cdd72e454a2",
+        "src/memory_bench/adapters/langmem.py": "63b815fb5cac9167ade2fe2b8dee2082d3d842c4809da0b8cdce4d9787dbbb15",
+        "src/memory_bench/adapters/mem0.py": "9ae0691110a861c2bfa312cafbc5f647fe463a5d73cfaa7619d68f6e4d395a45",
+        "src/memory_bench/adapters/recent.py": "3207aeb413ab110b0ac30ed5a929159f3cefec0484df303d3928a0a68c8b7714",
+        "src/memory_bench/deciders/base.py": "f21723645156a15d7913ed2f6a1a50548dc78ac8b95ef1a21daf570f3b35ad71",
+        "src/memory_bench/deciders/lifted.py": "01b29d11f7b3fc4a2cfadba9aa94c3609170e42ce43fe940f86831cfd0b5f920",
+        "src/memory_bench/deciders/model.py": "641119e5d993f9a4168fd18d471b361129b55a0ff224e96c7159606a8f028b55",
+        "src/memory_bench/deciders/prompts.py": "631fde74c0a0ee57be360fa550ffc452d7c726414e8975ea7729a2d6baf9548c",
+        "src/memory_bench/deciders/transports.py": "48c69adbf0a3301375976fd88fc017588f65d957448b0e0f083333bddc6877f5",
+        "src/memory_bench/gateway/meter.py": "ccb391ce4e32cf7ede8a762f707522a0ffad10eead505c3f2846e2a026077336",
+        "src/memory_bench/gateway/proxy.py": "72e843071e172caf9912b10af98f4aac5ffce8f526c57d99164cf5779d5ce21e",
+        "src/memory_bench/scoring/__init__.py": "a9ae90a1fe7575d6f9cf1ee3fe6c5308558e4119b29fa130ddfd936454883d22",
+        "src/memory_bench/scoring/acbi.py": "c1275fa001b0b33c39492057dee7f815f89dee12fa320e69893842a162f8a724",
+        "src/memory_bench/scoring/bootstrap.py": "0e66cc5dbc4c8012fd20338f8fe66ebca84ffb6061c308a65cf75d4a40384bb6",
+        "src/memory_bench/scoring/chow.py": "c45a3db2c1248d0d89fa281207bb5ecb64a5e518e83b063a1bb44e24749ca642",
+        "src/memory_bench/scoring/gates.py": "2d0024a8867c3e83afd393d9f20aa56b24b81f5ca2d6adb4cb7f6e3850366962",
+        "src/memory_bench/scoring/metrics.py": "88dd97d82968c821fcc006c1a65475953dd3a44ebec0caf1fc6a31d5abd71a24",
+        "src/memory_bench/scoring/power.py": "aba19848d1fd7259d3fafd1b686f206e1c89b9ccd6126209023d2be7fcc76d25",
+        "src/memory_bench/scoring/roi.py": "11cf04e0803e6fd995056aa940438f2032f21b06aaa8c3e097b0fe1a579a2534",
+        "src/memory_bench/scoring/separation.py": "80b9bf4f14c54b0e917f9c0c5eb0d7b05a981efa8715f9220f3ddaf3a17169f3",
+        "src/memory_bench/scoring/stability.py": "58ca10b227327cda73f2613d09bc115f1034caa12345d73d1af6a4d6f21889ed",
+        "src/memory_bench/scoring/temporal.py": "88c3a01713a4a3f7e7ae0d1c968c9e4ec8b791618c75d24425123315d0a8ca8b",
+        "src/memory_bench/scoring/variance.py": "375f4bcd9ca623409b3e0308e4e82cf6d957e999a8635fa29ca9e5ad3ce5a063",
+        "src/memory_bench/tracks/__init__.py": "19cfbbb01a45b8ad6601fed175d46a06110cb4d902256f4f30b92247f7abc4be",
+        "src/memory_bench/tracks/account_review.py": "2558dfe91c581b0e28736e1438a238e6469d7fc3398de7f67d4883ad4262e320",
+        "src/memory_bench/tracks/base.py": "b5b6536668fdb0c7dba48aa717159b999344f92658ea897b7e2485974b9ae8ea",
+        "src/memory_bench/tracks/chat_agent/__init__.py": "5d439650e3e205ff4ac0ac606bca8f35de15798dd764b4d25a9fe45fb2e6fd0c",
+        "src/memory_bench/tracks/chat_agent/generator.py": "5b6e787761e99d417cddfd439f7f8e0710ac0748897506ff16d1a479e0886337",
+        "src/memory_bench/tracks/chat_agent/prompts.py": "27d7e3225d432c909eec7f2be1c813714bc827405dedc1f5ae8e753291e186d0",
+        "src/memory_bench/tracks/chat_agent/schema.py": "6dad7db21735f80418f0c5013baf7832a32e6d8d0c87fef376c0ecacedab389c",
+        "src/memory_bench/tracks/chat_agent/track.py": "7abba893339f329a5ca3f1904fb3d3816299b9ba2796e7f760a7a180610bb34a",
+        "src/memory_bench/tracks/registry.py": "716d60bb7549d3170279ecf7f4a12ee07c4579c5dcbb38aaf011029126c99ea5",
+        "uv.lock": "f553706d4862f3c83c629783b0833c5f5e489fdb07c71c4993d90f9383489412"
+      },
+      "frozen_at": "2026-11-23T22:47:04+00:00",
+      "git_commit": "916345fa799f1e98236b52e2d384ffc0b301c1a0",
+      "patterns": [
+        "src/memory_bench/scoring/*.py",
+        "src/memory_bench/tracks/*.py",
+        "src/memory_bench/tracks/chat_agent/*.py",
+        "src/memory_bench/deciders/base.py",
+        "src/memory_bench/deciders/lifted.py",
+        "src/memory_bench/deciders/prompts.py",
+        "src/memory_bench/deciders/model.py",
+        "src/memory_bench/deciders/transports.py",
+        "src/memory_bench/adapters/base.py",
+        "src/memory_bench/adapters/full.py",
+        "src/memory_bench/adapters/bm25.py",
+        "src/memory_bench/adapters/recent.py",
+        "src/memory_bench/adapters/empty.py",
+        "src/memory_bench/adapters/dense_raw.py",
+        "src/memory_bench/adapters/hybrid_bm25_dense.py",
+        "src/memory_bench/adapters/mem0.py",
+        "src/memory_bench/adapters/langmem.py",
+        "src/memory_bench/adapters/graphiti.py",
+        "src/memory_bench/gateway/meter.py",
+        "src/memory_bench/gateway/proxy.py",
+        "configs/v2/deciders/*.json",
+        "pyproject.toml",
+        "uv.lock"
+      ],
+      "step_sha256": "dbed07ed030603c82293c0b6e1ec78d6287c8cc35d3bbba8790c21f0192e042c",
+      "title": "v2 metrics, tracks, chat_agent prompts/schema, dense/hybrid baselines, Phase 1 deciders, separation and kappa plan",
+      "values": {
+        "boot_reps": 1000,
+        "boot_seed": 11,
+        "budgets": [
+          1000,
+          4000
+        ],
+        "chow_lambdas": [
+          0.5,
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0,
+          50.0
+        ],
+        "chunk_rule": 25,
+        "ci_level": 0.95,
+        "deciders": [
+          "haiku-5-5",
+          "opencode-beam-free",
+          "opencode-big-pickle",
+          "opencode-deepseek-v4.1-flash-free",
+          "opencode-flint-40b-free",
+          "opencode-hy4-flash-free",
+          "opencode-iceman-free",
+          "opencode-mimo-v2.6-flash-free",
+          "opencode-nemotron-3.5-lightning-free",
+          "opencode-nemotron-3.5-super-vl-free",
+          "opencode-tidepool-alpha-free"
+        ],
+        "display_chow_lambdas": [
+          0.5,
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0
+        ],
+        "dual_ingest_subset_n": 60,
+        "holm_families": {
+          "account_review": "all unordered pairs of registered memory products per budget within blind_adapter/mode_a",
+          "chat_agent": "all unordered pairs of registered memory products per budget (1000, 4000) within blind_adapter/mode_a",
+          "coding_agent": "all unordered pairs of registered memory products per (mode, eval_mode, budget) partition; blind_adapter and end_to_end are never pooled"
+        },
+        "kappa_plan": {
+          "applies_to": "lossy_extractor_acbi_matcher_per_track",
+          "blind": true,
+          "fallback_below_threshold": "exact_id_recall_only",
+          "kappa_min": 0.7,
+          "labeller_1": "FNU Ratnavarma",
+          "labeller_2": "PENDING_VARMA_ASSIGNMENT",
+          "sample_n": 60,
+          "sample_seed": 2026112303,
+          "stratified_by": "mechanism"
+        },
+        "local_ollama_excluded": true,
+        "local_ollama_exclusion_reason": "ollama list holds personal varma-* models and quarantined gpt-oss:20b; local runs require explicit private port 127.0.0.1:11535",
+        "max_output_tokens_mode_a": 2048,
+        "min_context_tokens": 65536,
+        "phase1_deciders": [
+          {
+            "id": "haiku-5-5",
+            "model": "claude-haiku-5-5",
+            "opencode_version": "n/a",
+            "seen_date": "2026-11-23",
+            "transport": "anthropic_command",
+            "weights_status": "proprietary API",
+            "weights_url": "none",
+            "wrapper": "anthropic-api"
+          },
+          {
+            "id": "opencode-beam-free",
+            "model": "opencode/beam-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/reflection/Beam-1.0-501B-A23B",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-big-pickle",
+            "model": "opencode/big-pickle",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "free, weights not public",
+            "weights_url": "none",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-deepseek-v4.1-flash-free",
+            "model": "opencode/deepseek-v4.1-flash-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-flint-40b-free",
+            "model": "opencode/flint-40b-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/RecursiveSI/flint",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-hy4-flash-free",
+            "model": "opencode/hy4-flash-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/tencent/Hy4-flash",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-iceman-free",
+            "model": "opencode/iceman-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "free, weights not public",
+            "weights_url": "none",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-mimo-v2.6-flash-free",
+            "model": "opencode/mimo-v2.6-flash-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-nemotron-3.5-lightning-free",
+            "model": "opencode/nemotron-3.5-lightning-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-nemotron-3.5-super-vl-free",
+            "model": "opencode/nemotron-3.5-super-vl-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
+            "wrapper": "opencode run --standalone"
+          },
+          {
+            "id": "opencode-tidepool-alpha-free",
+            "model": "opencode/tidepool-alpha-free",
+            "opencode_version": "2.3.0",
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_status": "free, weights not public",
+            "weights_url": "none",
+            "wrapper": "opencode run --standalone"
+          }
+        ],
+        "product_pins": {
+          "falkordb_image": "falkordb/falkordb:6.0.2",
+          "graphiti-core": "0.31.2",
+          "langmem": "0.0.30",
+          "mem0ai": "2.2.1"
+        },
+        "rate_limit_policy": "back off on HTTP 429 and resume on the same model; never switch models mid-run; report wall time per model",
+        "repeats": 3,
+        "separation": {
+          "alpha": 0.05,
+          "floor_test": "95 percent paired bootstrap interval of excess wrong action above floor strictly above zero",
+          "leaderboard": "at least one product pair separates on every frozen gate-passing decider in the same direction",
+          "print_order": false,
+          "print_order_condition": "no ranking or order is printed unless the registered v2 separation rule is met; roi_status dominant is a per-system status, never an order",
+          "roi_dominant_is_status_not_order": true,
+          "test": "paired bootstrap p-value, Holm-adjusted across product pairs per track family"
+        },
+        "snapshot_policy": "each validity and table run records model_id, snapshot_date, and opencode_version; free-tier results count only for that recorded snapshot",
+        "systems": [
+          "full",
+          "bm25",
+          "recent",
+          "empty",
+          "dense_raw",
+          "hybrid_bm25_dense",
+          "mem0/k25",
+          "langmem/c25",
+          "graphiti/e25"
+        ],
+        "token_rule": "ceil(characters / 2.2)",
+        "validity_gate": {
+          "failed_models_quarantined": true,
+          "min_context_tokens": 65536,
+          "overall": 0.9,
+          "per_mechanism": 0.8,
+          "require_extractor_pass": true,
+          "sample_per_mechanism": 10,
+          "sample_total": 60,
+          "zero_truncation": true
+        }
+      }
+    },
+    "10": {
+      "files": {
+        "configs/v2/excused_ingest_errors.json": "437b3baf08f412377a3c06f28b2489415ae94eee1e1f483cf05ec13e694bb419",
+        "src/memory_bench/diagnostics/cause_split.py": "04dc1ecac9475a41d17372d1e815263d03db2bcf72061d2a69091849dc0f5e49"
+      },
+      "frozen_at": "2026-11-25T23:17:45+00:00",
+      "git_commit": "405a8a2fe0bf836fcf04700ebd36a0cf9409144d",
+      "patterns": [
+        "src/memory_bench/diagnostics/cause_split.py",
+        "configs/v2/excused_ingest_errors.json"
+      ],
+      "step_sha256": "6cef81d553a0978cbe52725dc04a3a939c44755d8d2539e1badb4c27617d0448",
+      "title": "Offline cause-split diagnostic (cause_split.py) and frozen reference excused ingest-error list (excused_ingest_errors.json)",
+      "values": {
+        "cause_split_module": "src/memory_bench/diagnostics/cause_split.py",
+        "cause_split_status": "exploratory_offline_diagnostic",
+        "excused_config": "configs/v2/excused_ingest_errors.json",
+        "excused_reference_counts": {
+          "graphiti/e25": 13,
+          "mem0/k25": 2
+        },
+        "frozen_date": "2026-11-25",
+        "max_excused_share": 0.05,
+        "protocol_step": 10,
+        "steps_1_to_9_unchanged": true
+      }
+    },
+    "2": {
+      "files": {
+        "data/v2/chat_agent/table_cases.jsonl": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+      },
+      "frozen_at": "2026-11-23T22:47:44+00:00",
+      "git_commit": "7ed1ddd0c844abc526b536756e2d0399fdfcb2e1",
+      "patterns": [
+        "data/v2/chat_agent/table_cases.jsonl"
+      ],
+      "step_sha256": "cca231721b09f06e0186bb92be4ecfd47028fc00a04d1c0f0b19a164e3d6eb90",
+      "title": "chat_agent frozen 300-case table split and table seed",
+      "values": {
+        "case_id_prefix": "ctab2026112302",
+        "generator_version": 1,
+        "mechanism_mix": {
+          "H0": 150,
+          "H1": 30,
+          "H2": 30,
+          "H3": 30,
+          "HU1": 30,
+          "HU2": 30
+        },
+        "n_table_cases": 300,
+        "table_seed": 2026112302,
+        "track": "chat_agent"
+      }
+    },
+    "3": {
+      "files": {
+        "configs/v2/deciders/opencode-deepseek-v4.1-flash.json": "99f7fc0ce5bf484c4f8415e66e4400bbbc8539b1fe8a4c8eadc78c790dd5bf1d",
+        "configs/v2/deciders/opencode-glm-5.3-flash.json": "09f054bcfadd8279cde515ef34f86a961c4efe9cfbf4913db7ab50b975291a44",
+        "configs/v2/deciders/opencode-qwen3.8-flash.json": "7ba63ba3f73455aae6df15b97f9363db0c863f78913f9d512d7e0db44c1989a3"
+      },
+      "frozen_at": "2026-11-24T00:24:57+00:00",
+      "git_commit": "233f9c6a4ceddc9828d2694003107b381283e33b",
+      "patterns": [
+        "configs/v2/deciders/opencode-deepseek-v4.1-flash.json",
+        "configs/v2/deciders/opencode-glm-5.3-flash.json",
+        "configs/v2/deciders/opencode-qwen3.8-flash.json"
+      ],
+      "step_sha256": "10c78d8adf00b4cc4ba175d23f6f5fdab0cc33d98ab2d1230bd3c2af5586e1bd",
+      "title": "Phase 1 paid open-weight OpenCode Console deciders (frozen transports.py, tools off)",
+      "values": {
+        "deciders": [
+          "opencode-deepseek-v4.1-flash",
+          "opencode-glm-5.3-flash",
+          "opencode-qwen3.8-flash"
+        ],
+        "local_mlx_and_ollama_excluded_round4": true,
+        "paid_phase1_deciders": [
+          {
+            "id": "opencode-deepseek-v4.1-flash",
+            "model": "opencode/deepseek-v4.1-flash",
+            "opencode_version": "2.3.0",
+            "price": {
+              "as_of": "2026-11-23",
+              "input_per_m": 0.12,
+              "output_per_m": 0.48,
+              "source": "OpenCode Console pricing recorded 2026-11-23"
+            },
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_label": "weights published at https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash; served build not verified",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+            "wrapper": "with-opencode-zen opencode run --standalone"
+          },
+          {
+            "id": "opencode-glm-5.3-flash",
+            "model": "opencode/glm-5.3-flash",
+            "opencode_version": "2.3.0",
+            "price": {
+              "as_of": "2026-11-23",
+              "input_per_m": 0.15,
+              "output_per_m": 0.5,
+              "source": "OpenCode Console pricing recorded 2026-11-23"
+            },
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_label": "weights published at https://huggingface.co/zai-org/GLM-5.3-Flash; served build not verified",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/zai-org/GLM-5.3-Flash",
+            "wrapper": "with-opencode-zen opencode run --standalone"
+          },
+          {
+            "id": "opencode-qwen3.8-flash",
+            "model": "opencode/qwen3.8-flash",
+            "opencode_version": "2.3.0",
+            "price": {
+              "as_of": "2026-11-23",
+              "input_per_m": 0.15,
+              "output_per_m": 0.47,
+              "source": "OpenCode Console pricing recorded 2026-11-23"
+            },
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_label": "weights published at https://huggingface.co/Qwen/Qwen3.8-Flash-Next; served build not verified",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+            "wrapper": "with-opencode-zen opencode run --standalone"
+          }
+        ],
+        "phase1_cap_usd": 25.0,
+        "phase1_stop_report_usd": 20.0,
+        "transport_path": "frozen_transports_py_tools_off"
+      }
+    },
+    "4": {
+      "files": {},
+      "frozen_at": "2026-11-24T00:24:57+00:00",
+      "git_commit": "c8b1e44eaf52b426329c5b9a2e45e1984981b19d",
+      "patterns": [],
+      "step_sha256": "1ef5c23306f5dcd4f4961f57d08b8789234aec5bbaaa0298d7da6a3e2c51b808",
+      "title": "Human labeller record for kappa calibration (single human labeller, presence rule vs human labels)",
+      "values": {
+        "frozen_date": "2026-11-23",
+        "inter_human_agreement": "not measured",
+        "kappa_basis": "presence rule vs human labels",
+        "labeller_1": "FNU Ratnavarma",
+        "labeller_2": "FNU Ratnavarma (same person as labeller 1)",
+        "public_wording_rule": "never describe this check as two independent labellers on any page or in any paper"
+      }
+    },
+    "5": {
+      "files": {
+        "scripts/run_phase1_gates.py": "e286126b1916b5dba95c16d580839da59a24e8b6fd1836c0214dd08cb56b6513",
+        "src/memory_bench/cli.py": "ab5a42ba5dea3d179624e8dadfe57fe6a2d5bafebc6eddd576b89608ba186a65",
+        "src/memory_bench/engine/ledgers.py": "bb5134cf3c29d8a09f3cb51b22a45788dbac2fcadcfce8482dac558aef0aa2d6",
+        "src/memory_bench/engine/opencode_meter.py": "0721877cc17faa41e9f8a1ae9b9d81a2916480f6298e49b09eafc11de1f82bb8",
+        "src/memory_bench/engine/run.py": "ec4f61fd7310e65a87a61dbd5ccca6bc3eedc5d5c426b8ddef186e8022ca9319",
+        "src/memory_bench/engine/validity.py": "82dc6642afca696a7a5a8d8ed8c9deb468b1d79bb37280189035143d27003c70",
+        "tests/fixtures/qwen_cache_read_ndjson.jsonl": "af4954c8685cf7ba63222a6592d6a8a4b55cfc89e805fcef06ab29741b5a0383"
+      },
+      "frozen_at": "2026-11-24T03:18:54+00:00",
+      "git_commit": "0b47e231d47f172307754477ad547484c66ed10d",
+      "patterns": [
+        "src/memory_bench/engine/opencode_meter.py",
+        "src/memory_bench/engine/ledgers.py",
+        "src/memory_bench/engine/run.py",
+        "src/memory_bench/engine/validity.py",
+        "src/memory_bench/cli.py",
+        "scripts/run_phase1_gates.py",
+        "tests/fixtures/qwen_cache_read_ndjson.jsonl"
+      ],
+      "step_sha256": "4dc0e16607acc7113b3b1232e9ac3ec59cbbb279f18a67b0cc72ed5d523aee65",
+      "title": "Step 5 OpenCode NDJSON metering fix (input + cache.read + cache.write at full input rate) and two-ledger caps",
+      "values": {
+        "frozen_date": "2026-11-23",
+        "frozen_transports_untouched": true,
+        "input_formula": "tokens.input + tokens.cache.read + tokens.cache.write",
+        "input_pricing_policy": "full input_per_m rate applied conservatively to all billable input tokens (uncached + cache.read + cache.write)",
+        "ledgers": {
+          "main": {
+            "cap_usd": 60.0,
+            "stop_usd": 55.0
+          },
+          "sonnet": {
+            "cap_usd": 20.0,
+            "stop_usd": 18.0
+          }
+        },
+        "meter_step": 5,
+        "output_formula": "tokens.output + tokens.reasoning",
+        "qwen_r4_gate_metering_note_usd": 0.062155
+      }
+    },
+    "6": {
+      "files": {
+        "configs/v2/adapters/graphiti-e25.json": "c60dafa6f59e3e1ba427376ce4a0730d21e1ad01fb1572733b819a4b51d42817",
+        "configs/v2/adapters/langmem-c25.json": "7e3ed5b8a867d28dedd17b5f53c96cd0b22e2d28ef435d17e1d5a4a2d4b27f68",
+        "configs/v2/adapters/mem0-k25.json": "92f2f1bee6981c9b27997bd2112f8e03e95597534655c17c81d3d7ede4d37993",
+        "configs/v2/memory-side/opencode-deepseek-v4.1-flash-bge-m3.json": "c047c4dc8909c896e165fb81ab7ada752f7dfb687a4893630442d41e51452bb7"
+      },
+      "frozen_at": "2026-11-24T03:19:58+00:00",
+      "git_commit": "161f395b81e8000098d313bd45cf9768119ecb35",
+      "patterns": [
+        "configs/v2/memory-side/opencode-deepseek-v4.1-flash-bge-m3.json",
+        "configs/v2/adapters/mem0-k25.json",
+        "configs/v2/adapters/langmem-c25.json",
+        "configs/v2/adapters/graphiti-e25.json"
+      ],
+      "step_sha256": "7238812a07ab31529856737e73ec67bdedc0acc406e0989a0e752b563e2eccee",
+      "title": "Shared memory side (opencode/deepseek-v4.1-flash extractor + bge-m3 embedder via OpenCode Zen ProductProxy) and v2 product adapter configs",
+      "values": {
+        "embedder": {
+          "base_url": "https://opencode.ai/zen/v1",
+          "candidates_tested": [
+            {
+              "dims": 1024,
+              "http_status": 200,
+              "input_per_m": 0.01,
+              "model": "bge-m3"
+            },
+            {
+              "dims": 4096,
+              "http_status": 200,
+              "input_per_m": 0.01,
+              "model": "qwen3-embedding-8b"
+            }
+          ],
+          "canonical_id": "baai/bge-m3",
+          "dims": 1024,
+          "key_wrapper": "with-opencode-zen",
+          "price": {
+            "as_of": "2026-11-23",
+            "input_per_m": 0.01,
+            "output_per_m": 0.0,
+            "source": "https://opencode.ai/zen/v1/models"
+          },
+          "selected_model": "bge-m3",
+          "selection_reason": "both bge-m3 and qwen3-embedding-8b return HTTP 200 on OpenCode Zen /zen/v1/embeddings at identical $0.01/1M input; bge-m3 selected for 1024-dim vector parity with Graphiti default and 4x smaller storage/cosine footprint"
+        },
+        "extractor": {
+          "api_model": "deepseek-v4.1-flash",
+          "base_url": "https://opencode.ai/zen/v1",
+          "canonical_id": "deepseek/deepseek-v4.1-flash-1017",
+          "key_wrapper": "with-opencode-zen",
+          "opencode_agent_tools": "off",
+          "opencode_id": "opencode/deepseek-v4.1-flash",
+          "price": {
+            "as_of": "2026-11-23",
+            "input_per_m": 0.12,
+            "output_per_m": 0.48,
+            "source": "https://opencode.ai/zen/v1/models"
+          }
+        },
+        "frozen_date": "2026-11-23",
+        "ledger": "main",
+        "memory_side_id": "opencode-deepseek-v4.1-flash-bge-m3"
+      }
+    },
+    "7": {
+      "files": {
+        "configs/v2/deciders/opencode-minimax-m3.json": "217c0bd85a4c398d6b2c76321e67c05586229e85f63b1dfb813bea5336d77b9b",
+        "configs/v2/deciders/opencode-mistral-large-4.json": "de40807d136987de60ef34aee7734507cac7ce3e73d595c604f4ac7a45c0c4f4",
+        "configs/v2/deciders/sonnet-5-5.json": "bac8a19e0e374877951f15fab5b751ab90f6f5a42df3bbde3bb24f403843d6a1"
+      },
+      "frozen_at": "2026-11-24T03:20:55+00:00",
+      "git_commit": "ca308c0a7f9bd76fb399da4ffeb4a525aaa96eae",
+      "patterns": [
+        "configs/v2/deciders/opencode-minimax-m3.json",
+        "configs/v2/deciders/opencode-mistral-large-4.json",
+        "configs/v2/deciders/sonnet-5-5.json"
+      ],
+      "step_sha256": "977531f92468c9f968ff69ae018616d9c111f7c355e298b7a78a14714e3b2433",
+      "title": "Three added Phase 1 deciders (MiniMax M3, Mistral Large 4, Claude Sonnet 5.5) on Step 5 meter",
+      "values": {
+        "added_phase1_deciders": [
+          {
+            "id": "opencode-minimax-m3",
+            "ledger": "main",
+            "model": "opencode/minimax-m3",
+            "opencode_version": "2.3.0",
+            "price": {
+              "as_of": "2026-11-23",
+              "input_per_m": 0.3,
+              "output_per_m": 1.2,
+              "source": "OpenCode Console /zen/v1/models"
+            },
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_label": "weights published at https://huggingface.co/MiniMaxAI/MiniMax-M3; served build not verified",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
+            "wrapper": "with-opencode-zen opencode run --standalone"
+          },
+          {
+            "id": "opencode-mistral-large-4",
+            "ledger": "main",
+            "model": "opencode/mistral-large-4",
+            "opencode_version": "2.3.0",
+            "price": {
+              "as_of": "2026-11-23",
+              "input_per_m": 0.68,
+              "output_per_m": 2.09,
+              "source": "OpenCode Console /zen/v1/models"
+            },
+            "seen_date": "2026-11-23",
+            "transport": "opencode_cli",
+            "weights_label": "weights published at https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B; served build not verified",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B",
+            "wrapper": "with-opencode-zen opencode run --standalone"
+          },
+          {
+            "id": "sonnet-5-5",
+            "ledger": "sonnet",
+            "model": "claude-sonnet-5-5",
+            "opencode_version": "n/a",
+            "price": {
+              "as_of": "2026-11-23",
+              "input_per_m": 2.0,
+              "output_per_m": 10.0,
+              "source": "Anthropic API pricing page"
+            },
+            "seen_date": "2026-11-23",
+            "transport": "anthropic_command",
+            "weights_label": "proprietary",
+            "weights_status": "proprietary",
+            "weights_url": "none",
+            "wrapper": "anthropic-api"
+          }
+        ],
+        "deciders": [
+          "opencode-minimax-m3",
+          "opencode-mistral-large-4",
+          "sonnet-5-5"
+        ],
+        "frozen_date": "2026-11-23",
+        "kimi_excluded": true,
+        "meter_step": 5,
+        "transport_path": "frozen_transports_py_tools_off_wrapped_step5_meter"
+      }
+    },
+    "8": {
+      "files": {
+        "scripts/run_phase1_table.py": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+        "src/memory_bench/engine/ledger_v2.py": "4a16ebdd694b94af40d858b4e1bcbc47dbaff7a789ee9f0e52882532ccf547a4"
+      },
+      "frozen_at": "2026-11-24T08:03:46+00:00",
+      "git_commit": "125bfdbaa2547bdaf2bd5c3eeb7f0a266a656bf4",
+      "patterns": [
+        "src/memory_bench/engine/ledger_v2.py",
+        "scripts/run_phase1_table.py"
+      ],
+      "step_sha256": "8776d6cfeea3cfa3e501b05a9ebc79342b708012b28fc288d53ccb8f2f0b26f4",
+      "title": "Deduplicated two-ledger sum (ledger_v2), isolated v2 environments, and frozen Phase 1 table runner",
+      "values": {
+        "frozen_date": "2026-11-24",
+        "isolated_v2_venvs": [
+          "venv",
+          "venv-mem0",
+          "venv-langmem",
+          "venv-graphiti"
+        ],
+        "ledger_dedup_rules": "skip _packs, packs, dryrun-pack, submissions, private, and any submission.json folder; deduplicate remaining runs by manifest run_id",
+        "ledger_step": 8,
+        "manifest_environment_fields": [
+          "python_version",
+          "venv_name",
+          "packages",
+          "table_runner",
+          "table_runner_sha256",
+          "ledger_module",
+          "protocol_step"
+        ],
+        "mem0ai_unmodified_policy": "mem0ai==2.2.1 unmodified; cases ctab2026112302-0025 and -0110 rerun unmodified with any failure counted under the existing product-error rule",
+        "r1_r4_unlabelled_ledger": "main",
+        "steps_1_to_7_unchanged": true
+      }
+    },
+    "9": {
+      "files": {
+        "configs/v2/ledger_adjustments.jsonl": "24b428cdbc67ecbca1f37b81caf6827f60fd0b48f158596774564d5e0764fd8d",
+        "src/memory_bench/engine/ledger_v3.py": "f18618dc488379181186aab55acab7e751429d11fa654ffdd8692caef5d10b61"
+      },
+      "frozen_at": "2026-11-25T03:14:23+00:00",
+      "git_commit": "9d263aade7e07d557053e47d0c392cce8268ca16",
+      "patterns": [
+        "src/memory_bench/engine/ledger_v3.py",
+        "configs/v2/ledger_adjustments.jsonl"
+      ],
+      "step_sha256": "076b108d59deb55a9fc5572e1f70c8db17b1b19c874dd705d4eb04dc375a2358",
+      "title": "Append-only call-log ledger adjustments (ledger_v3) for interrupted R5 decider calls",
+      "values": {
+        "adjusted_runs": [
+          {
+            "call_log": "calls.jsonl",
+            "ledger": "main",
+            "paid_rows": 378,
+            "run_path": "results/v2/table/chat_agent_r5_step7/opencode-qwen3.8-flash/mem0",
+            "usd": 0.352621
+          },
+          {
+            "call_log": "calls.jsonl",
+            "ledger": "main",
+            "paid_rows": 104,
+            "run_path": "results/v2/table/chat_agent_r5_step7/haiku-5-5/langmem",
+            "usd": 0.06353
+          }
+        ],
+        "adjustment_row_fields": [
+          "run_path",
+          "ledger",
+          "usd",
+          "call_log",
+          "paid_rows"
+        ],
+        "adjustments_file": "configs/v2/ledger_adjustments.jsonl",
+        "frozen_date": "2026-11-24",
+        "ledger_step": 9,
+        "reconciliation_tolerance_usd": 0.005,
+        "steps_1_to_8_unchanged": true
+      }
+    }
+  },
+  "version": "v2"
+}

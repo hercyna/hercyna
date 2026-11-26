@@ -67,15 +67,45 @@ class Event:
     type: str
     subtype: str = ""
     fields: dict[str, Any] = field(default_factory=dict)
+    _text: str | None = field(default=None, repr=False)
+
+    def __init__(
+        self,
+        id: str,
+        date: str,
+        type: str,
+        subtype: str = "",
+        fields: dict[str, Any] | None = None,
+        text: str | None = None,
+    ) -> None:
+        self.id = id
+        self.date = date
+        self.type = type
+        self.subtype = subtype
+        self.fields = {} if fields is None else fields
+        self._text = text
+
+    @property
+    def text(self) -> str:
+        if self._text is None:
+            raise AttributeError("Event has no 'text' attribute")
+        return self._text
+
+    @text.setter
+    def text(self, value: str | None) -> None:
+        self._text = value
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "id": self.id,
             "date": self.date,
             "type": self.type,
             "subtype": self.subtype,
             "fields": copy.deepcopy(self.fields),
         }
+        if self._text is not None:
+            out["text"] = self._text
+        return out
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "Event":
@@ -85,26 +115,35 @@ class Event:
             type=d["type"],
             subtype=d.get("subtype", ""),
             fields=copy.deepcopy(d.get("fields", {})),
+            text=d.get("text"),
         )
 
 
 @dataclass
 class Case:
     case_id: str
-    seed: int
-    mechanism: str
-    events: list[Event]
-    query_period: str  # YYYY-MM
-    query_text: str
-    actions: list[str]
-    a_star: str
-    d_star: list[str]
-    deleted_ids: list[str]
-    cls: str
-    knobs: dict[str, Any]
+    seed: int = 0
+    mechanism: str = ""
+    events: list[Event] = field(default_factory=list)
+    query_period: str = ""  # YYYY-MM (account_review)
+    query_text: str = ""
+    actions: list[str] = field(default_factory=lambda: list(ACTIONS))
+    a_star: str = ""
+    d_star: list[str] = field(default_factory=list)
+    deleted_ids: list[str] = field(default_factory=list)
+    cls: str = "none"
+    knobs: dict[str, Any] = field(default_factory=dict)
+    track: str = "account_review"
+    schema: str = "memory_bench.case/1"
+    repo_snapshot: dict[str, Any] | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def valid_actions(self) -> list[str]:
+        return list(self.actions)
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "case_id": self.case_id,
             "seed": self.seed,
             "mechanism": self.mechanism,
@@ -118,22 +157,43 @@ class Case:
             "cls": self.cls,
             "knobs": copy.deepcopy(self.knobs),
         }
+        is_v2 = (
+            self.schema != "memory_bench.case/1"
+            or self.track != "account_review"
+            or self.repo_snapshot is not None
+            or bool(self.metadata)
+        )
+        if is_v2:
+            out["schema"] = self.schema
+            out["track"] = self.track
+            out["valid_actions"] = list(self.actions)
+            if self.repo_snapshot is not None:
+                out["repo_snapshot"] = copy.deepcopy(self.repo_snapshot)
+            if self.metadata:
+                out["metadata"] = copy.deepcopy(self.metadata)
+        return out
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "Case":
+        raw_actions = d.get("actions") if "actions" in d else d.get("valid_actions")
+        actions = list(raw_actions) if raw_actions is not None else list(ACTIONS)
         return cls(
             case_id=d["case_id"],
-            seed=d["seed"],
+            seed=int(d.get("seed", 0)),
             mechanism=d["mechanism"],
             events=[Event.from_dict(e) for e in d["events"]],
-            query_period=d["query_period"],
+            query_period=str(d.get("query_period", "")),
             query_text=d["query_text"],
-            actions=list(d["actions"]),
+            actions=actions,
             a_star=d["a_star"],
-            d_star=list(d["d_star"]),
-            deleted_ids=list(d["deleted_ids"]),
-            cls=d["cls"],
-            knobs=copy.deepcopy(d["knobs"]),
+            d_star=list(d.get("d_star", [])),
+            deleted_ids=list(d.get("deleted_ids", [])),
+            cls=str(d.get("cls", "none")),
+            knobs=copy.deepcopy(d.get("knobs", {})),
+            track=str(d.get("track", "account_review")),
+            schema=str(d.get("schema", "memory_bench.case/1")),
+            repo_snapshot=copy.deepcopy(d["repo_snapshot"]) if d.get("repo_snapshot") is not None else None,
+            metadata=copy.deepcopy(d.get("metadata", {})),
         )
 
 

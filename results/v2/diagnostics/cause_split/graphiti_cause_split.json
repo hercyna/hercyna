@@ -1,0 +1,911 @@
+{
+  "bootstrap": {
+    "level": 0.95,
+    "reps": 1000,
+    "seed": 11
+  },
+  "budget": 1000,
+  "deciders": {
+    "haiku-5-5": {
+      "acbi_exact_id_counts": {
+        "n_both": 0,
+        "n_conflict_cases": 30,
+        "n_none": 30,
+        "n_partial": 0
+      },
+      "by_mechanism": {
+        "H0:withheld": {
+          "not_stored": 291,
+          "returned_not_used": 3
+        },
+        "H1:withheld": {
+          "not_stored": 48
+        },
+        "H1:wrong": {
+          "not_stored": 3
+        },
+        "H2:withheld": {
+          "not_stored": 57
+        },
+        "H2:wrong": {
+          "not_stored": 24
+        },
+        "H3:withheld": {
+          "conflict_returned": 7,
+          "not_stored": 45,
+          "returned_not_used": 3
+        },
+        "HU2:wrong": {
+          "not_stored": 6
+        }
+      },
+      "cell": "graphiti/e25@1000",
+      "combined": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.002053,
+              0.032478
+            ],
+            "count": 7,
+            "share": 0.014373716632443531
+          },
+          "not_stored": {
+            "ci95": [
+              0.947046,
+              0.992483
+            ],
+            "count": 474,
+            "share": 0.973305954825462
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.03112
+            ],
+            "count": 6,
+            "share": 0.012320328542094456
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 487
+      },
+      "mean_store_items": 9.64,
+      "mean_view_chars": 835.2,
+      "n_decisions": 831,
+      "n_gated_cases": 277,
+      "withheld": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.002202,
+              0.035275
+            ],
+            "count": 7,
+            "share": 0.015418502202643172
+          },
+          "not_stored": {
+            "ci95": [
+              0.94381,
+              0.99208
+            ],
+            "count": 441,
+            "share": 0.9713656387665198
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.033636
+            ],
+            "count": 6,
+            "share": 0.013215859030837005
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 454
+      },
+      "wrong": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "not_stored": {
+            "ci95": [
+              1.0,
+              1.0
+            ],
+            "count": 33,
+            "share": 1.0
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 33
+      }
+    },
+    "opencode-deepseek-v4.1-flash": {
+      "acbi_exact_id_counts": {
+        "n_both": 0,
+        "n_conflict_cases": 30,
+        "n_none": 30,
+        "n_partial": 0
+      },
+      "by_mechanism": {
+        "H0:withheld": {
+          "not_stored": 285,
+          "returned_not_used": 3
+        },
+        "H1:withheld": {
+          "conflict_returned": 2,
+          "not_stored": 48
+        },
+        "H1:wrong": {
+          "conflict_returned": 10,
+          "not_stored": 3
+        },
+        "H2:withheld": {
+          "not_stored": 57
+        },
+        "H2:wrong": {
+          "not_stored": 24
+        },
+        "H3:withheld": {
+          "not_stored": 46
+        },
+        "H3:wrong": {
+          "conflict_returned": 1,
+          "not_stored": 2
+        },
+        "HU2:wrong": {
+          "not_stored": 6
+        }
+      },
+      "cell": "graphiti/e25@1000",
+      "combined": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.008639,
+              0.050955
+            ],
+            "count": 13,
+            "share": 0.026694045174537988
+          },
+          "not_stored": {
+            "ci95": [
+              0.940204,
+              0.986542
+            ],
+            "count": 471,
+            "share": 0.9671457905544147
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.01915
+            ],
+            "count": 3,
+            "share": 0.006160164271047228
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 487
+      },
+      "mean_store_items": 9.6,
+      "mean_view_chars": 830.3,
+      "n_decisions": 834,
+      "n_gated_cases": 278,
+      "withheld": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.0,
+              0.014853
+            ],
+            "count": 2,
+            "share": 0.0045351473922902496
+          },
+          "not_stored": {
+            "ci95": [
+              0.970317,
+              1.0
+            ],
+            "count": 436,
+            "share": 0.9886621315192744
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.021429
+            ],
+            "count": 3,
+            "share": 0.006802721088435374
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 441
+      },
+      "wrong": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.078424,
+              0.463415
+            ],
+            "count": 11,
+            "share": 0.2391304347826087
+          },
+          "not_stored": {
+            "ci95": [
+              0.536585,
+              0.921576
+            ],
+            "count": 35,
+            "share": 0.7608695652173914
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 46
+      }
+    },
+    "opencode-glm-5.3-flash": {
+      "acbi_exact_id_counts": {
+        "n_both": 0,
+        "n_conflict_cases": 29,
+        "n_none": 29,
+        "n_partial": 0
+      },
+      "by_mechanism": {
+        "H0:withheld": {
+          "not_stored": 278,
+          "returned_not_used": 4
+        },
+        "H1:withheld": {
+          "conflict_returned": 1,
+          "not_stored": 48
+        },
+        "H1:wrong": {
+          "conflict_returned": 13,
+          "not_stored": 3
+        },
+        "H2:withheld": {
+          "not_stored": 57
+        },
+        "H2:wrong": {
+          "not_stored": 24
+        },
+        "H3:withheld": {
+          "not_stored": 46,
+          "returned_not_used": 3
+        },
+        "H3:wrong": {
+          "conflict_returned": 3,
+          "not_stored": 2
+        },
+        "HU1:wrong": {
+          "by_rule": 6
+        },
+        "HU2:wrong": {
+          "not_stored": 3
+        }
+      },
+      "cell": "graphiti/e25@1000",
+      "combined": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.02675
+            ],
+            "count": 6,
+            "share": 0.012219959266802444
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.012677,
+              0.060686
+            ],
+            "count": 17,
+            "share": 0.034623217922606926
+          },
+          "not_stored": {
+            "ci95": [
+              0.902172,
+              0.967744
+            ],
+            "count": 461,
+            "share": 0.9389002036659878
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.033228
+            ],
+            "count": 7,
+            "share": 0.014256619144602852
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 491
+      },
+      "mean_store_items": 9.58,
+      "mean_view_chars": 829.7,
+      "n_decisions": 816,
+      "n_gated_cases": 272,
+      "withheld": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.0,
+              0.007178
+            ],
+            "count": 1,
+            "share": 0.002288329519450801
+          },
+          "not_stored": {
+            "ci95": [
+              0.958616,
+              0.997748
+            ],
+            "count": 429,
+            "share": 0.9816933638443935
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.036887
+            ],
+            "count": 7,
+            "share": 0.016018306636155607
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 437
+      },
+      "wrong": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.243902
+            ],
+            "count": 6,
+            "share": 0.1111111111111111
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.116657,
+              0.5
+            ],
+            "count": 16,
+            "share": 0.2962962962962963
+          },
+          "not_stored": {
+            "ci95": [
+              0.363573,
+              0.794898
+            ],
+            "count": 32,
+            "share": 0.5925925925925926
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 54
+      }
+    },
+    "opencode-minimax-m3": {
+      "acbi_exact_id_counts": {
+        "n_both": 0,
+        "n_conflict_cases": 26,
+        "n_none": 26,
+        "n_partial": 0
+      },
+      "by_mechanism": {
+        "H0:withheld": {
+          "not_stored": 275,
+          "returned_not_used": 5
+        },
+        "H1:withheld": {
+          "not_stored": 48
+        },
+        "H1:wrong": {
+          "conflict_returned": 14,
+          "not_stored": 3
+        },
+        "H2:withheld": {
+          "not_stored": 59
+        },
+        "H2:wrong": {
+          "not_stored": 22
+        },
+        "H3:withheld": {
+          "conflict_returned": 1,
+          "not_stored": 36,
+          "returned_not_used": 1
+        },
+        "H3:wrong": {
+          "conflict_returned": 1
+        },
+        "HU2:wrong": {
+          "not_stored": 3
+        }
+      },
+      "cell": "graphiti/e25@1000",
+      "combined": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.012738,
+              0.063675
+            ],
+            "count": 16,
+            "share": 0.03418803418803419
+          },
+          "not_stored": {
+            "ci95": [
+              0.919539,
+              0.977873
+            ],
+            "count": 446,
+            "share": 0.9529914529914529
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.002053,
+              0.029817
+            ],
+            "count": 6,
+            "share": 0.01282051282051282
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 468
+      },
+      "mean_store_items": 9.76,
+      "mean_view_chars": 843.2,
+      "n_decisions": 774,
+      "n_gated_cases": 258,
+      "withheld": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.0,
+              0.008066
+            ],
+            "count": 1,
+            "share": 0.002352941176470588
+          },
+          "not_stored": {
+            "ci95": [
+              0.964368,
+              0.995898
+            ],
+            "count": 418,
+            "share": 0.9835294117647059
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.002242,
+              0.032828
+            ],
+            "count": 6,
+            "share": 0.01411764705882353
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 425
+      },
+      "wrong": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.142857,
+              0.617113
+            ],
+            "count": 15,
+            "share": 0.3488372093023256
+          },
+          "not_stored": {
+            "ci95": [
+              0.382887,
+              0.857143
+            ],
+            "count": 28,
+            "share": 0.6511627906976745
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 43
+      }
+    },
+    "opencode-qwen3.8-flash": {
+      "acbi_exact_id_counts": {
+        "n_both": 0,
+        "n_conflict_cases": 27,
+        "n_none": 27,
+        "n_partial": 0
+      },
+      "by_mechanism": {
+        "H0:withheld": {
+          "not_stored": 269,
+          "returned_not_used": 4
+        },
+        "H1:withheld": {
+          "not_stored": 48
+        },
+        "H1:wrong": {
+          "conflict_returned": 8,
+          "not_stored": 3
+        },
+        "H2:withheld": {
+          "not_stored": 58
+        },
+        "H2:wrong": {
+          "not_stored": 23
+        },
+        "H3:withheld": {
+          "not_stored": 43
+        },
+        "H3:wrong": {
+          "not_stored": 2
+        },
+        "HU2:wrong": {
+          "conflict_returned": 2,
+          "not_stored": 6
+        }
+      },
+      "cell": "graphiti/e25@1000",
+      "combined": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.005786,
+              0.039648
+            ],
+            "count": 10,
+            "share": 0.02145922746781116
+          },
+          "not_stored": {
+            "ci95": [
+              0.946914,
+              0.99022
+            ],
+            "count": 452,
+            "share": 0.9699570815450643
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.02203
+            ],
+            "count": 4,
+            "share": 0.008583690987124463
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 466
+      },
+      "mean_store_items": 9.62,
+      "mean_view_chars": 831.4,
+      "n_decisions": 798,
+      "n_gated_cases": 266,
+      "withheld": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "not_stored": {
+            "ci95": [
+              0.976125,
+              1.0
+            ],
+            "count": 418,
+            "share": 0.990521327014218
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.023875
+            ],
+            "count": 4,
+            "share": 0.009478672985781991
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 422
+      },
+      "wrong": {
+        "causes": {
+          "by_rule": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "conflict_returned": {
+            "ci95": [
+              0.066667,
+              0.433437
+            ],
+            "count": 10,
+            "share": 0.22727272727272727
+          },
+          "not_stored": {
+            "ci95": [
+              0.566563,
+              0.933333
+            ],
+            "count": 34,
+            "share": 0.7727272727272727
+          },
+          "returned_not_used": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          },
+          "stored_not_returned": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "count": 0,
+            "share": 0.0
+          }
+        },
+        "total": 44
+      }
+    }
+  },
+  "exploratory": true,
+  "product": "graphiti",
+  "replay_fidelity": {
+    "cases_checked": 287,
+    "low_fidelity": false,
+    "low_fidelity_threshold": 0.9,
+    "matched_view_units": 2633,
+    "method": "budget_cut_unit_in_store",
+    "total_view_units": 2639,
+    "view_unit_match_rate": 0.9977
+  },
+  "schema": "memory_bench.cause_split/1"
+}

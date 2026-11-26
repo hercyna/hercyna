@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from ..cases.schema import Case, dumps_case
-from ..scoring.metrics import ROW_KEY
+from ..scoring.metrics import ROW_KEY, ROW_KEY_V2, row_key_v2
 
 METRICS = "metrics.jsonl"
 SUMMARY = "summary.json"
@@ -24,6 +24,7 @@ TIMINGS = "timings.jsonl"
 MANIFEST = "manifest.json"
 STABILITY = "stability.json"  # bench stability (docs/freeze.md section 5); not written by a run
 POWER = "power.json"  # bench power (docs/freeze.md section 6); not written by a run
+ACBI = "acbi.json"  # post-run text-free conflict blindness audit (v2)
 RESULT_FILES = (METRICS, SUMMARY, SPEND, HEALTH, TIMINGS)
 
 

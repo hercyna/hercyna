@@ -1,0 +1,32 @@
+{
+  "id": "opencode-deepseek-v4.1-flash-bge-m3",
+  "chat": {
+    "base_url": "https://opencode.ai/zen/v1",
+    "model": "deepseek-v4.1-flash",
+    "key": {"env": "OPENCODE_API_KEY"},
+    "price": {
+      "input_per_m": 0.12,
+      "output_per_m": 0.48,
+      "as_of": "2026-11-23",
+      "source": "OpenCode Zen /zen/v1/models (deepseek-v4.1-flash, canonical deepseek/deepseek-v4.1-flash-1017)"
+    },
+    "assumed_max_output_tokens": 4000,
+    "description": "Shared memory-side extractor opencode/deepseek-v4.1-flash via ProductProxy (key injected via with-opencode-zen; OpenAI HTTP route has no OpenCode agent tools)."
+  },
+  "embeddings": {
+    "base_url": "https://opencode.ai/zen/v1",
+    "model": "bge-m3",
+    "dims": 1024,
+    "key": {"env": "OPENCODE_API_KEY"},
+    "price": {
+      "input_per_m": 0.01,
+      "output_per_m": 0.0,
+      "as_of": "2026-11-23",
+      "source": "OpenCode Zen /zen/v1/models (bge-m3, canonical baai/bge-m3; tied lowest price $0.01/1M with qwen3-embedding-8b)"
+    },
+    "description": "Shared memory-side embedder BAAI/bge-m3 (1024 dims) via OpenCode Zen /zen/v1/embeddings (key injected via with-opencode-zen)."
+  },
+  "timeout_s": 300,
+  "retries": 3,
+  "description": "Phase 1 v2 frozen shared memory side (protocol/v2.json Step 6): deepseek-v4.1-flash extractor + bge-m3 embedder through ProductProxy."
+}

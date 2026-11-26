@@ -1,0 +1,46 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 3e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T14:24:27+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 3.2e-05
+    },
+    {
+      "cases_done": 287,
+      "config_label": "e25",
+      "errors": 13,
+      "ingest_seconds_mean": 49.439003,
+      "last_error": {
+        "at": "2026-11-24T14:15:22+00:00",
+        "case_id": "ctab2026112302-0250",
+        "error": "JSONDecodeError",
+        "error_sha256": "03374eb0d5aa98c07e3f836bd6f4fe12c19800ef2828d86e834961158446e47a"
+      },
+      "last_ok_at": null,
+      "name": "graphiti",
+      "ok": false,
+      "product_version": "0.31.2",
+      "product_warnings": {
+        "by_logger": {
+          "graphiti_core.llm_client.client": 39,
+          "graphiti_core.llm_client.openai_generic_client": 52
+        },
+        "total": 91
+      },
+      "retrieve_seconds_mean": null
+    }
+  ],
+  "run_id": "v2-step8-table-haiku-5-5-graphiti",
+  "updated": "2026-11-24T14:24:29+00:00"
+}

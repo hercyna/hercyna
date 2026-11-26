@@ -101,10 +101,27 @@ def worst_case_usd(cfg: dict[str, Any], messages: list[dict[str, str]]) -> float
     return tin * price["input_per_m"] / 1e6 + tout * price["output_per_m"] / 1e6
 
 
-def call_key(cfg: dict[str, Any], messages: list[dict[str, str]], repeat: int) -> str:
-    """Cache key: sha256 of decider id, model, params, prompt version, messages and repeat index."""
-    return make_key(cfg["model"], cfg.get("prompt_version", "v1"), messages, dict(cfg.get("params") or {}),
-                    {"decider": cfg["id"], "repeat": int(repeat)})
+def call_key(
+    cfg: dict[str, Any],
+    messages: list[dict[str, str]],
+    repeat: int,
+    *,
+    track: str = "account_review",
+    mode: str = "blind_adapter",
+    eval_mode: str = "mode_a",
+    schema_sha256: str | None = None,
+) -> str:
+    """Cache key: sha256 of decider id, model, params, prompt version, messages and repeat index.
+
+    For v1 (`account_review`, `blind_adapter`, `mode_a`, no custom schema hash), emits the exact
+    byte-identical v1 key so existing `results/cache/calls.sqlite` hits stay 100% intact.
+    """
+    extra: dict[str, Any] = {"decider": cfg["id"], "repeat": int(repeat)}
+    if (track, mode, eval_mode) != ("account_review", "blind_adapter", "mode_a") or schema_sha256 is not None:
+        extra.update(track=track, mode=mode, eval_mode=eval_mode)
+        if schema_sha256 is not None:
+            extra["schema_sha256"] = schema_sha256
+    return make_key(cfg["model"], cfg.get("prompt_version", "v1"), messages, dict(cfg.get("params") or {}), extra)
 
 
 class _SharedCache(CallCache):
@@ -197,13 +214,22 @@ class Gateway:
     # -- the call ----------------------------------------------------------
 
     def call(self, decider_cfg: dict[str, Any], transport: _Sender, messages: list[dict[str, str]], *, repeat: int,
-             context: dict[str, Any] | None = None) -> Any:
+             context: dict[str, Any] | None = None, response_schema: dict[str, Any] | None = None) -> Any:
         """One model call through cache, cap, transport and meter. Returns a reply with text and usage.
 
         context keys used in the log: case_id, kind (gate, floor, view), system, config_label, budget, reminder."""
         ctx = dict(context or {})
         self.check_decider(decider_cfg)
-        key = call_key(decider_cfg, messages, repeat)
+        track = str(ctx.get("track") or "account_review")
+        mode = str(ctx.get("mode") or "blind_adapter")
+        eval_mode = str(ctx.get("eval_mode") or "mode_a")
+        schema_sha = (
+            _sha(json.dumps(response_schema, sort_keys=True, separators=(",", ":"), ensure_ascii=True))
+            if response_schema is not None
+            else None
+        )
+        key = call_key(decider_cfg, messages, repeat, track=track, mode=mode, eval_mode=eval_mode,
+                       schema_sha256=schema_sha)
         priced = decider_cfg.get("price") is not None
         t0 = self.clock()
         while True:
@@ -230,7 +256,11 @@ class Gateway:
                     break
             wait.wait()  # the same request is in flight on another thread; then read it from the cache
         try:
-            reply = transport.send(messages, repeat=repeat, retry_reminder=bool(ctx.get("reminder")))
+            if response_schema is None:
+                reply = transport.send(messages, repeat=repeat, retry_reminder=bool(ctx.get("reminder")))
+            else:
+                reply = transport.send(messages, repeat=repeat, retry_reminder=bool(ctx.get("reminder")),
+                                       response_schema=response_schema)
         except BaseException:
             with self.lock:
                 self._settle(key, worst, mine)

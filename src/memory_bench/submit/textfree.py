@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Iterator
 
 RELEASED_FILES = ("metrics.jsonl", "calls.jsonl", "memory_calls.jsonl", "timings.jsonl", "summary.json", "spend.json",
-                  "health.json", "manifest.json", "stability.json", "power.json", "view-audit.json")
+                  "health.json", "manifest.json", "stability.json", "power.json", "view-audit.json", "acbi.json")
 
 
 @dataclass(frozen=True)
@@ -28,6 +28,10 @@ class Violation:
 
 # A token: an id, label, action name, file name, timestamp, version or hash. No white space, 64 characters at most.
 TOKEN = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.:/@+\-]{0,63}")
+# Long provider/model slugs (e.g. OpenCode/MLX HF paths) allowed strictly on `.provider_model` up to 96 chars.
+PROVIDER_MODEL_TOKEN = re.compile(r"[A-Za-z0-9_][A-Za-z0-9_.:/@+\-]{0,95}")
+# Exception class name ONLY (no message, no colon, no whitespace) allowed strictly in health.json `.adapters[].last_error.error`.
+HEALTH_EXCEPTION = re.compile(r"[A-Z][A-Za-z0-9_.]*(?:Error|Exception)")
 # The only places where a sentence is expected. Matched on the end of the path. One line, 200 characters at most.
 PROSE_PATHS = (".bootstrap.unit", ".price.source")
 PROSE_MAX = 200
@@ -36,12 +40,15 @@ PROSE_MAX = 200
 def is_free_text(path: str, value: str) -> bool:
     """True when `value`, found at dotted key path `path`, could be view, note or prompt text.
 
-    Strict by choice: a string passes only as a token or as short prose at a known path. A new field that
-    holds a sentence is flagged until its path is added here on purpose. On a stranger's submission a false
-    alarm costs a look; a missed leak publishes text. An error message is not allow-listed, so a run that
-    stopped with one is flagged: such a run is not released.
+    Strict by choice: a string passes only as a token, an exception class name at
+    `.adapters[].last_error.error`, or short prose at a known path. A new field that holds a
+    sentence is flagged until its path is added here on purpose.
     """
     if value == "" or TOKEN.fullmatch(value):
+        return False
+    if path == ".adapters[].last_error.error" and len(value) <= 64 and HEALTH_EXCEPTION.fullmatch(value):
+        return False
+    if path.endswith(".provider_model") and PROVIDER_MODEL_TOKEN.fullmatch(value):
         return False
     if path.endswith(PROSE_PATHS):
         return len(value) > PROSE_MAX or "\n" in value or "\r" in value

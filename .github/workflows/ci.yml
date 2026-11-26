@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "v2"]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      HERCYNA_ACCEPT_TERMS: "1"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up uv and Python 3.12
+        uses: astral-sh/setup-uv@v4
+        with:
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Print terms version
+        run: uv run --frozen bench terms --version
+
+      - name: Check frozen v2 protocol hashes
+        run: uv run --frozen bench freeze --check --protocol protocol/v2.json --accept-terms
+
+      - name: Run unit and integration tests
+        run: uv run --frozen pytest -q
+
+      - name: Verify released v2 pack
+        run: >
+          uv run --frozen bench verify
+          results/table/v2/chat_agent/haiku-5-5/bm25
+          --protocol protocol/v2.json
+          --cases data/v2/chat_agent/table_cases.jsonl
+          --accept-terms
+
+      - name: Build static results site and check strict CSP assets
+        run: |
+          uv run --frozen bench site build --out site/dist --accept-terms
+          uv run --frozen python -c '
+          import re
+          from pathlib import Path
+          htmls = sorted(Path("site/dist").rglob("*.html"))
+          assert len(htmls) >= 20
+          for p in htmls:
+              txt = p.read_text(encoding="utf-8")
+              assert not re.search(r"<script(?![^>]*\bsrc=)", txt, re.I), f"inline script in {p}"
+              assert "<style" not in txt.lower(), f"inline style in {p}"
+          print(f"CSP asset check passed across {len(htmls)} HTML files.")
+          '

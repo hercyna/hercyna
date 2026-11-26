@@ -1,0 +1,24 @@
+{
+  "cases_failed_without_view": 0,
+  "failed_calls": 0,
+  "failed_calls_by_status": {},
+  "margin_seconds": 5.0,
+  "memory_calls": 22,
+  "run_id": "v2-step8-table-opencode-glm-5.3-flash-mem0",
+  "schema": "memory_bench.view_audit/1",
+  "systems": {
+    "mem0/k25": {
+      "case_ids": [],
+      "cases_failed_without_view": [],
+      "failed_calls": 0,
+      "failed_calls_by_status": {},
+      "failed_calls_in_window": 0,
+      "n_cases_failed_without_view": 0,
+      "views_checked": 298,
+      "views_unchecked": 0,
+      "views_with_failed_call": 0
+    }
+  },
+  "views_checked": 298,
+  "views_with_failed_call": 0
+}

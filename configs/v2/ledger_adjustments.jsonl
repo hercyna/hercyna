@@ -1,0 +1,2 @@
+{"run_path": "results/v2/table/chat_agent_r5_step7/opencode-qwen3.8-flash/mem0", "ledger": "main", "usd": 0.352621, "call_log": "calls.jsonl", "paid_rows": 378}
+{"run_path": "results/v2/table/chat_agent_r5_step7/haiku-5-5/langmem", "ledger": "main", "usd": 0.06353, "call_log": "calls.jsonl", "paid_rows": 104}

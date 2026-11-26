@@ -1,0 +1,38 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 2e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T13:16:30+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 2.7e-05
+    },
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 0.0,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T13:16:30+00:00",
+      "name": "empty",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 7e-06
+    }
+  ],
+  "run_id": "v2-step8-table-haiku-5-5-empty",
+  "updated": "2026-11-24T13:16:32+00:00"
+}

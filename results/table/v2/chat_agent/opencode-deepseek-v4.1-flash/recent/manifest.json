@@ -1,0 +1,110 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "recent",
+      "product_version": "builtin"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 3.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+  },
+  "code": {
+    "git_commit": "7c3e0b1b4ef73b71f23974c1321266e228c14c69",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-24T12:12:01+00:00",
+  "deciders": [
+    {
+      "id": "opencode-deepseek-v4.1-flash",
+      "key_source": null,
+      "meter_step": 5,
+      "model": "opencode/deepseek-v4.1-flash",
+      "opencode_binary_version": "2.3.0",
+      "opencode_version": "2.3.0",
+      "params": {
+        "max_tokens": 2048,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-23",
+        "input_per_m": 0.12,
+        "output_per_m": 0.48,
+        "source": "OpenCode Console pricing recorded 2026-11-23"
+      },
+      "prompt_version": "v1",
+      "snapshot_date": "2026-11-23",
+      "transport": "opencode_cli"
+    }
+  ],
+  "environment": {
+    "ledger_module": "ledger_v2",
+    "packages": {
+      "graphiti-core": "not_installed",
+      "langmem": "not_installed",
+      "mem0ai": "not_installed"
+    },
+    "protocol_step": 8,
+    "python_version": "3.12.13",
+    "table_runner": "scripts/run_phase1_table.py",
+    "table_runner_sha256": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+    "venv_name": "venv"
+  },
+  "error": null,
+  "files": {
+    "calls.jsonl": "93ac65be1de3e68d2f00e17c3e83c71997f69524d43972aba5f4acb6e756e6c7",
+    "health.json": "4510716124c616b3fd337c663354270e487314ee3dc30c8fbd52fcca0f88003d",
+    "metrics.jsonl": "90b75f8b6c6ba95adda395205aab0d6dea8203dda761463c4d5bb610630f148f",
+    "spend.json": "8c005837444651c2bfaee270dd8397e31e9d5122603411877b758f0c66a2d780",
+    "summary.json": "25e1a694961a806ac7434ce7585dcb300a970a9a1c93e2cc5a710e31d80f3b1a",
+    "timings.jsonl": "482d016894a485611d2a1f772d4bcc2e531fb4c9f3209c7d2c9a77a780a537da"
+  },
+  "finished": "2026-11-24T12:12:01+00:00",
+  "grade": "table",
+  "incomplete_cells": [],
+  "ledger": "main",
+  "memory_side": null,
+  "meter_step": 5,
+  "parallel": 4,
+  "protocol": {
+    "budgets_registered_not_run": [
+      4000
+    ],
+    "path": "protocol/v2.json",
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "steps": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "version": "v2"
+  },
+  "repeats": 3,
+  "run_id": "v2-step8-table-opencode-deepseek-v4.1-flash-recent",
+  "started": "2026-11-24T12:12:01+00:00",
+  "state": "complete",
+  "track": "chat_agent"
+}

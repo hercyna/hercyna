@@ -1,0 +1,603 @@
+{
+  "schema": "memory_bench.protocol_spec/1",
+  "version": "v2",
+  "steps": {
+    "1": {
+      "title": "v2 metrics, tracks, chat_agent prompts/schema, dense/hybrid baselines, Phase 1 deciders, separation and kappa plan",
+      "files": [
+        "src/memory_bench/scoring/*.py",
+        "src/memory_bench/tracks/*.py",
+        "src/memory_bench/tracks/chat_agent/*.py",
+        "src/memory_bench/deciders/base.py",
+        "src/memory_bench/deciders/lifted.py",
+        "src/memory_bench/deciders/prompts.py",
+        "src/memory_bench/deciders/model.py",
+        "src/memory_bench/deciders/transports.py",
+        "src/memory_bench/adapters/base.py",
+        "src/memory_bench/adapters/full.py",
+        "src/memory_bench/adapters/bm25.py",
+        "src/memory_bench/adapters/recent.py",
+        "src/memory_bench/adapters/empty.py",
+        "src/memory_bench/adapters/dense_raw.py",
+        "src/memory_bench/adapters/hybrid_bm25_dense.py",
+        "src/memory_bench/adapters/mem0.py",
+        "src/memory_bench/adapters/langmem.py",
+        "src/memory_bench/adapters/graphiti.py",
+        "src/memory_bench/gateway/meter.py",
+        "src/memory_bench/gateway/proxy.py",
+        "configs/v2/deciders/*.json",
+        "pyproject.toml",
+        "uv.lock"
+      ],
+      "values": {
+        "deciders": [
+          "haiku-5-5",
+          "opencode-beam-free",
+          "opencode-big-pickle",
+          "opencode-deepseek-v4.1-flash-free",
+          "opencode-flint-40b-free",
+          "opencode-hy4-flash-free",
+          "opencode-iceman-free",
+          "opencode-mimo-v2.6-flash-free",
+          "opencode-nemotron-3.5-lightning-free",
+          "opencode-nemotron-3.5-super-vl-free",
+          "opencode-tidepool-alpha-free"
+        ],
+        "phase1_deciders": [
+          {
+            "id": "haiku-5-5",
+            "model": "claude-haiku-5-5",
+            "transport": "anthropic_command",
+            "wrapper": "anthropic-api",
+            "seen_date": "2026-11-23",
+            "opencode_version": "n/a",
+            "weights_status": "proprietary API",
+            "weights_url": "none"
+          },
+          {
+            "id": "opencode-beam-free",
+            "model": "opencode/beam-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/reflection/Beam-1.0-501B-A23B"
+          },
+          {
+            "id": "opencode-big-pickle",
+            "model": "opencode/big-pickle",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "free, weights not public",
+            "weights_url": "none"
+          },
+          {
+            "id": "opencode-deepseek-v4.1-flash-free",
+            "model": "opencode/deepseek-v4.1-flash-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash"
+          },
+          {
+            "id": "opencode-flint-40b-free",
+            "model": "opencode/flint-40b-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/RecursiveSI/flint"
+          },
+          {
+            "id": "opencode-hy4-flash-free",
+            "model": "opencode/hy4-flash-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/tencent/Hy4-flash"
+          },
+          {
+            "id": "opencode-iceman-free",
+            "model": "opencode/iceman-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "free, weights not public",
+            "weights_url": "none"
+          },
+          {
+            "id": "opencode-mimo-v2.6-flash-free",
+            "model": "opencode/mimo-v2.6-flash-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/XiaomiMiMo/MiMo-V2.6-Flash-RL"
+          },
+          {
+            "id": "opencode-nemotron-3.5-lightning-free",
+            "model": "opencode/nemotron-3.5-lightning-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16"
+          },
+          {
+            "id": "opencode-nemotron-3.5-super-vl-free",
+            "model": "opencode/nemotron-3.5-super-vl-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16"
+          },
+          {
+            "id": "opencode-tidepool-alpha-free",
+            "model": "opencode/tidepool-alpha-free",
+            "transport": "opencode_cli",
+            "wrapper": "opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "weights_status": "free, weights not public",
+            "weights_url": "none"
+          }
+        ],
+        "local_ollama_excluded": true,
+        "local_ollama_exclusion_reason": "ollama list holds personal varma-* models and quarantined gpt-oss:20b; local runs require explicit private port 127.0.0.1:11535",
+        "systems": [
+          "full",
+          "bm25",
+          "recent",
+          "empty",
+          "dense_raw",
+          "hybrid_bm25_dense",
+          "mem0/k25",
+          "langmem/c25",
+          "graphiti/e25"
+        ],
+        "budgets": [
+          1000,
+          4000
+        ],
+        "repeats": 3,
+        "dual_ingest_subset_n": 60,
+        "boot_seed": 11,
+        "boot_reps": 1000,
+        "ci_level": 0.95,
+        "chow_lambdas": [
+          0.5,
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0,
+          50.0
+        ],
+        "display_chow_lambdas": [
+          0.5,
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0
+        ],
+        "min_context_tokens": 65536,
+        "max_output_tokens_mode_a": 2048,
+        "token_rule": "ceil(characters / 2.2)",
+        "chunk_rule": 25,
+        "validity_gate": {
+          "overall": 0.9,
+          "per_mechanism": 0.8,
+          "sample_per_mechanism": 10,
+          "sample_total": 60,
+          "min_context_tokens": 65536,
+          "zero_truncation": true,
+          "require_extractor_pass": true,
+          "failed_models_quarantined": true
+        },
+        "product_pins": {
+          "mem0ai": "2.2.1",
+          "langmem": "0.0.30",
+          "graphiti-core": "0.31.2",
+          "falkordb_image": "falkordb/falkordb:6.0.2"
+        },
+        "separation": {
+          "test": "paired bootstrap p-value, Holm-adjusted across product pairs per track family",
+          "alpha": 0.05,
+          "floor_test": "95 percent paired bootstrap interval of excess wrong action above floor strictly above zero",
+          "leaderboard": "at least one product pair separates on every frozen gate-passing decider in the same direction",
+          "print_order": false,
+          "print_order_condition": "no ranking or order is printed unless the registered v2 separation rule is met; roi_status dominant is a per-system status, never an order",
+          "roi_dominant_is_status_not_order": true
+        },
+        "kappa_plan": {
+          "labeller_1": "FNU Ratnavarma",
+          "labeller_2": "PENDING_VARMA_ASSIGNMENT",
+          "blind": true,
+          "sample_n": 60,
+          "stratified_by": "mechanism",
+          "sample_seed": 2026112303,
+          "kappa_min": 0.7,
+          "fallback_below_threshold": "exact_id_recall_only",
+          "applies_to": "lossy_extractor_acbi_matcher_per_track"
+        },
+        "holm_families": {
+          "account_review": "all unordered pairs of registered memory products per budget within blind_adapter/mode_a",
+          "chat_agent": "all unordered pairs of registered memory products per budget (1000, 4000) within blind_adapter/mode_a",
+          "coding_agent": "all unordered pairs of registered memory products per (mode, eval_mode, budget) partition; blind_adapter and end_to_end are never pooled"
+        },
+        "snapshot_policy": "each validity and table run records model_id, snapshot_date, and opencode_version; free-tier results count only for that recorded snapshot",
+        "rate_limit_policy": "back off on HTTP 429 and resume on the same model; never switch models mid-run; report wall time per model"
+      }
+    },
+    "2": {
+      "title": "chat_agent frozen 300-case table split and table seed",
+      "files": [
+        "data/v2/chat_agent/table_cases.jsonl"
+      ],
+      "values": {
+        "track": "chat_agent",
+        "table_seed": 2026112302,
+        "n_table_cases": 300,
+        "generator_version": 1,
+        "case_id_prefix": "ctab2026112302",
+        "mechanism_mix": {
+          "H0": 150,
+          "H1": 30,
+          "H2": 30,
+          "H3": 30,
+          "HU1": 30,
+          "HU2": 30
+        }
+      }
+    },
+    "3": {
+      "title": "Phase 1 paid open-weight OpenCode Console deciders (frozen transports.py, tools off)",
+      "files": [
+        "configs/v2/deciders/opencode-deepseek-v4.1-flash.json",
+        "configs/v2/deciders/opencode-glm-5.3-flash.json",
+        "configs/v2/deciders/opencode-qwen3.8-flash.json"
+      ],
+      "values": {
+        "deciders": [
+          "opencode-deepseek-v4.1-flash",
+          "opencode-glm-5.3-flash",
+          "opencode-qwen3.8-flash"
+        ],
+        "paid_phase1_deciders": [
+          {
+            "id": "opencode-deepseek-v4.1-flash",
+            "model": "opencode/deepseek-v4.1-flash",
+            "transport": "opencode_cli",
+            "wrapper": "with-opencode-zen opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "price": {
+              "input_per_m": 0.12,
+              "output_per_m": 0.48,
+              "as_of": "2026-11-23",
+              "source": "OpenCode Console pricing recorded 2026-11-23"
+            },
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+            "weights_label": "weights published at https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash; served build not verified"
+          },
+          {
+            "id": "opencode-glm-5.3-flash",
+            "model": "opencode/glm-5.3-flash",
+            "transport": "opencode_cli",
+            "wrapper": "with-opencode-zen opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "price": {
+              "input_per_m": 0.15,
+              "output_per_m": 0.5,
+              "as_of": "2026-11-23",
+              "source": "OpenCode Console pricing recorded 2026-11-23"
+            },
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/zai-org/GLM-5.3-Flash",
+            "weights_label": "weights published at https://huggingface.co/zai-org/GLM-5.3-Flash; served build not verified"
+          },
+          {
+            "id": "opencode-qwen3.8-flash",
+            "model": "opencode/qwen3.8-flash",
+            "transport": "opencode_cli",
+            "wrapper": "with-opencode-zen opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "price": {
+              "input_per_m": 0.15,
+              "output_per_m": 0.47,
+              "as_of": "2026-11-23",
+              "source": "OpenCode Console pricing recorded 2026-11-23"
+            },
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/Qwen/Qwen3.8-Flash-Next",
+            "weights_label": "weights published at https://huggingface.co/Qwen/Qwen3.8-Flash-Next; served build not verified"
+          }
+        ],
+        "transport_path": "frozen_transports_py_tools_off",
+        "phase1_cap_usd": 25.0,
+        "phase1_stop_report_usd": 20.0,
+        "local_mlx_and_ollama_excluded_round4": true
+      }
+    },
+    "4": {
+      "title": "Human labeller record for kappa calibration (single human labeller, presence rule vs human labels)",
+      "files": [],
+      "values": {
+        "frozen_date": "2026-11-23",
+        "labeller_1": "FNU Ratnavarma",
+        "labeller_2": "FNU Ratnavarma (same person as labeller 1)",
+        "kappa_basis": "presence rule vs human labels",
+        "inter_human_agreement": "not measured",
+        "public_wording_rule": "never describe this check as two independent labellers on any page or in any paper"
+      }
+    },
+    "5": {
+      "title": "Step 5 OpenCode NDJSON metering fix (input + cache.read + cache.write at full input rate) and two-ledger caps",
+      "files": [
+        "src/memory_bench/engine/opencode_meter.py",
+        "src/memory_bench/engine/ledgers.py",
+        "src/memory_bench/engine/run.py",
+        "src/memory_bench/engine/validity.py",
+        "src/memory_bench/cli.py",
+        "scripts/run_phase1_gates.py",
+        "tests/fixtures/qwen_cache_read_ndjson.jsonl"
+      ],
+      "values": {
+        "frozen_date": "2026-11-23",
+        "meter_step": 5,
+        "input_formula": "tokens.input + tokens.cache.read + tokens.cache.write",
+        "output_formula": "tokens.output + tokens.reasoning",
+        "input_pricing_policy": "full input_per_m rate applied conservatively to all billable input tokens (uncached + cache.read + cache.write)",
+        "frozen_transports_untouched": true,
+        "ledgers": {
+          "main": {
+            "cap_usd": 60.0,
+            "stop_usd": 55.0
+          },
+          "sonnet": {
+            "cap_usd": 20.0,
+            "stop_usd": 18.0
+          }
+        },
+        "qwen_r4_gate_metering_note_usd": 0.062155
+      }
+    },
+    "6": {
+      "title": "Shared memory side (opencode/deepseek-v4.1-flash extractor + bge-m3 embedder via OpenCode Zen ProductProxy) and v2 product adapter configs",
+      "files": [
+        "configs/v2/memory-side/opencode-deepseek-v4.1-flash-bge-m3.json",
+        "configs/v2/adapters/mem0-k25.json",
+        "configs/v2/adapters/langmem-c25.json",
+        "configs/v2/adapters/graphiti-e25.json"
+      ],
+      "values": {
+        "frozen_date": "2026-11-23",
+        "memory_side_id": "opencode-deepseek-v4.1-flash-bge-m3",
+        "extractor": {
+          "opencode_id": "opencode/deepseek-v4.1-flash",
+          "api_model": "deepseek-v4.1-flash",
+          "canonical_id": "deepseek/deepseek-v4.1-flash-1017",
+          "base_url": "https://opencode.ai/zen/v1",
+          "key_wrapper": "with-opencode-zen",
+          "opencode_agent_tools": "off",
+          "price": {
+            "input_per_m": 0.12,
+            "output_per_m": 0.48,
+            "as_of": "2026-11-23",
+            "source": "https://opencode.ai/zen/v1/models"
+          }
+        },
+        "embedder": {
+          "selected_model": "bge-m3",
+          "canonical_id": "baai/bge-m3",
+          "dims": 1024,
+          "base_url": "https://opencode.ai/zen/v1",
+          "key_wrapper": "with-opencode-zen",
+          "price": {
+            "input_per_m": 0.01,
+            "output_per_m": 0.0,
+            "as_of": "2026-11-23",
+            "source": "https://opencode.ai/zen/v1/models"
+          },
+          "candidates_tested": [
+            {
+              "model": "bge-m3",
+              "http_status": 200,
+              "dims": 1024,
+              "input_per_m": 0.01
+            },
+            {
+              "model": "qwen3-embedding-8b",
+              "http_status": 200,
+              "dims": 4096,
+              "input_per_m": 0.01
+            }
+          ],
+          "selection_reason": "both bge-m3 and qwen3-embedding-8b return HTTP 200 on OpenCode Zen /zen/v1/embeddings at identical $0.01/1M input; bge-m3 selected for 1024-dim vector parity with Graphiti default and 4x smaller storage/cosine footprint"
+        },
+        "ledger": "main"
+      }
+    },
+    "7": {
+      "title": "Three added Phase 1 deciders (MiniMax M3, Mistral Large 4, Claude Sonnet 5.5) on Step 5 meter",
+      "files": [
+        "configs/v2/deciders/opencode-minimax-m3.json",
+        "configs/v2/deciders/opencode-mistral-large-4.json",
+        "configs/v2/deciders/sonnet-5-5.json"
+      ],
+      "values": {
+        "frozen_date": "2026-11-23",
+        "deciders": [
+          "opencode-minimax-m3",
+          "opencode-mistral-large-4",
+          "sonnet-5-5"
+        ],
+        "added_phase1_deciders": [
+          {
+            "id": "opencode-minimax-m3",
+            "model": "opencode/minimax-m3",
+            "transport": "opencode_cli",
+            "wrapper": "with-opencode-zen opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "ledger": "main",
+            "price": {
+              "input_per_m": 0.30,
+              "output_per_m": 1.20,
+              "as_of": "2026-11-23",
+              "source": "OpenCode Console /zen/v1/models"
+            },
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/MiniMaxAI/MiniMax-M3",
+            "weights_label": "weights published at https://huggingface.co/MiniMaxAI/MiniMax-M3; served build not verified"
+          },
+          {
+            "id": "opencode-mistral-large-4",
+            "model": "opencode/mistral-large-4",
+            "transport": "opencode_cli",
+            "wrapper": "with-opencode-zen opencode run --standalone",
+            "seen_date": "2026-11-23",
+            "opencode_version": "2.3.0",
+            "ledger": "main",
+            "price": {
+              "input_per_m": 0.68,
+              "output_per_m": 2.09,
+              "as_of": "2026-11-23",
+              "source": "OpenCode Console /zen/v1/models"
+            },
+            "weights_status": "open-weight",
+            "weights_url": "https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B",
+            "weights_label": "weights published at https://huggingface.co/mistralai/Mistral-Large-4-1T-A52B; served build not verified"
+          },
+          {
+            "id": "sonnet-5-5",
+            "model": "claude-sonnet-5-5",
+            "transport": "anthropic_command",
+            "wrapper": "anthropic-api",
+            "seen_date": "2026-11-23",
+            "opencode_version": "n/a",
+            "ledger": "sonnet",
+            "price": {
+              "input_per_m": 2.00,
+              "output_per_m": 10.00,
+              "as_of": "2026-11-23",
+              "source": "Anthropic API pricing page"
+            },
+            "weights_status": "proprietary",
+            "weights_url": "none",
+            "weights_label": "proprietary"
+          }
+        ],
+        "transport_path": "frozen_transports_py_tools_off_wrapped_step5_meter",
+        "meter_step": 5,
+        "kimi_excluded": true
+      }
+    },
+    "8": {
+      "title": "Deduplicated two-ledger sum (ledger_v2), isolated v2 environments, and frozen Phase 1 table runner",
+      "files": [
+        "src/memory_bench/engine/ledger_v2.py",
+        "scripts/run_phase1_table.py"
+      ],
+      "values": {
+        "frozen_date": "2026-11-24",
+        "ledger_step": 8,
+        "ledger_dedup_rules": "skip _packs, packs, dryrun-pack, submissions, private, and any submission.json folder; deduplicate remaining runs by manifest run_id",
+        "r1_r4_unlabelled_ledger": "main",
+        "isolated_v2_venvs": [
+          "venv",
+          "venv-mem0",
+          "venv-langmem",
+          "venv-graphiti"
+        ],
+        "manifest_environment_fields": [
+          "python_version",
+          "venv_name",
+          "packages",
+          "table_runner",
+          "table_runner_sha256",
+          "ledger_module",
+          "protocol_step"
+        ],
+        "mem0ai_unmodified_policy": "mem0ai==2.2.1 unmodified; cases ctab2026112302-0025 and -0110 rerun unmodified with any failure counted under the existing product-error rule",
+        "steps_1_to_7_unchanged": true
+      }
+    },
+    "9": {
+      "title": "Append-only call-log ledger adjustments (ledger_v3) for interrupted R5 decider calls",
+      "files": [
+        "src/memory_bench/engine/ledger_v3.py",
+        "configs/v2/ledger_adjustments.jsonl"
+      ],
+      "values": {
+        "frozen_date": "2026-11-24",
+        "ledger_step": 9,
+        "adjustments_file": "configs/v2/ledger_adjustments.jsonl",
+        "adjustment_row_fields": [
+          "run_path",
+          "ledger",
+          "usd",
+          "call_log",
+          "paid_rows"
+        ],
+        "reconciliation_tolerance_usd": 0.005,
+        "adjusted_runs": [
+          {
+            "run_path": "results/v2/table/chat_agent_r5_step7/opencode-qwen3.8-flash/mem0",
+            "ledger": "main",
+            "usd": 0.352621,
+            "call_log": "calls.jsonl",
+            "paid_rows": 378
+          },
+          {
+            "run_path": "results/v2/table/chat_agent_r5_step7/haiku-5-5/langmem",
+            "ledger": "main",
+            "usd": 0.06353,
+            "call_log": "calls.jsonl",
+            "paid_rows": 104
+          }
+        ],
+        "steps_1_to_8_unchanged": true
+      }
+    },
+    "10": {
+      "title": "Offline cause-split diagnostic (cause_split.py) and frozen reference excused ingest-error list (excused_ingest_errors.json)",
+      "files": [
+        "src/memory_bench/diagnostics/cause_split.py",
+        "configs/v2/excused_ingest_errors.json"
+      ],
+      "values": {
+        "frozen_date": "2026-11-25",
+        "protocol_step": 10,
+        "cause_split_module": "src/memory_bench/diagnostics/cause_split.py",
+        "cause_split_status": "exploratory_offline_diagnostic",
+        "excused_config": "configs/v2/excused_ingest_errors.json",
+        "excused_reference_counts": {
+          "graphiti/e25": 13,
+          "mem0/k25": 2
+        },
+        "max_excused_share": 0.05,
+        "steps_1_to_9_unchanged": true
+      }
+    }
+  }
+}

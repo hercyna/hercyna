@@ -30,7 +30,7 @@ def adapter(request):
 
 def test_registry():
     products = sorted(n for n, cls in ADAPTERS.items() if getattr(cls, "needs_proxy", False))
-    assert products == ["graphiti", "langmem", "mem0"]  # product adapters need the proxy and are not built by a bare name
+    assert products == ["dense_raw", "graphiti", "hybrid_bm25_dense", "langmem", "mem0"]  # proxy-backed adapters (v2 adds dense/hybrid baselines)
     assert sorted(ADAPTERS) == sorted([*NAMES, "empty", *products])  # empty: the exploratory baseline (Day 14)
     for n in [*NAMES, "empty"]:
         a = get_adapter(n)

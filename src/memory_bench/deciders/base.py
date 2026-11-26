@@ -25,6 +25,7 @@ class DecisionInput:
     records_text: str  # the exact text the decider reads as its records
     record_ids: list[str] = field(default_factory=list)  # ids quoted verbatim in records_text
     repeat: int = 0  # 0 for the gate call, 1..R for floor and view calls
+    track: str = "account_review"  # v2 track name; defaults to v1 account_review
 
 
 @runtime_checkable

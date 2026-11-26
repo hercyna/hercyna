@@ -12,16 +12,27 @@ import hashlib
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from ..engine import files as F
-from ..engine.freeze import DEFAULT_PROTOCOL, TABLE_CASES, check_protocol, load_protocol, system_id
-from ..scoring.metrics import ROW_KEY
+from ..engine.audit import VIEW_AUDIT
+from ..engine.freeze import (
+    DEFAULT_PROTOCOL,
+    TABLE_CASES,
+    check_protocol,
+    frozen_deciders,
+    load_protocol,
+    protocol_sha256,
+    system_id,
+)
+from ..scoring.metrics import ROW_DEFAULTS_V2, ROW_KEY, ROW_KEY_V2, cell_name
 from .pack import ALLOWED, REQUIRED, SUBMISSION, SUBMISSION_SCHEMA
 from .textfree import TOKEN, scan_run
 
 EXIT_FAIL = 5
 DEFAULT_RUNS = "results/runs"
+EXCUSED_CONFIG = "configs/v2/excused_ingest_errors.json"
+MAX_EXCUSED_SHARE = 0.05
 CHECKS = {1: "files", 2: "text-free", 3: "rows", 4: "labels", 5: "summary", 6: "protocol", 7: "submission"}
 # Run files whose bytes the manifest must hash when present. stability.json and power.json are written after the
 # run completes (bench stability, bench power), so the manifest never lists them.
@@ -49,10 +60,13 @@ class VerifyResult:
     grade: str | None  # the manifest's grade ("table" or "exploratory"); None when manifest.json does not parse
     failures: list[Failure] = field(default_factory=list)
     skipped: list[int] = field(default_factory=list)  # check 4 without a case file, check 6 for exploratory
+    documented_ingest_errors: dict[str, int] = field(default_factory=dict)
+    excused_over_limit: dict[str, tuple[int, int]] = field(default_factory=dict)
+    matched_protocol_steps: int | None = None
 
     @property
     def ok(self) -> bool:
-        return not self.failures
+        return not self.failures and not self.excused_over_limit
 
     @property
     def failed_checks(self) -> list[int]:
@@ -63,9 +77,21 @@ class VerifyResult:
         if self.failures:
             return (f"verify: FAIL at check(s) {', '.join(map(str, self.failed_checks))}, "
                     f"{len(self.failures)} failure(s)")
-        if self.grade == "table":
-            return "verify: pass, grade table"
-        return "verify: pass, exploratory (check 6 skipped)"
+        notes: list[str] = []
+        if self.matched_protocol_steps is not None:
+            notes.append(f"matched protocol v2 Steps 1 to {self.matched_protocol_steps}")
+        if self.excused_over_limit:
+            parts = ", ".join(
+                f"{c} {k}/{n} ({100.0 * k / n:.1f}%)" for c, (k, n) in sorted(self.excused_over_limit.items())
+            )
+            head = f"verify: excused_over_limit ({parts}; exceeds {100.0 * MAX_EXCUSED_SHARE:.1f}% cap), unranked"
+            return head if not notes else f"{head}; {'; '.join(notes)}"
+        base = "verify: pass, grade table" if self.grade == "table" else "verify: pass, exploratory (check 6 skipped)"
+        if self.documented_ingest_errors:
+            n_doc = sum(self.documented_ingest_errors.values())
+            unit = "case" if n_doc == 1 else "cases"
+            notes.append(f"ingest error, documented ({n_doc} {unit})")
+        return base if not notes else f"{base}; {'; '.join(notes)}"
 
 
 # ---------------------------------------------------------------------------
@@ -160,6 +186,18 @@ def _check_files(d: Path, manifest: dict, fail) -> None:
         if p.name not in ALLOWED or not p.is_file():
             kind = "folder" if p.is_dir() else "file"
             fail(safe(p.name), f"{kind} outside the allowed list")
+    va_path = d / VIEW_AUDIT
+    if va_path.is_file():
+        try:
+            va = F.read_json(va_path)
+            if not isinstance(va, dict):
+                raise ValueError("not an object")
+        except (OSError, ValueError, UnicodeDecodeError):
+            fail(VIEW_AUDIT, "does not parse as a JSON object")
+        else:
+            n_bad = va.get("views_with_failed_call")
+            if not isinstance(n_bad, int) or n_bad != 0:
+                fail(VIEW_AUDIT, f"views_with_failed_call is {safe(n_bad)}, expected 0")
 
 
 def _check_textfree(d: Path, fail) -> None:
@@ -181,27 +219,157 @@ def _case_set(manifest: dict, rows: list[dict], cases_ids: list[str] | None) -> 
     return list(seen)
 
 
-def _check_rows(manifest: dict, rows: list[dict], cases_ids: list[str] | None, fail) -> None:
+def _load_frozen_excused(proto_path: Path | None) -> dict[str, Any] | None:
+    """Locate configs/v2/excused_ingest_errors.json relative to protocol, cwd, or repo root."""
+    cands = []
+    if proto_path is not None:
+        resolved = proto_path.resolve()
+        cands.append(resolved.parent.parent / EXCUSED_CONFIG)
+    cands.append(Path(EXCUSED_CONFIG))
+    cands.append(Path(__file__).resolve().parents[3] / EXCUSED_CONFIG)
+    for p in cands:
+        if p.is_file():
+            try:
+                data = F.read_json(p)
+                if isinstance(data, dict) and isinstance(data.get("systems"), dict):
+                    return data
+            except (OSError, ValueError, UnicodeDecodeError):
+                return None
+    return None
+
+
+def _failed_ingest_call_cases(d: Path) -> dict[tuple[str, str | None], set[str]]:
+    """Return {(adapter, config_label): {case_id, ...}} for cases with a failed ingest call in memory_calls.jsonl."""
+    p = d / "memory_calls.jsonl"
+    out: dict[tuple[str, str | None], set[str]] = {}
+    if not p.is_file():
+        return out
+    try:
+        raw = p.read_bytes().decode("utf-8")
+    except (OSError, UnicodeDecodeError):
+        return out
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except ValueError:
+            continue
+        if not isinstance(row, dict) or row.get("phase") != "ingest":
+            continue
+        status = row.get("status")
+        if isinstance(status, int) and 200 <= status < 300:
+            continue
+        cid = row.get("case_id")
+        adapter = row.get("adapter")
+        if not isinstance(cid, str) or not cid or not isinstance(adapter, str) or not adapter:
+            continue
+        clab = row.get("config_label")
+        out.setdefault((adapter, str(clab) if isinstance(clab, str) else None), set()).add(cid)
+        out.setdefault((adapter, None), set()).add(cid)
+    return out
+
+
+def _read_health_adapters(d: Path) -> dict[tuple[str | None, str | None], dict]:
+    hpath = d / F.HEALTH
+    if not hpath.is_file():
+        return {}
+    try:
+        health = F.read_json(hpath)
+    except (OSError, ValueError, UnicodeDecodeError):
+        return {}
+    if not isinstance(health, dict):
+        return {}
+    by_adapter: dict[tuple[str | None, str | None], dict] = {}
+    for entry in health.get("adapters") or []:
+        if isinstance(entry, dict):
+            by_adapter[(entry.get("name"), entry.get("config_label"))] = entry
+    return by_adapter
+
+
+def _documented_ingest_cases(
+    d: Path, manifest: dict, views: list[tuple], budgets: list, n_cases: Any, in_set: set[str]
+) -> dict[tuple[str, str, int | None], set[str]]:
+    """Read health.json (+ manifest.incomplete_cells) to find cases cleanly documented as ingest errors."""
+    if not isinstance(n_cases, int):
+        return {}
+    by_adapter = _read_health_adapters(d)
+    if not by_adapter:
+        return {}
+    inc_by_cell: dict[str, set[str]] = {}
+    for item in manifest.get("incomplete_cells") or []:
+        if isinstance(item, dict) and isinstance(item.get("cell"), str):
+            inc_by_cell[item["cell"]] = {str(cid) for cid in (item.get("missing_cases") or [])}
+
+    documented: dict[tuple[str, str, int | None], set[str]] = {}
+    for sname, clab in views:
+        ah = by_adapter.get((sname, clab))
+        if not isinstance(ah, dict):
+            continue
+        err_n = ah.get("errors")
+        done_n = ah.get("cases_done")
+        last_err = ah.get("last_error")
+        if not isinstance(err_n, int) or err_n <= 0 or not isinstance(done_n, int):
+            continue
+        if done_n + err_n != n_cases:
+            continue
+        if not isinstance(last_err, dict) or not last_err.get("case_id") or not last_err.get("error"):
+            continue
+        last_cid = str(last_err["case_id"])
+        for b in budgets:
+            cname = cell_name(str(sname), str(clab), b)
+            if isinstance(ah.get("error_cases"), list):
+                cands = {str(x) for x in ah["error_cases"]}
+            elif cname in inc_by_cell:
+                cands = set(inc_by_cell[cname])
+            elif err_n == 1:
+                cands = {last_cid}
+            else:
+                cands = set()
+            if len(cands) == err_n and last_cid in cands and cands <= in_set:
+                documented[(sname, clab, b)] = cands
+    return documented
+
+
+def _check_rows(
+    d: Path,
+    manifest: dict,
+    rows: list[dict],
+    cases_ids: list[str] | None,
+    fail,
+    *,
+    grade: str | None = None,
+    excused_cfg: dict[str, Any] | None = None,
+) -> tuple[dict[str, int], dict[str, tuple[int, int]]]:
     deciders = [x.get("id") for x in manifest.get("deciders") or []]
     adapters = list(manifest.get("adapters") or [])
     if not adapters:
         fail(F.MANIFEST, "manifest lists no adapters")
-        return
+        return {}, {}
     full = (adapters[0].get("name"), adapters[0].get("config_label"))
     views = [(a.get("name"), a.get("config_label")) for a in adapters[1:]]
     budgets = list(manifest.get("budgets") or [])
     reps = manifest.get("repeats")
     if not isinstance(reps, int) or reps < 1:
         fail(F.MANIFEST, f"repeats {safe(reps)} is not a positive integer")
-        return
+        return {}, {}
     seen: set[tuple] = set()
+    pass1_seen: set[tuple] = set()
+    pass2_rows: list[tuple[int, dict]] = []
     for i, r in enumerate(rows, 1):
-        k = F.row_key(r)
-        if k in seen:
-            fail(F.METRICS, f"row {i} repeats the key {_key_str(k)}")
-        seen.add(k)
+        k2 = F.row_key_v2(r)
+        if k2 in seen:
+            fail(F.METRICS, f"row {i} repeats the key {_key_str(F.row_key(r))}")
+        seen.add(k2)
         if r["decider"] not in deciders:
             fail(F.METRICS, f"row {i} has decider {safe(r['decider'])}, not in the manifest")
+        ipass = int(r.get("ingest_pass", ROW_DEFAULTS_V2["ingest_pass"]))
+        if ipass == 1:
+            pass1_seen.add(F.row_key(r))
+        elif ipass == 2:
+            pass2_rows.append((i, r))
+        else:
+            fail(F.METRICS, f"row {i} has unsupported ingest_pass {safe(ipass)}")
     case_set = _case_set(manifest, rows, cases_ids)
     n = (manifest.get("cases") or {}).get("n")
     if len(case_set) != n:
@@ -215,11 +383,87 @@ def _check_rows(manifest: dict, rows: list[dict], cases_ids: list[str] | None, f
                 for b in budgets:
                     expected.update((cid, did, "view", *s, b, rr) for rr in range(1, reps + 1))
     in_set = set(case_set)
-    for k in sorted(expected - seen, key=repr):
-        fail(F.METRICS, f"missing row {_key_str(k)}")
-    for k in sorted(seen - expected, key=repr):
+    missing_keys = sorted(expected - pass1_seen, key=repr)
+    missing_view_reps: dict[tuple, int] = {}
+    for k in missing_keys:
+        if k[2] == "view":
+            g = (k[0], k[1], k[3], k[4], k[5])
+            missing_view_reps[g] = missing_view_reps.get(g, 0) + 1
+
+    use_frozen = (
+        grade == "table"
+        and isinstance(excused_cfg, dict)
+        and (manifest.get("cases") or {}).get("sha256") == excused_cfg.get("cases_sha256")
+        and bool(views)
+        and all(system_id(str(sn), str(cl)) in (excused_cfg.get("systems") or {}) for sn, cl in views)
+    )
+    doc_by_cell: dict[str, set[str]] = {}
+    if use_frozen:
+        frozen_sys = excused_cfg["systems"]  # type: ignore[index]
+        by_adapter = _read_health_adapters(d)
+        allowed_by_cell: dict[tuple[str, str, int | None], set[str]] = {}
+        for sn, cl in views:
+            sid = system_id(str(sn), str(cl))
+            want = {str(cid) for cid in frozen_sys.get(sid) or []}
+            if want:
+                ah = by_adapter.get((sn, cl)) or {}
+                if ah.get("errors") != len(want) or ah.get("cases_done") != (int(n) - len(want) if isinstance(n, int) else -1):
+                    fail(F.METRICS, f"health.json error count for {safe(sid)} does not match frozen excused list ({len(want)})")
+            for b in budgets:
+                cname = cell_name(str(sn), str(cl), b)
+                allowed_by_cell[(sn, cl, b)] = want
+                for cid in sorted(want):
+                    for did in deciders:
+                        if missing_view_reps.get((cid, did, sn, cl, b)) != reps:
+                            fail(F.METRICS, f"frozen excused case {safe(cid)} for {safe(cname)} is present; must match frozen excused list exactly")
+        for k in missing_keys:
+            cid, did, kind, sname, clab, b, _rr = k
+            if (
+                kind == "view"
+                and cid in allowed_by_cell.get((sname, clab, b), ())
+                and missing_view_reps.get((cid, did, sname, clab, b)) == reps
+            ):
+                doc_by_cell.setdefault(cell_name(str(sname), str(clab), b), set()).add(cid)
+                continue
+            fail(F.METRICS, f"missing row {_key_str(k)} (not in frozen excused list)")
+    else:
+        documented_cases = _documented_ingest_cases(d, manifest, views, budgets, n, in_set)
+        failed_calls = _failed_ingest_call_cases(d)
+        for k in missing_keys:
+            cid, did, kind, sname, clab, b, _rr = k
+            has_failed_call = cid in (failed_calls.get((str(sname), str(clab)), set()) | failed_calls.get((str(sname), None), set()))
+            if (
+                kind == "view"
+                and cid in documented_cases.get((sname, clab, b), ())
+                and missing_view_reps.get((cid, did, sname, clab, b)) == reps
+                and has_failed_call
+            ):
+                doc_by_cell.setdefault(cell_name(str(sname), str(clab), b), set()).add(cid)
+                continue
+            why = "no failed ingest call in memory_calls.jsonl" if (kind == "view" and cid in documented_cases.get((sname, clab, b), ()) and not has_failed_call) else "missing row"
+            fail(F.METRICS, f"{why} {_key_str(k)}" if why == "missing row" else f"missing row {_key_str(k)} ({why})")
+
+    for k in sorted(pass1_seen - expected, key=repr):
         why = "row for a case outside the set" if k[0] not in in_set else "row outside the run's plan"
         fail(F.METRICS, f"{why} {_key_str(k)}")
+    # Validate sparse dual-ingest pass-2 rows: view-only, valid case/view/budget/repeat
+    views_set = set(views)
+    budgets_set = set(budgets)
+    for i, r in pass2_rows:
+        if r["kind"] != "view":
+            fail(F.METRICS, f"row {i} ingest_pass=2 must have kind 'view', got {safe(r['kind'])}")
+        elif r["case_id"] not in in_set:
+            fail(F.METRICS, f"row {i} ingest_pass=2 for case outside the set {safe(r['case_id'])}")
+        elif (r["system"], r["config_label"]) not in views_set or r["budget"] not in budgets_set or r["repeat"] not in range(1, reps + 1):
+            fail(F.METRICS, f"row {i} ingest_pass=2 outside the run's view plan {_key_str(F.row_key(r))}")
+
+    doc_counts = {cname: len(cids) for cname, cids in sorted(doc_by_cell.items())}
+    over_limit: dict[str, tuple[int, int]] = {}
+    if isinstance(n, int) and n > 0:
+        for cname, cnt in doc_counts.items():
+            if cnt * 20 > n:
+                over_limit[cname] = (cnt, n)
+    return doc_counts, over_limit
 
 
 def _load_cases(path: Path, fail) -> tuple[list[str], dict[str, tuple[str, str]], str] | None:
@@ -275,35 +519,81 @@ def _check_summary(d: Path, manifest: dict, rows: list[dict] | None, fail) -> No
                         f"(seed {safe(boot.get('seed'))}, reps {safe(boot.get('reps'))})")
 
 
-def _check_protocol(manifest: dict, protocol: Path, fail) -> None:
+def _matched_v2_prefix_step(got: Any, proto: Mapping[str, Any]) -> int | None:
+    """Return the step number k when `got` matches cumulative step prefix `1..k` of a v2+ protocol whose
+    subsequent append-only steps `k+1..N` introduce disjoint files (never modifying a file frozen in `1..k`)."""
+    if not isinstance(got, str) or proto.get("version") == "v1":
+        return None
+    steps = proto.get("steps") or {}
+    ordered_keys = sorted(steps, key=lambda k: int(k))
+    seen_files: set[str] = set()
+    prefix_files: set[str] = set()
+    matched_step: int | None = None
+    acc: dict[str, Any] = {}
+    for k in ordered_keys:
+        step = steps[k]
+        s_files = set((step.get("files") or {}).keys())
+        if matched_step is not None and (s_files & prefix_files):
+            return None
+        seen_files.update(s_files)
+        acc[k] = step
+        if protocol_sha256(acc) == got:
+            matched_step = int(k)
+            prefix_files = set(seen_files)
+    return matched_step
+
+
+def _valid_v2_prefix_sha(got: Any, proto: Mapping[str, Any]) -> bool:
+    return _matched_v2_prefix_step(got, proto) is not None
+
+
+def _check_protocol(manifest: dict, protocol: Path, fail) -> int | None:
     name = str(protocol)
     try:
         proto = load_protocol(protocol)
         mismatches = check_protocol(protocol)
     except (OSError, ValueError) as exc:
         fail(name, f"cannot read the protocol ({type(exc).__name__})")
-        return
+        return None
     got = (manifest.get("protocol") or {}).get("protocol_sha256")
+    matched_step: int | None = None
     if got != proto.get("protocol_sha256"):
-        fail(F.MANIFEST, f"protocol_sha256 {safe(got)} differs from {protocol.name} {proto.get('protocol_sha256')}")
+        step_k = _matched_v2_prefix_step(got, proto)
+        if not mismatches and step_k is not None:
+            matched_step = step_k
+        else:
+            fail(F.MANIFEST, f"protocol_sha256 {safe(got)} differs from {protocol.name} {proto.get('protocol_sha256')}")
     for m in mismatches:
         fail(name, f"freeze --check: {m.line()}")
-    v = ((proto.get("steps") or {}).get("1") or {}).get("values") or {}
+    steps = proto.get("steps") or {}
+    v = (steps.get("1") or {}).get("values") or {}
+    active_steps = (
+        {sk: sv for sk, sv in steps.items() if int(sk) <= matched_step}
+        if matched_step is not None
+        else steps
+    )
+    allowed_deciders = frozen_deciders(active_steps)
     deciders = [x.get("id") for x in manifest.get("deciders") or []]
     for did in deciders:
-        if did not in v.get("deciders", []):
+        if did not in allowed_deciders:
             fail(F.MANIFEST, f"decider {safe(did)} is not a frozen decider")
     for a in manifest.get("adapters") or []:
         sid = system_id(str(a.get("name")), str(a.get("config_label")))
         if sid not in v.get("systems", []):
             fail(F.MANIFEST, f"system {safe(sid)} is not a frozen system")
     boot = manifest.get("bootstrap") or {}
-    for what, got_v, want in (("budgets", sorted(manifest.get("budgets") or []), sorted(v.get("budgets", []))),
-                              ("repeats", manifest.get("repeats"), v.get("repeats")),
+    got_b, want_b = sorted(manifest.get("budgets") or []), sorted(v.get("budgets", []))
+    if proto.get("version") == "v1":
+        if got_b != want_b:
+            fail(F.MANIFEST, f"budgets {safe(got_b)} differ from the frozen {safe(want_b)}")
+    elif not got_b or any(b not in want_b for b in got_b):
+        fail(F.MANIFEST, f"budgets {safe(got_b)} are not a subset of frozen {safe(want_b)}")
+    for what, got_v, want in (("repeats", manifest.get("repeats"), v.get("repeats")),
                               ("boot seed", boot.get("seed"), v.get("boot_seed")),
                               ("boot reps", boot.get("reps"), v.get("boot_reps"))):
         if got_v != want:
             fail(F.MANIFEST, f"{what} {safe(got_v)} differ from the frozen {safe(want)}")
+    return matched_step
 
 
 def _check_submission(d: Path, manifest: dict, runs: Path, fail) -> None:
@@ -329,6 +619,11 @@ def _check_submission(d: Path, manifest: dict, runs: Path, fail) -> None:
                          f"adapter in the manifest")
     if "grade" in sub and sub["grade"] != (manifest.get("grade") or "exploratory"):
         fail(SUBMISSION, f"grade {safe(sub['grade'])} differs from the manifest {safe(manifest.get('grade'))}")
+    for field_name, max_len in (("submitter", 120), ("organisation", 120), ("adapter_source", 200)):
+        val = sub.get(field_name)
+        if val is not None:
+            if not isinstance(val, str) or len(val) > max_len or "\n" in val or "\r" in val:
+                fail(SUBMISSION, f"{field_name} must be a single-line string (<= {max_len} chars) or null")
     rep = sub.get("reproduced")
     if rep is None:
         return
@@ -383,11 +678,42 @@ def verify(dir: str | Path, protocol: str | Path | None = None, cases: str | Pat
     _check_textfree(d, failer(2))
     rows = _read_rows(d / F.METRICS, failer(3)) if (d / F.METRICS).is_file() else None
 
-    case_path = Path(cases) if cases is not None else (Path(TABLE_CASES) if res.grade == "table" else None)
+    case_path = Path(cases) if cases is not None else None
+    if case_path is None and res.grade == "table":
+        v2_cases = Path("data/v2/chat_agent/table_cases.jsonl")
+        if v2_cases.is_file() and (manifest.get("cases") or {}).get("sha256") == F.sha256_file(v2_cases):
+            case_path = v2_cases
+        else:
+            case_path = Path(TABLE_CASES)
     loaded = _load_cases(case_path, failer(4)) if case_path is not None else None
     hash_ok = loaded is not None and loaded[2] == (manifest.get("cases") or {}).get("sha256")
+    proto_path = Path(protocol) if protocol is not None else None
+    if res.grade == "table" and proto_path is None:
+        v2_proto = Path("protocol/v2.json")
+        m_ver = (manifest.get("protocol") or {}).get("version")
+        m_sha = (manifest.get("protocol") or {}).get("protocol_sha256")
+        if v2_proto.is_file():
+            try:
+                p2 = load_protocol(v2_proto)
+            except (OSError, ValueError):
+                p2 = None
+            if p2 is not None and (
+                m_ver == "v2"
+                or m_sha == p2.get("protocol_sha256")
+                or _valid_v2_prefix_sha(m_sha, p2)
+            ):
+                proto_path = v2_proto
+    excused_cfg = _load_frozen_excused(proto_path)
     if rows is not None:
-        _check_rows(manifest, rows, loaded[0] if hash_ok else None, failer(3))
+        res.documented_ingest_errors, res.excused_over_limit = _check_rows(
+            d,
+            manifest,
+            rows,
+            loaded[0] if hash_ok else None,
+            failer(3),
+            grade=res.grade,
+            excused_cfg=excused_cfg,
+        )
     elif not (d / F.METRICS).is_file():
         failer(3)(F.METRICS, "missing")
     if case_path is None:
@@ -396,7 +722,7 @@ def verify(dir: str | Path, protocol: str | Path | None = None, cases: str | Pat
         _check_labels(manifest, rows, case_path, loaded, failer(4))
     _check_summary(d, manifest, rows, failer(5))
     if res.grade == "table":
-        _check_protocol(manifest, Path(protocol) if protocol is not None else Path(DEFAULT_PROTOCOL), failer(6))
+        res.matched_protocol_steps = _check_protocol(manifest, proto_path or Path(DEFAULT_PROTOCOL), failer(6))
     else:
         res.skipped.append(6)
     _check_submission(d, manifest, Path(runs) if runs is not None else Path(DEFAULT_RUNS), failer(7))

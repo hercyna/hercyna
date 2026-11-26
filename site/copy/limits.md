@@ -1,3 +1,11 @@
+## What this does not show
+
+- One chat track only: the v2 tables cover synthetic multi-session `chat_agent` cases only (`coding_agent` runs remain held).
+- Five deciders: v2 chat results hold only for the five gate-passing deciders tested; other models may read the same views differently.
+- Synthetic cases: all 300 v2 chat cases and all 300 v1 account-review cases come from deterministic generators, not production histories.
+- Ingest-error cases left out: Mem0 drops 2 cases and Graphiti drops 13 cases during ingestion out of 300; every row prints the count of left-out cases beside wrong, withheld, and right action.
+- The cause split is exploratory: the failure cause split replays dumped stores offline and marks Mem0 and LangMem as low-fidelity because store-vs-retrieval replay match is below 90 percent.
+
 ## Limits
 
 Read the table with these limits in mind.

@@ -1,0 +1,22 @@
+{
+  "id": "opencode-deepseek-v4.1-flash",
+  "transport": "opencode_cli",
+  "command": ["opencode"],
+  "model": "opencode/deepseek-v4.1-flash",
+  "prompt_version": "v1",
+  "params": {"max_tokens": 2048, "temperature": 0},
+  "price": {
+    "input_per_m": 0.12,
+    "output_per_m": 0.48,
+    "as_of": "2026-11-23",
+    "source": "OpenCode Console pricing recorded 2026-11-23"
+  },
+  "snapshot_date": "2026-11-23",
+  "opencode_version": "2.3.0",
+  "weights_status": "open-weight",
+  "weights_url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+  "timeout_s": 180,
+  "retries": 3,
+  "max_retry_sleep_s": 60.0,
+  "description": "Phase 1 paid OpenCode Console open-weight decider via frozen OpenCodeCliTransport (standalone isolated XDG, OPENCODE_DB=:memory:, tools disabled)."
+}

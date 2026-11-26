@@ -22,8 +22,19 @@ from .bootstrap import Boot, ratio
 from .gates import gate_report, is_committed, validity_gate
 
 SUMMARY_SCHEMA = "memory_bench.summary/1"
+SUMMARY_SCHEMA_V2 = "memory_bench.summary/2"
 KINDS = ("gate", "floor", "view")
 ROW_KEY = ("case_id", "decider", "kind", "system", "config_label", "budget", "repeat")
+ROW_KEY_V2 = (
+    "case_id", "track", "mode", "eval_mode", "decider",
+    "kind", "system", "config_label", "budget", "ingest_pass", "repeat",
+)
+ROW_DEFAULTS_V2 = {
+    "track": "account_review",
+    "mode": "blind_adapter",
+    "eval_mode": "mode_a",
+    "ingest_pass": 1,
+}
 DEFAULT_CONFIG_LABEL = "default"
 
 # Feature names follow LENS where LENS had them (wc, ab, hpe, h, g, one).
@@ -77,8 +88,13 @@ def legacy_rows_to_metric_rows(rows: Iterable[dict], decider: str = "haiku-5-5-l
 # Scoring
 # ---------------------------------------------------------------------------
 
+def row_key_v2(r: dict) -> tuple:
+    """11-tuple v2 row key with v1 defaults so v1 rows remain byte-unchanged."""
+    return tuple(r.get(k, ROW_DEFAULTS_V2[k]) if k in ROW_DEFAULTS_V2 else r[k] for k in ROW_KEY_V2)
+
+
 def _row_key(r: dict) -> tuple:
-    return tuple(r[k] for k in ROW_KEY)
+    return row_key_v2(r)
 
 
 def cell_name(system: str, config_label: str, budget: int | None) -> str:
@@ -210,20 +226,60 @@ def _check(rows: list[dict]) -> None:
             raise ScoringError(f"unknown row kind {r['kind']!r} for case {r['case_id']!r}")
         k = _row_key(r)
         if k in seen:
-            raise ScoringError(f"duplicate row key {dict(zip(ROW_KEY, k))}")
+            raise ScoringError(f"duplicate row key {dict(zip(ROW_KEY_V2, k))}")
         seen.add(k)
 
 
+def _partition_key(r: dict) -> tuple[str, str, str]:
+    return (
+        str(r.get("track", ROW_DEFAULTS_V2["track"])),
+        str(r.get("mode", ROW_DEFAULTS_V2["mode"])),
+        str(r.get("eval_mode", ROW_DEFAULTS_V2["eval_mode"])),
+    )
+
+
 def summarise(rows: Iterable[dict], *, seed: int = 11, reps: int = 1000) -> dict[str, Any]:
-    """The summary.json content for a list of metric rows. Deterministic in the rows and the seed."""
+    """The summary.json content for a list of metric rows. Deterministic in the rows and the seed.
+
+    Rows with `ingest_pass != 1` (dual-ingest variance passes) are strictly isolated from headline
+    summaries and scored only in `scoring.variance`. Single-partition runs emit v1 `deciders`
+    unchanged; multi-partition v2 runs also emit `partitions` keyed by `<track>/<mode>/<eval_mode>`.
+    """
     rows = list(rows)
     _check(rows)
-    by_decider: dict[str, list[dict]] = {}
-    for r in rows:
-        by_decider.setdefault(r["decider"], []).append(r)
+    primary = [r for r in rows if int(r.get("ingest_pass", 1)) == 1]
+    parts: dict[tuple[str, str, str], list[dict]] = {}
+    for r in primary:
+        parts.setdefault(_partition_key(r), []).append(r)
+
+    def _by_decider(part_rows: list[dict]) -> dict[str, Any]:
+        by_decider: dict[str, list[dict]] = {}
+        for r in part_rows:
+            by_decider.setdefault(r["decider"], []).append(r)
+        return {d: _decider_summary(rs, seed, reps) for d, rs in sorted(by_decider.items())}
+
+    if len(parts) <= 1:
+        only_rows = next(iter(parts.values())) if parts else []
+        return {
+            "schema": SUMMARY_SCHEMA,
+            "bootstrap": {"seed": seed, "reps": reps, "level": 0.95,
+                          "unit": "case (paired: every cell, the floor and every repeat of a resampled case come along)"},
+            "deciders": _by_decider(only_rows),
+        }
+
+    partitions: dict[str, Any] = {}
+    for (track, mode, eval_mode), prs in sorted(parts.items()):
+        pkey = f"{track}/{mode}/{eval_mode}"
+        partitions[pkey] = {
+            "track": track,
+            "mode": mode,
+            "eval_mode": eval_mode,
+            "deciders": _by_decider(prs),
+        }
     return {
-        "schema": SUMMARY_SCHEMA,
+        "schema": SUMMARY_SCHEMA_V2,
         "bootstrap": {"seed": seed, "reps": reps, "level": 0.95,
                       "unit": "case (paired: every cell, the floor and every repeat of a resampled case come along)"},
-        "deciders": {d: _decider_summary(rs, seed, reps) for d, rs in sorted(by_decider.items())},
+        "partitions": partitions,
+        "deciders": next(iter(partitions.values()))["deciders"],
     }

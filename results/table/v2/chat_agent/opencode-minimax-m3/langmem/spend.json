@@ -1,0 +1,72 @@
+{
+  "by_adapter": {
+    "full": {
+      "cached_calls": 1201,
+      "calls": 1201,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "langmem": {
+      "cached_calls": 0,
+      "calls": 900,
+      "input_tokens": 1625388,
+      "memory_side": {
+        "cached_calls": 0,
+        "calls": 0,
+        "embed_calls": 0,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "usd": 0.0
+      },
+      "output_tokens": 585980,
+      "usd": 1.190775
+    }
+  },
+  "by_decider": {
+    "opencode-minimax-m3": {
+      "cached_calls": 1201,
+      "calls": 2101,
+      "input_tokens": 1625388,
+      "output_tokens": 585980,
+      "usd": 1.190775
+    }
+  },
+  "by_stage": {
+    "floor": {
+      "cached_calls": 901,
+      "calls": 901,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "gate": {
+      "cached_calls": 300,
+      "calls": 300,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "view": {
+      "cached_calls": 0,
+      "calls": 900,
+      "input_tokens": 1625388,
+      "output_tokens": 585980,
+      "usd": 1.190775
+    }
+  },
+  "cached_calls": 1201,
+  "cached_input_tokens": 5237772,
+  "cached_output_tokens": 851371,
+  "calls": 2101,
+  "cap_usd": 60.0,
+  "estimated_calls": 0,
+  "input_tokens": 1625388,
+  "ledger": "main",
+  "memory_side_usd": 0.0,
+  "output_tokens": 585980,
+  "run_cap_usd": 6.0,
+  "stop_usd": 55.0,
+  "total_usd": 1.190775,
+  "unpriced_calls": 0
+}

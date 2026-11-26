@@ -26,10 +26,33 @@ import json
 from pathlib import Path
 from typing import Any
 
+from ..submit.textfree import HEALTH_EXCEPTION
 from . import files as F
 from .views import views_path
 
 UNKNOWN_LOGGER = "_unknown"
+
+
+def sanitize_health_errors(health: dict[str, Any]) -> tuple[dict[str, Any], bool]:
+    """Replace any free-text exception message in `last_error.error` with exception class name + `error_sha256`."""
+    changed = False
+    adapters = health.get("adapters")
+    if not isinstance(adapters, list):
+        return health, False
+    for entry in adapters:
+        if not isinstance(entry, dict):
+            continue
+        le = entry.get("last_error")
+        if not isinstance(le, dict):
+            continue
+        raw = le.get("error")
+        if isinstance(raw, str) and not HEALTH_EXCEPTION.fullmatch(raw):
+            cand = raw.split(":", 1)[0].strip()
+            exc_cls = cand if HEALTH_EXCEPTION.fullmatch(cand) else "Exception"
+            le["error"] = exc_cls
+            le["error_sha256"] = F.sha256_text(raw)
+            changed = True
+    return health, changed
 
 
 def _read_jsonl(p: Path) -> list[dict]:
@@ -173,6 +196,7 @@ def rebuild_health(run_dir: str | Path) -> dict[str, Any]:
                            "rebuilt": {"from": ["timings.jsonl", "metrics.jsonl"], "timing_rows": len(timings)}}
     if old.get("unattributed_warnings"):
         rep["unattributed_warnings"] = old["unattributed_warnings"]
+    sanitize_health_errors(rep)
     F.write_json(run_dir / F.HEALTH, rep)
     if manifest.get("files"):
         manifest["files"][F.HEALTH] = F.sha256_file(run_dir / F.HEALTH)
@@ -180,4 +204,4 @@ def rebuild_health(run_dir: str | Path) -> dict[str, Any]:
     return rep
 
 
-__all__ = ["rebuild_health", "UNKNOWN_LOGGER"]
+__all__ = ["rebuild_health", "sanitize_health_errors", "UNKNOWN_LOGGER"]

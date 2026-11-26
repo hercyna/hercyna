@@ -1,0 +1,33 @@
+{
+  "cases_sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0",
+  "max_excused_share": 0.05,
+  "protocol_version": "v2",
+  "schema": "memory_bench.excused_ingest_errors/1",
+  "systems": {
+    "bm25/default": [],
+    "dense_raw/default": [],
+    "empty/default": [],
+    "graphiti/e25": [
+      "ctab2026112302-0036",
+      "ctab2026112302-0044",
+      "ctab2026112302-0047",
+      "ctab2026112302-0065",
+      "ctab2026112302-0072",
+      "ctab2026112302-0079",
+      "ctab2026112302-0085",
+      "ctab2026112302-0124",
+      "ctab2026112302-0173",
+      "ctab2026112302-0186",
+      "ctab2026112302-0199",
+      "ctab2026112302-0214",
+      "ctab2026112302-0250"
+    ],
+    "hybrid_bm25_dense/default": [],
+    "langmem/c25": [],
+    "mem0/k25": [
+      "ctab2026112302-0025",
+      "ctab2026112302-0110"
+    ],
+    "recent/default": []
+  }
+}

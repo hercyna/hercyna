@@ -7,9 +7,15 @@ results/cache/
 results/runs/
 hub/dist/
 results/*.log
+.venv-mem0/
 .venv-langmem/
 .venv-graphiti/
 .venv-build/
 site/dist/
 site/preview/
+site/preview-v2/
 banned_words.local.txt
+results/v2/*/private/
+results/v2/diagnostics/*/private/
+results/v2/dryrun-pack/
+results/v2/cache/

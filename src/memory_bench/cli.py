@@ -106,12 +106,12 @@ def _run(args: argparse.Namespace) -> int:
         cases = cases[: args.n]
     gateway = None
     if args.decider:
-        from .deciders.model import load_decider
+        from .engine.opencode_meter import load_step5_decider
         from .gateway import DEFAULT_PATH, Gateway, UnpricedDecider
 
         gateway = Gateway(args.cache or DEFAULT_PATH, cap_usd=args.cap_usd, allow_unpriced=args.allow_unpriced)
         try:
-            decider = load_decider(args.decider, gateway)
+            decider = load_step5_decider(args.decider, gateway)
         except (UnpricedDecider, ValueError, OSError) as exc:
             gateway.close()
             print(f"bench run: {exc}", file=sys.stderr)
@@ -127,7 +127,8 @@ def _run(args: argparse.Namespace) -> int:
                                  gateway=gateway, parallel=args.parallel, memory_side=args.memory_side,
                                  proxy_cache=args.cache, allow_unpriced=args.allow_unpriced,
                                  ingest_workers=args.ingest_workers, protocol=args.protocol,
-                                 adapter_files=_adapter_files(args.adapters)))
+                                 adapter_files=_adapter_files(args.adapters),
+                                 ledger=getattr(args, "ledger", None)))
     except ProtocolError as exc:
         print(f"bench run: --protocol {args.protocol}: {exc}", file=sys.stderr)
         return 2
@@ -189,12 +190,12 @@ def _quickstart(args: argparse.Namespace) -> int:
     cases = quickstart_cases()
     gateway = None
     if args.decider:
-        from .deciders.model import load_decider
+        from .engine.opencode_meter import load_step5_decider
         from .gateway import DEFAULT_PATH, Gateway, UnpricedDecider
 
         gateway = Gateway(args.cache or DEFAULT_PATH, cap_usd=args.cap_usd, allow_unpriced=args.allow_unpriced)
         try:
-            decider = load_decider(args.decider, gateway)
+            decider = load_step5_decider(args.decider, gateway)
         except (UnpricedDecider, ValueError, OSError) as exc:
             gateway.close()
             print(f"bench quickstart: {exc}", file=sys.stderr)
@@ -241,15 +242,16 @@ def _validity(args: argparse.Namespace) -> int:
         return 2
     if not _parallel_ok("validity", args.parallel):
         return 2
-    cases = validity_sample(dev_cases(), args.n_per_mechanism)
+    src_cases = list(read_jsonl(args.cases)) if getattr(args, "cases", None) else dev_cases()
+    cases = validity_sample(src_cases, args.n_per_mechanism)
     gateway = None
     if args.decider:
-        from .deciders.model import load_decider
+        from .engine.opencode_meter import load_step5_decider
         from .gateway import DEFAULT_PATH, Gateway, UnpricedDecider
 
         gateway = Gateway(args.cache or DEFAULT_PATH, cap_usd=args.cap_usd, allow_unpriced=args.allow_unpriced)
         try:
-            decider = load_decider(args.decider, gateway)
+            decider = load_step5_decider(args.decider, gateway)
         except (UnpricedDecider, ValueError, OSError) as exc:
             gateway.close()
             print(f"bench validity: {exc}", file=sys.stderr)
@@ -257,7 +259,8 @@ def _validity(args: argparse.Namespace) -> int:
     else:
         decider = MockOracleDecider(cases)
     try:
-        res = run_validity(decider, cases, args.out, gateway=gateway, parallel=args.parallel)
+        res = run_validity(decider, cases, args.out, gateway=gateway, parallel=args.parallel,
+                           ledger=getattr(args, "ledger", None))
     finally:
         if gateway is not None:
             gateway.close()
@@ -297,12 +300,14 @@ def _serve_wait(proxy, scope) -> None:
 
 
 def _proxy_serve(args: argparse.Namespace) -> int:
+    from .engine.opencode_meter import needs_zen_opener, zen_urllib_opener
     from .gateway import DEFAULT_PATH, ProductProxy, load_memory_side
 
     try:
         cfg = load_memory_side(args.memory_side)
+        opener = zen_urllib_opener if needs_zen_opener(cfg) else None
         proxy = ProductProxy(cfg, run_dir=args.log, cache_path=args.cache or DEFAULT_PATH, cap_usd=args.cap_usd,
-                             allow_unpriced=args.allow_unpriced, port=args.port)
+                             allow_unpriced=args.allow_unpriced, port=args.port, opener=opener)
     except (ValueError, OSError) as exc:
         print(f"bench proxy serve: {exc}", file=sys.stderr)
         return 2
@@ -714,6 +719,8 @@ def build_parser() -> argparse.ArgumentParser:
                    help=f"product-adapter cases ingested at once (1 to {MAX_PARALLEL}); result files do not change")
     r.add_argument("--protocol", default=None, metavar="PATH",
                    help="protocol/v1.json: check the frozen protocol first; table grade when every check passes")
+    r.add_argument("--ledger", default=None, choices=("main", "sonnet"),
+                   help="optional two-ledger tag stamped into spend.json (Round 5 A1)")
     r.add_argument("--out", required=True, help="run directory (resumes when it already holds this run)")
     r.set_defaults(func=_run)
 
@@ -730,12 +737,15 @@ def build_parser() -> argparse.ArgumentParser:
     v = sub.add_parser("validity", help="gate decisions on the full history for a sample of the dev cases")
     v.add_argument("--mock", action="store_true", help="use the mock oracle decider (no network)")
     v.add_argument("--decider", default=None, metavar="CONFIG", help="decider config JSON (configs/deciders/)")
+    v.add_argument("--cases", default=None, help="cases.jsonl (default: v1 account_review dev cases)")
     v.add_argument("--n-per-mechanism", type=int, default=10)
     v.add_argument("--cache", default=None, metavar="PATH", help="call cache (default results/cache/calls.sqlite)")
     v.add_argument("--allow-unpriced", action="store_true", help="allow a decider whose price is null")
     v.add_argument("--cap-usd", type=float, default=0.0, help="dollar cap for live calls over the whole folder")
     v.add_argument("--parallel", type=int, default=1, metavar="N",
                    help=f"gate calls in flight at once (1 to {MAX_PARALLEL})")
+    v.add_argument("--ledger", default=None, choices=("main", "sonnet"),
+                   help="optional two-ledger tag stamped into spend.json (Round 5 A1)")
     v.add_argument("--out", required=True, help="output directory (rerun in the same folder reuses the cache)")
     v.set_defaults(func=_validity)
 

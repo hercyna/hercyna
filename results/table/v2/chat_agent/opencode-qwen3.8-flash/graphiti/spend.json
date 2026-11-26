@@ -1,0 +1,72 @@
+{
+  "by_adapter": {
+    "full": {
+      "cached_calls": 1265,
+      "calls": 1265,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "graphiti": {
+      "cached_calls": 25,
+      "calls": 880,
+      "input_tokens": 1222481,
+      "memory_side": {
+        "cached_calls": 323,
+        "calls": 328,
+        "embed_calls": 109,
+        "input_tokens": 4613,
+        "output_tokens": 1006,
+        "usd": 0.00103
+      },
+      "output_tokens": 421239,
+      "usd": 0.381341
+    }
+  },
+  "by_decider": {
+    "opencode-qwen3.8-flash": {
+      "cached_calls": 1290,
+      "calls": 2145,
+      "input_tokens": 1222481,
+      "output_tokens": 421239,
+      "usd": 0.381341
+    }
+  },
+  "by_stage": {
+    "floor": {
+      "cached_calls": 955,
+      "calls": 955,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "gate": {
+      "cached_calls": 310,
+      "calls": 310,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "view": {
+      "cached_calls": 25,
+      "calls": 880,
+      "input_tokens": 1222481,
+      "output_tokens": 421239,
+      "usd": 0.381341
+    }
+  },
+  "cached_calls": 1290,
+  "cached_input_tokens": 6793652,
+  "cached_output_tokens": 1134388,
+  "calls": 2145,
+  "cap_usd": 60.0,
+  "estimated_calls": 0,
+  "input_tokens": 1222481,
+  "ledger": "main",
+  "memory_side_usd": 0.00103,
+  "output_tokens": 421239,
+  "run_cap_usd": 3.0,
+  "stop_usd": 55.0,
+  "total_usd": 0.382371,
+  "unpriced_calls": 0
+}

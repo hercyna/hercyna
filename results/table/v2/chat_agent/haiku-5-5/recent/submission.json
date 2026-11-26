@@ -1,0 +1,12 @@
+{
+  "adapter_source": null,
+  "config_label": "default",
+  "organisation": null,
+  "product_version": "builtin",
+  "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+  "reproduced": null,
+  "run_id": "v2-step8-table-haiku-5-5-recent",
+  "schema": "memory_bench.submission/1",
+  "submitter": null,
+  "system": "recent"
+}

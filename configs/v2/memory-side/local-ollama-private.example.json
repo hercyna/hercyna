@@ -1,0 +1,17 @@
+{
+  "id": "local-ollama-private-mem",
+  "chat": {
+    "base_url": "http://127.0.0.1:11535/v1",
+    "model": "REPLACE-WITH-LOCAL-MODEL",
+    "price": {"input_per_m": 0, "output_per_m": 0, "as_of": "2026-11-23", "source": "local private Ollama on 127.0.0.1:11535"},
+    "assumed_max_output_tokens": 2048
+  },
+  "embeddings": {
+    "base_url": "http://127.0.0.1:11535/v1",
+    "model": "nomic-embed-text",
+    "dims": 768,
+    "price": {"input_per_m": 0, "output_per_m": 0, "as_of": "2026-11-23", "source": "local private Ollama on 127.0.0.1:11535"}
+  },
+  "timeout_s": 300,
+  "retries": 3
+}

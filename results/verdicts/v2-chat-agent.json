@@ -1,0 +1,612 @@
+{
+  "pool": {
+    "cases_sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0",
+    "deciders": [
+      "haiku-5-5",
+      "opencode-deepseek-v4.1-flash",
+      "opencode-glm-5.3-flash",
+      "opencode-minimax-m3",
+      "opencode-qwen3.8-flash"
+    ],
+    "differing_view_cells": 0,
+    "grade": "table",
+    "partition": [
+      "chat_agent",
+      "blind_adapter",
+      "mode_a"
+    ],
+    "products": [
+      [
+        "graphiti",
+        "e25",
+        1000
+      ],
+      [
+        "langmem",
+        "c25",
+        1000
+      ],
+      [
+        "mem0",
+        "k25",
+        1000
+      ]
+    ],
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "runs": [
+      {
+        "new_rows": 2100,
+        "run": "bm25"
+      },
+      {
+        "new_rows": 900,
+        "run": "recent"
+      },
+      {
+        "new_rows": 900,
+        "run": "empty"
+      },
+      {
+        "new_rows": 900,
+        "run": "dense_raw"
+      },
+      {
+        "new_rows": 900,
+        "run": "hybrid_bm25_dense"
+      },
+      {
+        "new_rows": 894,
+        "run": "mem0"
+      },
+      {
+        "new_rows": 900,
+        "run": "langmem"
+      },
+      {
+        "new_rows": 861,
+        "run": "graphiti"
+      },
+      {
+        "new_rows": 2100,
+        "run": "bm25"
+      },
+      {
+        "new_rows": 900,
+        "run": "recent"
+      },
+      {
+        "new_rows": 900,
+        "run": "empty"
+      },
+      {
+        "new_rows": 900,
+        "run": "dense_raw"
+      },
+      {
+        "new_rows": 900,
+        "run": "hybrid_bm25_dense"
+      },
+      {
+        "new_rows": 894,
+        "run": "mem0"
+      },
+      {
+        "new_rows": 900,
+        "run": "langmem"
+      },
+      {
+        "new_rows": 861,
+        "run": "graphiti"
+      },
+      {
+        "new_rows": 2100,
+        "run": "bm25"
+      },
+      {
+        "new_rows": 900,
+        "run": "recent"
+      },
+      {
+        "new_rows": 900,
+        "run": "empty"
+      },
+      {
+        "new_rows": 900,
+        "run": "dense_raw"
+      },
+      {
+        "new_rows": 900,
+        "run": "hybrid_bm25_dense"
+      },
+      {
+        "new_rows": 894,
+        "run": "mem0"
+      },
+      {
+        "new_rows": 900,
+        "run": "langmem"
+      },
+      {
+        "new_rows": 861,
+        "run": "graphiti"
+      },
+      {
+        "new_rows": 2100,
+        "run": "bm25"
+      },
+      {
+        "new_rows": 900,
+        "run": "recent"
+      },
+      {
+        "new_rows": 900,
+        "run": "empty"
+      },
+      {
+        "new_rows": 900,
+        "run": "dense_raw"
+      },
+      {
+        "new_rows": 900,
+        "run": "hybrid_bm25_dense"
+      },
+      {
+        "new_rows": 894,
+        "run": "mem0"
+      },
+      {
+        "new_rows": 900,
+        "run": "langmem"
+      },
+      {
+        "new_rows": 861,
+        "run": "graphiti"
+      },
+      {
+        "new_rows": 2100,
+        "run": "bm25"
+      },
+      {
+        "new_rows": 900,
+        "run": "recent"
+      },
+      {
+        "new_rows": 900,
+        "run": "empty"
+      },
+      {
+        "new_rows": 900,
+        "run": "dense_raw"
+      },
+      {
+        "new_rows": 900,
+        "run": "hybrid_bm25_dense"
+      },
+      {
+        "new_rows": 894,
+        "run": "mem0"
+      },
+      {
+        "new_rows": 900,
+        "run": "langmem"
+      },
+      {
+        "new_rows": 861,
+        "run": "graphiti"
+      }
+    ],
+    "shared_view_cells": 2655,
+    "shared_views": true
+  },
+  "separation": {
+    "deciders": {
+      "haiku-5-5": {
+        "floor": true,
+        "from_floor": {
+          "graphiti/e25@1000": {
+            "ci95": [
+              0.007784,
+              0.055536
+            ],
+            "n_resamples": 1000,
+            "p": 0.007992007992007992,
+            "separates": true,
+            "value": 0.029330568498369833
+          },
+          "langmem/c25@1000": {
+            "ci95": [
+              0.021835,
+              0.076928
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.04844290657439446
+          },
+          "mem0/k25@1000": {
+            "ci95": [
+              0.050799,
+              0.115427
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.08253459202906413
+          }
+        },
+        "missing_products": [],
+        "n_cases": 300,
+        "n_gated": 289,
+        "pairs": {
+          "graphiti/e25@1000 | langmem/c25@1000": {
+            "ci95": [
+              -0.05016,
+              0.011095
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.22577422577422576,
+            "n_resamples": 1000,
+            "p": 0.22577422577422576,
+            "separates": false,
+            "value": -0.01911233807602463
+          },
+          "graphiti/e25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.092863,
+              -0.01493
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.02997002997002997,
+            "n_resamples": 1000,
+            "p": 0.00999000999000999,
+            "separates": true,
+            "value": -0.053204023530694304
+          },
+          "langmem/c25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.066356,
+              -0.004002
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.055944055944055944,
+            "n_resamples": 1000,
+            "p": 0.027972027972027972,
+            "separates": false,
+            "value": -0.034091685454669673
+          }
+        }
+      },
+      "opencode-deepseek-v4.1-flash": {
+        "floor": true,
+        "from_floor": {
+          "graphiti/e25@1000": {
+            "ci95": [
+              0.017056,
+              0.069842
+            ],
+            "n_resamples": 1000,
+            "p": 0.003996003996003996,
+            "separates": true,
+            "value": 0.04141017083240624
+          },
+          "langmem/c25@1000": {
+            "ci95": [
+              0.046631,
+              0.106548
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.07560137457044674
+          },
+          "mem0/k25@1000": {
+            "ci95": [
+              0.071917,
+              0.139829
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.10390135435617545
+          }
+        },
+        "missing_products": [],
+        "n_cases": 300,
+        "n_gated": 291,
+        "pairs": {
+          "graphiti/e25@1000 | langmem/c25@1000": {
+            "ci95": [
+              -0.070028,
+              -0.001443
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.1038961038961039,
+            "n_resamples": 1000,
+            "p": 0.05194805194805195,
+            "separates": false,
+            "value": -0.0341912037380405
+          },
+          "graphiti/e25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.106604,
+              -0.019339
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.023976023976023976,
+            "n_resamples": 1000,
+            "p": 0.007992007992007992,
+            "separates": true,
+            "value": -0.06249118352376922
+          },
+          "langmem/c25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.060629,
+              0.001498
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.1038961038961039,
+            "n_resamples": 1000,
+            "p": 0.059940059940059943,
+            "separates": false,
+            "value": -0.02829997978572872
+          }
+        }
+      },
+      "opencode-glm-5.3-flash": {
+        "floor": true,
+        "from_floor": {
+          "graphiti/e25@1000": {
+            "ci95": [
+              0.009844,
+              0.069197
+            ],
+            "n_resamples": 1000,
+            "p": 0.00999000999000999,
+            "separates": true,
+            "value": 0.03800745650372825
+          },
+          "langmem/c25@1000": {
+            "ci95": [
+              0.043672,
+              0.108054
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.07629107981220656
+          },
+          "mem0/k25@1000": {
+            "ci95": [
+              0.067499,
+              0.134261
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.09949056038357805
+          }
+        },
+        "missing_products": [],
+        "n_cases": 300,
+        "n_gated": 284,
+        "pairs": {
+          "graphiti/e25@1000 | langmem/c25@1000": {
+            "ci95": [
+              -0.076858,
+              0.000549
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.10789210789210789,
+            "n_resamples": 1000,
+            "p": 0.053946053946053944,
+            "separates": false,
+            "value": -0.038283623308478315
+          },
+          "graphiti/e25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.109107,
+              -0.017013
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.023976023976023976,
+            "n_resamples": 1000,
+            "p": 0.007992007992007992,
+            "separates": true,
+            "value": -0.0614831038798498
+          },
+          "langmem/c25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.057756,
+              0.013475
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.21978021978021978,
+            "n_resamples": 1000,
+            "p": 0.21978021978021978,
+            "separates": false,
+            "value": -0.023199480571371486
+          }
+        }
+      },
+      "opencode-minimax-m3": {
+        "floor": true,
+        "from_floor": {
+          "graphiti/e25@1000": {
+            "ci95": [
+              0.002803,
+              0.059989
+            ],
+            "n_resamples": 1000,
+            "p": 0.025974025974025976,
+            "separates": true,
+            "value": 0.030772408095828166
+          },
+          "langmem/c25@1000": {
+            "ci95": [
+              0.051745,
+              0.116425
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.08426270136307311
+          },
+          "mem0/k25@1000": {
+            "ci95": [
+              0.061124,
+              0.132128
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.09506703980619022
+          }
+        },
+        "missing_products": [],
+        "n_cases": 300,
+        "n_gated": 269,
+        "pairs": {
+          "graphiti/e25@1000 | langmem/c25@1000": {
+            "ci95": [
+              -0.090987,
+              -0.01906
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.017982017982017984,
+            "n_resamples": 1000,
+            "p": 0.005994005994005994,
+            "separates": true,
+            "value": -0.05349029326724494
+          },
+          "graphiti/e25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.110367,
+              -0.021548
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.017982017982017984,
+            "n_resamples": 1000,
+            "p": 0.007992007992007992,
+            "separates": true,
+            "value": -0.06429463171036205
+          },
+          "langmem/c25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.053761,
+              0.027692
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.6533466533466533,
+            "n_resamples": 1000,
+            "p": 0.6533466533466533,
+            "separates": false,
+            "value": -0.010804338443117109
+          }
+        }
+      },
+      "opencode-qwen3.8-flash": {
+        "floor": true,
+        "from_floor": {
+          "graphiti/e25@1000": {
+            "ci95": [
+              -0.002781,
+              0.056628
+            ],
+            "n_resamples": 1000,
+            "p": 0.0899100899100899,
+            "separates": false,
+            "value": 0.02526926635585379
+          },
+          "langmem/c25@1000": {
+            "ci95": [
+              0.012932,
+              0.072213
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.04181600955794504
+          },
+          "mem0/k25@1000": {
+            "ci95": [
+              0.053157,
+              0.116043
+            ],
+            "n_resamples": 1000,
+            "p": 0.001998001998001998,
+            "separates": true,
+            "value": 0.08324814857946336
+          }
+        },
+        "missing_products": [],
+        "n_cases": 300,
+        "n_gated": 279,
+        "pairs": {
+          "graphiti/e25@1000 | langmem/c25@1000": {
+            "ci95": [
+              -0.051187,
+              0.0183
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.34965034965034963,
+            "n_resamples": 1000,
+            "p": 0.34965034965034963,
+            "separates": false,
+            "value": -0.01654674320209125
+          },
+          "graphiti/e25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.09946,
+              -0.01522
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.04195804195804196,
+            "n_resamples": 1000,
+            "p": 0.013986013986013986,
+            "separates": true,
+            "value": -0.05797888222360957
+          },
+          "langmem/c25@1000 | mem0/k25@1000": {
+            "ci95": [
+              -0.075253,
+              -0.008158
+            ],
+            "direction": "a_lower",
+            "holm_p": 0.04195804195804196,
+            "n_resamples": 1000,
+            "p": 0.015984015984015984,
+            "separates": true,
+            "value": -0.04143213902151832
+          }
+        }
+      }
+    },
+    "leaderboard": true,
+    "products": [
+      "graphiti/e25@1000",
+      "langmem/c25@1000",
+      "mem0/k25@1000"
+    ],
+    "rule": {
+      "alpha": 0.05,
+      "correction": "holm",
+      "from_floor": "a product separates from the floor when the lower bound of the 95 percent interval of headline (wrong_commit - floor) is above zero",
+      "interval": "percentile interval over the paired case bootstrap of summarise (same seed, same resamples)",
+      "leaderboard": "true only if at least one pair separates on every decider present, in the same direction; false publishes the null; null with a single decider",
+      "level": 0.95,
+      "p_value": "two-sided bootstrap p = min(1, 2 * min((k_le + 1) / (B + 1), (k_ge + 1) / (B + 1))), B = resamples where both rates are defined",
+      "pairs": "for each unordered product pair a | b: wrong_commit(a) - wrong_commit(b) (the floor cancels); separates when the Holm-adjusted p across the decider's pairs is below alpha; direction a_lower means a has the lower wrong-commit rate",
+      "reps": 1000,
+      "seed": 11,
+      "source": "CHARTER section 4.6"
+    },
+    "schema": "memory_bench.separation/1",
+    "separating_pairs": [
+      {
+        "direction": "a_lower",
+        "pair": "graphiti/e25@1000 | mem0/k25@1000"
+      }
+    ],
+    "verdict": "leaderboard"
+  }
+}

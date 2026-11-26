@@ -1,0 +1,12 @@
+{
+  "adapter_source": null,
+  "config_label": "k25",
+  "organisation": null,
+  "product_version": "2.2.1",
+  "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+  "reproduced": null,
+  "run_id": "v2-step8-table-opencode-deepseek-v4.1-flash-mem0",
+  "schema": "memory_bench.submission/1",
+  "submitter": null,
+  "system": "mem0"
+}

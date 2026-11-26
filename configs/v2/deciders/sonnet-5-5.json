@@ -1,0 +1,20 @@
+{
+  "id": "sonnet-5-5",
+  "transport": "anthropic_command",
+  "command": ["anthropic-api"],
+  "env_unset": ["ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN"],
+  "model": "claude-sonnet-5-5",
+  "prompt_version": "v1",
+  "params": {"max_tokens": 6000, "effort": "high"},
+  "price": {
+    "input_per_m": 2.00,
+    "output_per_m": 10.00,
+    "as_of": "2026-11-23",
+    "source": "Anthropic API pricing page (Claude Sonnet 5.5 standard: $2.00/M input, $10.00/M output)"
+  },
+  "snapshot_date": "2026-11-23",
+  "weights_status": "proprietary",
+  "timeout_s": 300,
+  "retries": 3,
+  "description": "Phase 1 added strong decider Claude Sonnet 5.5 via anthropic-api wrapper (never claude -p): effort high, structured JSON reply schema, separate sonnet ledger ($20 cap, $18 stop)."
+}

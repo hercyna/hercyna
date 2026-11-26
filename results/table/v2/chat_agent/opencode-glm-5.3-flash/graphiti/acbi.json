@@ -1,0 +1,146 @@
+{
+  "bootstrap": {
+    "level": 0.95,
+    "reps": 1000,
+    "seed": 11
+  },
+  "calibration_kappa": null,
+  "deciders": {
+    "opencode-glm-5.3-flash": {
+      "cells": {
+        "graphiti/e25@1000": {
+          "acbi": {
+            "ci95": null,
+            "sums": {
+              "den_both": 0.0,
+              "den_none": 84.0,
+              "den_partial": 0.0,
+              "is_both": 0.0,
+              "is_none": 29.0,
+              "is_partial": 0.0,
+              "n_case": 29.0,
+              "wc_both": 0.0,
+              "wc_none": 3.0,
+              "wc_partial": 0.0
+            },
+            "value": null
+          },
+          "acbi_vs_none": {
+            "ci95": null,
+            "sums": {
+              "den_both": 0.0,
+              "den_none": 84.0,
+              "den_partial": 0.0,
+              "is_both": 0.0,
+              "is_none": 29.0,
+              "is_partial": 0.0,
+              "n_case": 29.0,
+              "wc_both": 0.0,
+              "wc_none": 3.0,
+              "wc_partial": 0.0
+            },
+            "value": null
+          },
+          "arr": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "sums": {
+              "den_both": 0.0,
+              "den_none": 84.0,
+              "den_partial": 0.0,
+              "is_both": 0.0,
+              "is_none": 29.0,
+              "is_partial": 0.0,
+              "n_case": 29.0,
+              "wc_both": 0.0,
+              "wc_none": 3.0,
+              "wc_partial": 0.0
+            },
+            "value": 0.0
+          },
+          "budget": 1000,
+          "config_label": "e25",
+          "counts": {
+            "n_both": 0,
+            "n_conflict_cases": 29,
+            "n_none": 29,
+            "n_partial": 0
+          },
+          "p_wc_given_both": {
+            "ci95": null,
+            "sums": {
+              "den_both": 0.0,
+              "den_none": 84.0,
+              "den_partial": 0.0,
+              "is_both": 0.0,
+              "is_none": 29.0,
+              "is_partial": 0.0,
+              "n_case": 29.0,
+              "wc_both": 0.0,
+              "wc_none": 3.0,
+              "wc_partial": 0.0
+            },
+            "value": null
+          },
+          "p_wc_given_none": {
+            "ci95": [
+              0.0,
+              0.111111
+            ],
+            "sums": {
+              "den_both": 0.0,
+              "den_none": 84.0,
+              "den_partial": 0.0,
+              "is_both": 0.0,
+              "is_none": 29.0,
+              "is_partial": 0.0,
+              "n_case": 29.0,
+              "wc_both": 0.0,
+              "wc_none": 3.0,
+              "wc_partial": 0.0
+            },
+            "value": 0.03571428571428571
+          },
+          "p_wc_given_partial": {
+            "ci95": null,
+            "sums": {
+              "den_both": 0.0,
+              "den_none": 84.0,
+              "den_partial": 0.0,
+              "is_both": 0.0,
+              "is_none": 29.0,
+              "is_partial": 0.0,
+              "n_case": 29.0,
+              "wc_both": 0.0,
+              "wc_none": 3.0,
+              "wc_partial": 0.0
+            },
+            "value": null
+          },
+          "ser": {
+            "ci95": null,
+            "sums": {
+              "den_both": 0.0,
+              "den_none": 84.0,
+              "den_partial": 0.0,
+              "is_both": 0.0,
+              "is_none": 29.0,
+              "is_partial": 0.0,
+              "n_case": 29.0,
+              "wc_both": 0.0,
+              "wc_none": 3.0,
+              "wc_partial": 0.0
+            },
+            "value": null
+          },
+          "system": "graphiti"
+        }
+      },
+      "n_conflict_cases": 29
+    }
+  },
+  "exploratory": true,
+  "schema": "memory_bench.acbi/1"
+}

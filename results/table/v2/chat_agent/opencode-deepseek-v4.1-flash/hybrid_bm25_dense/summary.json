@@ -1,0 +1,326 @@
+{
+  "bootstrap": {
+    "level": 0.95,
+    "reps": 1000,
+    "seed": 11,
+    "unit": "case (paired: every cell, the floor and every repeat of a resampled case come along)"
+  },
+  "deciders": {
+    "opencode-deepseek-v4.1-flash": {
+      "cells": {
+        "hybrid_bm25_dense/default@1000": {
+          "abstention": {
+            "ci95": [
+              0.006873,
+              0.03515
+            ],
+            "sums": {
+              "ab": 17.0,
+              "com": 698.0,
+              "fc": 33.0,
+              "g": 873.0,
+              "h": 50.0,
+              "hpe": 0.0,
+              "ok": 823.0,
+              "one": 900.0,
+              "wc": 33.0
+            },
+            "value": 0.019473081328751432
+          },
+          "abstention_above_floor": {
+            "ci95": [
+              0.001134,
+              0.029991
+            ],
+            "value": 0.013745704467353952
+          },
+          "budget": 1000,
+          "config_label": "default",
+          "false_closure_rate": {
+            "ci95": [
+              0.023984,
+              0.071146
+            ],
+            "sums": {
+              "ab": 17.0,
+              "com": 698.0,
+              "fc": 33.0,
+              "g": 873.0,
+              "h": 50.0,
+              "hpe": 0.0,
+              "ok": 823.0,
+              "one": 900.0,
+              "wc": 33.0
+            },
+            "value": 0.04727793696275072
+          },
+          "harmful": {
+            "ci95": [
+              0.03448,
+              0.08105
+            ],
+            "sums": {
+              "ab": 17.0,
+              "com": 698.0,
+              "fc": 33.0,
+              "g": 873.0,
+              "h": 50.0,
+              "hpe": 0.0,
+              "ok": 823.0,
+              "one": 900.0,
+              "wc": 33.0
+            },
+            "value": 0.0572737686139748
+          },
+          "headline": {
+            "ci95": [
+              0.006688,
+              0.042976
+            ],
+            "value": 0.024054982817869414
+          },
+          "parse_error": {
+            "ci95": [
+              0.0,
+              0.0
+            ],
+            "sums": {
+              "ab": 17.0,
+              "com": 698.0,
+              "fc": 33.0,
+              "g": 873.0,
+              "h": 50.0,
+              "hpe": 0.0,
+              "ok": 823.0,
+              "one": 900.0,
+              "wc": 33.0
+            },
+            "value": 0.0
+          },
+          "repeats": [
+            1,
+            2,
+            3
+          ],
+          "right_action": {
+            "ci95": [
+              0.91895,
+              0.96552
+            ],
+            "sums": {
+              "ab": 17.0,
+              "com": 698.0,
+              "fc": 33.0,
+              "g": 873.0,
+              "h": 50.0,
+              "hpe": 0.0,
+              "ok": 823.0,
+              "one": 900.0,
+              "wc": 33.0
+            },
+            "value": 0.9427262313860252
+          },
+          "system": "hybrid_bm25_dense",
+          "view": {
+            "mean_tokens": 974.14,
+            "mean_units": 17.89
+          },
+          "wrong_commit": {
+            "ci95": [
+              0.01947,
+              0.056689
+            ],
+            "sums": {
+              "ab": 17.0,
+              "com": 698.0,
+              "fc": 33.0,
+              "g": 873.0,
+              "h": 50.0,
+              "hpe": 0.0,
+              "ok": 823.0,
+              "one": 900.0,
+              "wc": 33.0
+            },
+            "value": 0.037800687285223365
+          }
+        }
+      },
+      "excluded_from_gated": {
+        "by_mechanism": {
+          "H0": 3,
+          "H3": 6
+        },
+        "count": 9,
+        "gate_parse_errors": 0
+      },
+      "floor": {
+        "abstention": {
+          "ci95": [
+            0.001149,
+            0.011299
+          ],
+          "sums": {
+            "ab": 5.0,
+            "com": 688.0,
+            "fc": 12.0,
+            "g": 873.0,
+            "h": 17.0,
+            "hpe": 0.0,
+            "ok": 856.0,
+            "one": 900.0,
+            "wc": 12.0
+          },
+          "value": 0.0057273768613974796
+        },
+        "false_closure_rate": {
+          "ci95": [
+            0.006229,
+            0.030081
+          ],
+          "sums": {
+            "ab": 5.0,
+            "com": 688.0,
+            "fc": 12.0,
+            "g": 873.0,
+            "h": 17.0,
+            "hpe": 0.0,
+            "ok": 856.0,
+            "one": 900.0,
+            "wc": 12.0
+          },
+          "value": 0.01744186046511628
+        },
+        "harmful": {
+          "ci95": [
+            0.009195,
+            0.031145
+          ],
+          "sums": {
+            "ab": 5.0,
+            "com": 688.0,
+            "fc": 12.0,
+            "g": 873.0,
+            "h": 17.0,
+            "hpe": 0.0,
+            "ok": 856.0,
+            "one": 900.0,
+            "wc": 12.0
+          },
+          "value": 0.019473081328751432
+        },
+        "parse_error": {
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "sums": {
+            "ab": 5.0,
+            "com": 688.0,
+            "fc": 12.0,
+            "g": 873.0,
+            "h": 17.0,
+            "hpe": 0.0,
+            "ok": 856.0,
+            "one": 900.0,
+            "wc": 12.0
+          },
+          "value": 0.0
+        },
+        "repeats": [
+          1,
+          2,
+          3
+        ],
+        "right_action": {
+          "ci95": [
+            0.968855,
+            0.990805
+          ],
+          "sums": {
+            "ab": 5.0,
+            "com": 688.0,
+            "fc": 12.0,
+            "g": 873.0,
+            "h": 17.0,
+            "hpe": 0.0,
+            "ok": 856.0,
+            "one": 900.0,
+            "wc": 12.0
+          },
+          "value": 0.9805269186712485
+        },
+        "view": {
+          "mean_tokens": 5909.213333333333,
+          "mean_units": 115.96
+        },
+        "wrong_commit": {
+          "ci95": [
+            0.004646,
+            0.023731
+          ],
+          "sums": {
+            "ab": 5.0,
+            "com": 688.0,
+            "fc": 12.0,
+            "g": 873.0,
+            "h": 17.0,
+            "hpe": 0.0,
+            "ok": 856.0,
+            "one": 900.0,
+            "wc": 12.0
+          },
+          "value": 0.013745704467353952
+        }
+      },
+      "n_cases": 300,
+      "n_gated": 291,
+      "validity": {
+        "gate": {
+          "overall_min": 0.9,
+          "passes": true,
+          "per_mechanism_min": 0.8
+        },
+        "overall": {
+          "accuracy": 0.97,
+          "correct": 291,
+          "n": 300
+        },
+        "passes": true,
+        "per_mechanism": {
+          "H0": {
+            "accuracy": 0.98,
+            "correct": 147,
+            "n": 150
+          },
+          "H1": {
+            "accuracy": 1.0,
+            "correct": 30,
+            "n": 30
+          },
+          "H2": {
+            "accuracy": 1.0,
+            "correct": 30,
+            "n": 30
+          },
+          "H3": {
+            "accuracy": 0.8,
+            "correct": 24,
+            "n": 30
+          },
+          "HU1": {
+            "accuracy": 1.0,
+            "correct": 30,
+            "n": 30
+          },
+          "HU2": {
+            "accuracy": 1.0,
+            "correct": 30,
+            "n": 30
+          }
+        }
+      }
+    }
+  },
+  "grade": "table",
+  "schema": "memory_bench.summary/1"
+}

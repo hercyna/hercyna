@@ -68,7 +68,10 @@ def test_empty_is_a_baseline_never_a_product(tmp_path):
     from memory_bench.engine import pool as P
     from memory_bench.site import build as S
 
-    assert P.BASELINES == ("full", "bm25", "recent", "empty") == S.BASELINES
+    assert P.BASELINES == (
+        "full", "bm25", "recent", "empty",
+        "dense_raw", "hybrid_bm25_dense", "always_act", "always_request_info",
+    ) == S.BASELINES
     a = _run(tmp_path / "a", "empty,bm25")
     rows, facts = pool([a], require_table=False)
     assert {r["system"] for r in rows if r["kind"] == "view"} == {"empty", "bm25"}

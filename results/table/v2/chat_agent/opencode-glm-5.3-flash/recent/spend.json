@@ -1,0 +1,69 @@
+{
+  "by_adapter": {
+    "full": {
+      "cached_calls": 1200,
+      "calls": 1200,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "recent": {
+      "cached_calls": 0,
+      "calls": 900,
+      "input_tokens": 1420089,
+      "memory_side": {
+        "embed_calls": 0,
+        "input_tokens": 0,
+        "model_calls": 0,
+        "output_tokens": 0
+      },
+      "output_tokens": 443705,
+      "usd": 0.434872
+    }
+  },
+  "by_decider": {
+    "opencode-glm-5.3-flash": {
+      "cached_calls": 1200,
+      "calls": 2100,
+      "input_tokens": 1420089,
+      "output_tokens": 443705,
+      "usd": 0.434872
+    }
+  },
+  "by_stage": {
+    "floor": {
+      "cached_calls": 900,
+      "calls": 900,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "gate": {
+      "cached_calls": 300,
+      "calls": 300,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "view": {
+      "cached_calls": 0,
+      "calls": 900,
+      "input_tokens": 1420089,
+      "output_tokens": 443705,
+      "usd": 0.434872
+    }
+  },
+  "cached_calls": 1200,
+  "cached_input_tokens": 5112940,
+  "cached_output_tokens": 807327,
+  "calls": 2100,
+  "cap_usd": 60.0,
+  "estimated_calls": 0,
+  "input_tokens": 1420089,
+  "ledger": "main",
+  "output_tokens": 443705,
+  "run_cap_usd": 6.0,
+  "stop_usd": 55.0,
+  "total_usd": 0.434872,
+  "unpriced_calls": 0
+}

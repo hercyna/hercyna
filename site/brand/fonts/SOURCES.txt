@@ -1,0 +1,13 @@
+Site fonts, shipped with the site so pages make no third-party request.
+
+Newsreader (variable, roman and italic, latin and latin-ext subsets)
+  Copyright 2020 The Newsreader Project Authors. SIL Open Font License 1.1, see OFL-Newsreader.txt.
+  Files as served by Google Fonts (fonts.gstatic.com/s/newsreader/v26).
+
+JetBrains Mono (variable, latin and latin-ext subsets)
+  Copyright 2020 The JetBrains Mono Project Authors. SIL Open Font License 1.1, see OFL-JetBrainsMono.txt.
+  Files as served by Google Fonts (fonts.gstatic.com/s/jetbrainsmono/v24).
+
+IBM Plex Sans (Regular, Medium, SemiBold, Bold, Latin1 split)
+  Copyright 2017 IBM Corp. with Reserved Font Name "Plex". SIL Open Font License 1.1, see OFL-IBMPlexSans.txt.
+  Unmodified files from IBM's own release, npm @ibm/plex-sans 2.0.0, fonts/split/woff2.

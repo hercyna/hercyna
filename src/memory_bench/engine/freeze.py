@@ -148,6 +148,8 @@ def _write(path: Path, obj: Any) -> None:
 
 def _dirty(root: Path, files: list[str]) -> list[str]:
     """Matched files whose bytes no commit describes: changed, staged, untracked or ignored."""
+    if not files:
+        return []
     st = _git(root, "status", "--porcelain", "--untracked-files=all", "--", *files)
     if st.returncode != 0:
         raise FreezeError(f"git status failed in {root}: {st.stderr.strip()}")
@@ -215,17 +217,23 @@ def root_relative(p: str | Path, root: Path) -> str:
 # bench freeze --check
 # ---------------------------------------------------------------------------
 
+PUBLIC_EXPORT_OMITTED = frozenset({"scripts/run_phase1_table.py"})
+
+
 def check_protocol(protocol_path: str | Path = DEFAULT_PROTOCOL) -> list[Mismatch]:
     """Recompute every hash of every frozen step. Empty list when all match."""
     path = Path(protocol_path)
     proto = load_protocol(path)
     root = repo_root(path)
+    is_public_export = not (root / "scripts" / "export_public.py").exists()
     out: list[Mismatch] = []
     steps = proto.get("steps") or {}
     for key in sorted(steps, key=int):
         st = steps[key]
         for f, want in st.get("files", {}).items():
             p = root / f
+            if not p.is_file() and f in PUBLIC_EXPORT_OMITTED and is_public_export:
+                continue  # documented workstation runner omitted in public export (docs/freeze.md)
             got = sha256_file(p) if p.is_file() else "missing"
             if got != want:
                 out.append(Mismatch(f, want, got))
@@ -264,6 +272,17 @@ def _frozen_file(proto: dict, root: Path, given: str | Path, what: str) -> tuple
     raise ProtocolError(f"check 3 (product adapters): {what} {given} is not a frozen file")
 
 
+def frozen_deciders(steps: Mapping[str, Any]) -> list[str]:
+    """Collect frozen decider IDs across Step 1 and any later protocol steps (e.g. Step 3 paid roster)."""
+    out: list[str] = []
+    for k in sorted(steps, key=int):
+        vals = (steps[k] or {}).get("values") or {}
+        for did in vals.get("deciders") or []:
+            if did not in out:
+                out.append(did)
+    return out
+
+
 def check_run(protocol_path: str | Path, *, decider_id: str, adapters: Sequence[Any],
               adapter_files: Mapping[str, str | Path], budgets: Iterable[int], repeats: int, boot_seed: int,
               boot_reps: int, memory_side: Any, cases_sha256: str, is_product) -> dict:
@@ -288,14 +307,25 @@ def check_run(protocol_path: str | Path, *, decider_id: str, adapters: Sequence[
 
     # check 2: decider, systems, budgets, repeats, bootstrap
     systems = ["full", *(system_id(*system_of(a)) for a in adapters)]
+    allowed_deciders = frozen_deciders(steps)
     fails = []
-    if decider_id not in v.get("deciders", []):
-        fails.append(f"decider {decider_id!r} is not in the frozen deciders {v.get('deciders')}")
+    if decider_id not in allowed_deciders:
+        fails.append(f"decider {decider_id!r} is not in the frozen deciders {allowed_deciders}")
     extra = [s for s in systems if s not in v.get("systems", [])]
     if extra:
         fails.append(f"systems {extra} are not in the frozen systems {v.get('systems')}")
-    for name, got, want in (("budgets", sorted({int(b) for b in budgets}), sorted(v.get("budgets", []))),
-                            ("repeats", repeats, v.get("repeats")), ("boot seed", boot_seed, v.get("boot_seed")),
+    got_budgets = sorted({int(b) for b in budgets})
+    want_budgets = sorted(v.get("budgets", []))
+    budgets_not_run: list[int] = []
+    if proto.get("version") == "v1":
+        if got_budgets != want_budgets:
+            fails.append(f"budgets {got_budgets!r} differ from the frozen {want_budgets!r}")
+    else:
+        if not got_budgets or any(b not in want_budgets for b in got_budgets):
+            fails.append(f"budgets {got_budgets!r} are not a subset of frozen {want_budgets!r}")
+        else:
+            budgets_not_run = [b for b in want_budgets if b not in got_budgets]
+    for name, got, want in (("repeats", repeats, v.get("repeats")), ("boot seed", boot_seed, v.get("boot_seed")),
                             ("boot reps", boot_reps, v.get("boot_reps"))):
         if got != want:
             fails.append(f"{name} {got!r} differ from the frozen {want!r}")
@@ -309,6 +339,8 @@ def check_run(protocol_path: str | Path, *, decider_id: str, adapters: Sequence[
         name, label = system_of(a)
         sid = system_id(name, label)
         cls = ADAPTERS.get(name) if not isinstance(a, type) else a
+        if getattr(cls, "product_version", None) == "builtin":
+            continue
         mod = importlib.import_module(cls.__module__) if cls is not None else None
         package = getattr(mod, "PACKAGE", None)
         if package is None or package not in pins:
@@ -345,11 +377,22 @@ def check_run(protocol_path: str | Path, *, decider_id: str, adapters: Sequence[
     # which equal the file's bytes for a file written by cases.schema.write_jsonl, and also catch a cut (--n).
     entry: dict[str, Any] = {"path": str(path), "version": proto.get("version"),
                              "protocol_sha256": proto.get("protocol_sha256"), "steps": sorted(steps, key=int)}
+    if budgets_not_run:
+        entry["budgets_registered_not_run"] = budgets_not_run
     if "2" in steps:
-        want = steps["2"].get("files", {}).get(TABLE_CASES)
+        s2_files = steps["2"].get("files", {})
+        if TABLE_CASES in s2_files:
+            want_name, want = TABLE_CASES, s2_files[TABLE_CASES]
+        else:
+            jsonl_hits = [(k, h) for k, h in s2_files.items() if k.endswith(".jsonl")]
+            want_name, want = jsonl_hits[0] if len(jsonl_hits) == 1 else (TABLE_CASES, None)
+            if len(jsonl_hits) > 1:
+                match = next(((k, h) for k, h in jsonl_hits if h == cases_sha256), None)
+                if match is not None:
+                    want_name, want = match
         if want is None or cases_sha256 != want:
             raise ProtocolError(f"check 4 (table cases): the run's cases sha256 {cases_sha256} differs from the "
-                                f"frozen {TABLE_CASES} {want}")
+                                f"frozen {want_name} {want}")
         return {"grade": "table", "protocol": entry}
     entry["exploratory_reason"] = "step 2 (table cases and table seed) is not frozen"
     return {"grade": "exploratory", "protocol": entry}

@@ -1,0 +1,136 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "e25",
+      "config_sha256": "5f518ec0dec05fa92eb4b2bc78c44fffed9285209756b43cf016e795e0c69dbc",
+      "name": "graphiti",
+      "product_version": "0.31.2"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 3.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+  },
+  "code": {
+    "git_commit": "7c3e0b1b4ef73b71f23974c1321266e228c14c69",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-24T20:35:44+00:00",
+  "deciders": [
+    {
+      "id": "opencode-glm-5.3-flash",
+      "key_source": null,
+      "meter_step": 5,
+      "model": "opencode/glm-5.3-flash",
+      "opencode_binary_version": "2.3.0",
+      "opencode_version": "2.3.0",
+      "params": {
+        "max_tokens": 2048,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-23",
+        "input_per_m": 0.15,
+        "output_per_m": 0.5,
+        "source": "OpenCode Console pricing recorded 2026-11-23"
+      },
+      "prompt_version": "v1",
+      "snapshot_date": "2026-11-23",
+      "transport": "opencode_cli"
+    }
+  ],
+  "environment": {
+    "ledger_module": "ledger_v2",
+    "packages": {
+      "graphiti-core": "0.31.2",
+      "langmem": "not_installed",
+      "mem0ai": "not_installed"
+    },
+    "protocol_step": 8,
+    "python_version": "3.12.13",
+    "table_runner": "scripts/run_phase1_table.py",
+    "table_runner_sha256": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+    "venv_name": "venv-graphiti"
+  },
+  "error": null,
+  "files": {
+    "calls.jsonl": "295c9a469fbd1500459b82216d921281cba75cc4fa9362812558f6a8db114d2a",
+    "health.json": "84ae7cafc8476f2421856088f677405c611531e5152c2bb7cee88cc7918657d7",
+    "memory_calls.jsonl": "ce181b141e8eecac8be1472e1852b1c6c5cfafbadb242058378bd4c963222db3",
+    "metrics.jsonl": "84bcffaf276290e0de75bda14dcc4174e705913570db0aef8eaf1f2cc4d387d0",
+    "spend.json": "7c1022b11fe914a9e74d163f68873075a6768faf32f1d1236723f29c7bbba28f",
+    "summary.json": "1c2ec8878de61013a99613ec88c1d953d3afc63753bfb9d14cab7637ee9ce6f6",
+    "timings.jsonl": "ba282ba9084cf5746386d9b9d5c27b6e42020f2893a1041e0369065b30c74a27",
+    "view-audit.json": "3a6eabd1ea326f5214cf9bab780f3ed9b3cbc610674442189b3b1624d3ba5313"
+  },
+  "finished": "2026-11-24T21:10:37+00:00",
+  "grade": "table",
+  "incomplete_cells": [
+    {
+      "cell": "graphiti/e25@1000",
+      "missing_cases": [
+        "ctab2026112302-0036",
+        "ctab2026112302-0044",
+        "ctab2026112302-0047",
+        "ctab2026112302-0065",
+        "ctab2026112302-0072",
+        "ctab2026112302-0079",
+        "ctab2026112302-0085",
+        "ctab2026112302-0124",
+        "ctab2026112302-0173",
+        "ctab2026112302-0186",
+        "ctab2026112302-0199",
+        "ctab2026112302-0214",
+        "ctab2026112302-0250"
+      ]
+    }
+  ],
+  "ledger": "main",
+  "memory_side": {
+    "chat_model": "deepseek-v4.1-flash",
+    "config_sha256": "6b010a180ff94079b07dc08670e67a8e84f46d1cd75f725f1a48c00561f8b4b4",
+    "embeddings_model": "bge-m3",
+    "id": "opencode-deepseek-v4.1-flash-bge-m3"
+  },
+  "meter_step": 5,
+  "parallel": 4,
+  "protocol": {
+    "budgets_registered_not_run": [
+      4000
+    ],
+    "path": "protocol/v2.json",
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "steps": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "version": "v2"
+  },
+  "repeats": 3,
+  "run_id": "v2-step8-table-opencode-glm-5.3-flash-graphiti",
+  "started": "2026-11-24T20:35:44+00:00",
+  "state": "complete",
+  "track": "chat_agent"
+}

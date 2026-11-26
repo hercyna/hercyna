@@ -1,0 +1,110 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "empty",
+      "product_version": "builtin"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 6.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+  },
+  "code": {
+    "git_commit": "7c3e0b1b4ef73b71f23974c1321266e228c14c69",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-24T15:17:15+00:00",
+  "deciders": [
+    {
+      "id": "opencode-minimax-m3",
+      "key_source": null,
+      "meter_step": 5,
+      "model": "opencode/minimax-m3",
+      "opencode_binary_version": "2.3.0",
+      "opencode_version": "2.3.0",
+      "params": {
+        "max_tokens": 2048,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-23",
+        "input_per_m": 0.3,
+        "output_per_m": 1.2,
+        "source": "OpenCode Console /zen/v1/models (minimax-m3: $0.30/M input, $1.20/M output)"
+      },
+      "prompt_version": "v1",
+      "snapshot_date": "2026-11-23",
+      "transport": "opencode_cli"
+    }
+  ],
+  "environment": {
+    "ledger_module": "ledger_v2",
+    "packages": {
+      "graphiti-core": "not_installed",
+      "langmem": "not_installed",
+      "mem0ai": "not_installed"
+    },
+    "protocol_step": 8,
+    "python_version": "3.12.13",
+    "table_runner": "scripts/run_phase1_table.py",
+    "table_runner_sha256": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+    "venv_name": "venv"
+  },
+  "error": null,
+  "files": {
+    "calls.jsonl": "4304d250721425f4980272aeb4385d609b243ac56b7db806f34a744516893f4f",
+    "health.json": "5c6baf3bde25663794d7e091598d12342f48516b082d54014d3d2638fa5c4339",
+    "metrics.jsonl": "cf95f0eb39992d5a6eb0dc8fa2431f64279f3565fda7063c48abfb53d2b9e7a4",
+    "spend.json": "26f3b3ca0fa507269a3fa433f053b61e05646ae63ce9658a4d51aeb4b9879f02",
+    "summary.json": "a74bc583291841f7ee12d88cba327a0614037d5740f35ad87d2dfc291630d172",
+    "timings.jsonl": "49d32042bf2850706d5b7471809094fcb84c41f8d98732167e6414b91e62f45e"
+  },
+  "finished": "2026-11-24T15:17:15+00:00",
+  "grade": "table",
+  "incomplete_cells": [],
+  "ledger": "main",
+  "memory_side": null,
+  "meter_step": 5,
+  "parallel": 4,
+  "protocol": {
+    "budgets_registered_not_run": [
+      4000
+    ],
+    "path": "protocol/v2.json",
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "steps": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "version": "v2"
+  },
+  "repeats": 3,
+  "run_id": "v2-step8-table-opencode-minimax-m3-empty",
+  "started": "2026-11-24T15:17:15+00:00",
+  "state": "complete",
+  "track": "chat_agent"
+}

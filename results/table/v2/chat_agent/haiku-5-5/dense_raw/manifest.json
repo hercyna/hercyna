@@ -1,0 +1,115 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "default",
+      "config_sha256": "384f958463f2d72668849760269f1e575686322ef40d48d7261e27d85fb7fa86",
+      "name": "dense_raw",
+      "product_version": "builtin"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 6.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+  },
+  "code": {
+    "git_commit": "7c3e0b1b4ef73b71f23974c1321266e228c14c69",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-24T13:16:33+00:00",
+  "deciders": [
+    {
+      "id": "haiku-5-5",
+      "key_source": null,
+      "meter_step": 5,
+      "model": "claude-haiku-5-5",
+      "params": {
+        "effort": "high",
+        "max_tokens": 6000
+      },
+      "price": {
+        "as_of": "2026-10-16",
+        "input_per_m": 0.1,
+        "output_per_m": 0.5,
+        "source": "live price taken as twice the Haiku 5.5 batch price (0.05 and 0.25) recorded 2026-10-16"
+      },
+      "prompt_version": "v1",
+      "snapshot_date": "2026-11-23",
+      "transport": "anthropic_command"
+    }
+  ],
+  "environment": {
+    "ledger_module": "ledger_v2",
+    "packages": {
+      "graphiti-core": "not_installed",
+      "langmem": "not_installed",
+      "mem0ai": "not_installed"
+    },
+    "protocol_step": 8,
+    "python_version": "3.12.13",
+    "table_runner": "scripts/run_phase1_table.py",
+    "table_runner_sha256": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+    "venv_name": "venv"
+  },
+  "error": null,
+  "files": {
+    "calls.jsonl": "9e56fa619bd49e41101492f558d7cb485b2af1436b5000aa59473b24f280faa9",
+    "health.json": "8b4f9b7244e6d9825ebc5d7431710c38cc3bed0666a91fe626288a2c37b580b3",
+    "memory_calls.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "metrics.jsonl": "7fc911b50b3b87a7746085fe6ca7e9b12e5f8015e87977eae55b41488a146ad8",
+    "spend.json": "064512a68dfd661056629df9635e778b4f888beee9c94f5694647b31c47b8490",
+    "summary.json": "4773afbccc88ac763fa20842e6faaea254b1b89fe916f976b6c3ab42202238cb",
+    "timings.jsonl": "be5163eaeffc5830a4fa5428c7ee7311e17cfa33d0bd0590883e060a5be4cd71",
+    "view-audit.json": "09ff60837d871203e2ed89ed522d6aaa660028020b64ba6aac6f2123910fd597"
+  },
+  "finished": "2026-11-24T13:28:03+00:00",
+  "grade": "table",
+  "incomplete_cells": [],
+  "ledger": "main",
+  "memory_side": {
+    "chat_model": "deepseek-v4.1-flash",
+    "config_sha256": "6b010a180ff94079b07dc08670e67a8e84f46d1cd75f725f1a48c00561f8b4b4",
+    "embeddings_model": "bge-m3",
+    "id": "opencode-deepseek-v4.1-flash-bge-m3"
+  },
+  "meter_step": 5,
+  "parallel": 8,
+  "protocol": {
+    "budgets_registered_not_run": [
+      4000
+    ],
+    "path": "protocol/v2.json",
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "steps": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "version": "v2"
+  },
+  "repeats": 3,
+  "run_id": "v2-step8-table-haiku-5-5-dense_raw",
+  "started": "2026-11-24T13:16:33+00:00",
+  "state": "complete",
+  "track": "chat_agent"
+}

@@ -11,11 +11,12 @@ import shutil
 from pathlib import Path
 
 from ..engine import files as F
+from ..engine.health import sanitize_health_errors
 
 SUBMISSION = "submission.json"
 SUBMISSION_SCHEMA = "memory_bench.submission/1"
 REQUIRED = (F.MANIFEST, F.METRICS, F.SUMMARY, F.SPEND, F.HEALTH)
-OPTIONAL = (F.TIMINGS, "calls.jsonl", "memory_calls.jsonl", F.STABILITY, F.POWER, "view-audit.json")
+OPTIONAL = (F.TIMINGS, "calls.jsonl", "memory_calls.jsonl", F.STABILITY, F.POWER, "view-audit.json", F.ACBI)
 ALLOWED = (*REQUIRED, *OPTIONAL, SUBMISSION)
 SLUG = re.compile(r"[a-z0-9][a-z0-9-]{0,31}")
 BUILTIN = "builtin"
@@ -71,6 +72,16 @@ def pack(run_dir: str | Path, out: str | Path, *, slug: str | None = None, explo
         src = run_dir / name
         if src.is_file():
             shutil.copyfile(src, dest / name)
+    health_dest = dest / F.HEALTH
+    health_obj = F.read_json(health_dest)
+    _, health_changed = sanitize_health_errors(health_obj)
+    if health_changed:
+        F.write_json(health_dest, health_obj)
+        m_dest = F.read_json(dest / F.MANIFEST)
+        if isinstance(m_dest.get("files"), dict) and F.HEALTH in m_dest["files"]:
+            m_dest["files"][F.HEALTH] = F.sha256_file(health_dest)
+            F.write_json(dest / F.MANIFEST, m_dest)
+            manifest = m_dest
     protocol = manifest.get("protocol") or {}
     sub = {"schema": SUBMISSION_SCHEMA, "system": adapter["name"], "config_label": adapter.get("config_label"),
            "product_version": adapter.get("product_version"), "submitter": None, "organisation": None,

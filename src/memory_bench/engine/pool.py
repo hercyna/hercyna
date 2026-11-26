@@ -23,10 +23,19 @@ from pathlib import Path
 from typing import Any, Sequence
 
 from ..scoring import separation
-from ..scoring.metrics import _row_key
+from ..scoring.metrics import ROW_DEFAULTS_V2, _row_key
 from . import files as F
 
-BASELINES = ("full", "bm25", "recent", "empty")
+BASELINES = (
+    "full",
+    "bm25",
+    "recent",
+    "empty",
+    "dense_raw",
+    "hybrid_bm25_dense",
+    "always_act",
+    "always_request_info",
+)
 
 
 class PoolError(RuntimeError):
@@ -54,7 +63,17 @@ def pool(run_dirs: Sequence[str | Path], *, require_table: bool = True) -> tuple
             elif facts[key] != val:
                 raise PoolError(f"{d.name}: {key} {val!r} differs from {facts[key]!r}")
         n_new = 0
+        run_partition: tuple[str, str, str] | None = None
         for r in F.read_metrics(d / F.METRICS):
+            part = (
+                str(r.get("track", ROW_DEFAULTS_V2["track"])),
+                str(r.get("mode", ROW_DEFAULTS_V2["mode"])),
+                str(r.get("eval_mode", ROW_DEFAULTS_V2["eval_mode"])),
+            )
+            if run_partition is None:
+                run_partition = part
+            elif part != run_partition:
+                raise PoolError(f"{d.name}: mixed partitions {run_partition!r} and {part!r} inside one run")
             k = _row_key(r)
             if k in seen:
                 if seen[k] != r:
@@ -63,6 +82,14 @@ def pool(run_dirs: Sequence[str | Path], *, require_table: bool = True) -> tuple
             else:
                 seen[k] = r
                 n_new += 1
+        if run_partition is not None:
+            if "partition" not in facts:
+                facts["partition"] = run_partition
+            elif facts["partition"] != run_partition:
+                raise PoolError(
+                    f"{d.name}: partition {run_partition!r} differs from {facts['partition']!r}; "
+                    f"runs across different tracks, modes, or eval_modes cannot be pooled"
+                )
         facts["runs"].append({"run": d.name, "new_rows": n_new})
     rows = list(seen.values())
     facts["deciders"] = sorted({r["decider"] for r in rows})

@@ -1,0 +1,134 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "e25",
+      "config_sha256": "5f518ec0dec05fa92eb4b2bc78c44fffed9285209756b43cf016e795e0c69dbc",
+      "name": "graphiti",
+      "product_version": "0.31.2"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 3.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+  },
+  "code": {
+    "git_commit": "7c3e0b1b4ef73b71f23974c1321266e228c14c69",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-24T14:04:39+00:00",
+  "deciders": [
+    {
+      "id": "haiku-5-5",
+      "key_source": null,
+      "meter_step": 5,
+      "model": "claude-haiku-5-5",
+      "params": {
+        "effort": "high",
+        "max_tokens": 6000
+      },
+      "price": {
+        "as_of": "2026-10-16",
+        "input_per_m": 0.1,
+        "output_per_m": 0.5,
+        "source": "live price taken as twice the Haiku 5.5 batch price (0.05 and 0.25) recorded 2026-10-16"
+      },
+      "prompt_version": "v1",
+      "snapshot_date": "2026-11-23",
+      "transport": "anthropic_command"
+    }
+  ],
+  "environment": {
+    "ledger_module": "ledger_v2",
+    "packages": {
+      "graphiti-core": "0.31.2",
+      "langmem": "not_installed",
+      "mem0ai": "not_installed"
+    },
+    "protocol_step": 8,
+    "python_version": "3.12.13",
+    "table_runner": "scripts/run_phase1_table.py",
+    "table_runner_sha256": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+    "venv_name": "venv-graphiti"
+  },
+  "error": null,
+  "files": {
+    "calls.jsonl": "691153056478b394a5e1155096b44e674d89561e0a4e161a553edf30ecbb03f1",
+    "health.json": "cbc3d1ae32d13e590237ec186f34e326d1d9a94733c89b85fb2c29ca5112cc88",
+    "memory_calls.jsonl": "d8d42a4dd50399188d460d73329ba40cf0fcdf7bb9d93673b23255cec0b5ace1",
+    "metrics.jsonl": "64aa31302343c970728845eff3fa37ae9e07340b3f381e59e50993f85a6f654d",
+    "spend.json": "d2c47be791e3b6cefcd4a9f5cc1ad1093a98fb3de51b67541d6b2c309f68bd4c",
+    "summary.json": "8f525ceefb842b0864b5eaed9da30223c557e0111b736a46af12c7ae64157989",
+    "timings.jsonl": "be6b3d286f9a42d26a43774ffde5a4c12483e5a575162c373631ba3264d695e7",
+    "view-audit.json": "63f08acf51cd04621dc7b30eeffb09837b3025fafe834c72c9427c452ec747e2"
+  },
+  "finished": "2026-11-24T14:24:29+00:00",
+  "grade": "table",
+  "incomplete_cells": [
+    {
+      "cell": "graphiti/e25@1000",
+      "missing_cases": [
+        "ctab2026112302-0036",
+        "ctab2026112302-0044",
+        "ctab2026112302-0047",
+        "ctab2026112302-0065",
+        "ctab2026112302-0072",
+        "ctab2026112302-0079",
+        "ctab2026112302-0085",
+        "ctab2026112302-0124",
+        "ctab2026112302-0173",
+        "ctab2026112302-0186",
+        "ctab2026112302-0199",
+        "ctab2026112302-0214",
+        "ctab2026112302-0250"
+      ]
+    }
+  ],
+  "ledger": "main",
+  "memory_side": {
+    "chat_model": "deepseek-v4.1-flash",
+    "config_sha256": "6b010a180ff94079b07dc08670e67a8e84f46d1cd75f725f1a48c00561f8b4b4",
+    "embeddings_model": "bge-m3",
+    "id": "opencode-deepseek-v4.1-flash-bge-m3"
+  },
+  "meter_step": 5,
+  "parallel": 8,
+  "protocol": {
+    "budgets_registered_not_run": [
+      4000
+    ],
+    "path": "protocol/v2.json",
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "steps": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "version": "v2"
+  },
+  "repeats": 3,
+  "run_id": "v2-step8-table-haiku-5-5-graphiti",
+  "started": "2026-11-24T14:04:39+00:00",
+  "state": "complete",
+  "track": "chat_agent"
+}

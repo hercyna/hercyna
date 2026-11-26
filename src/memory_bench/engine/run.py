@@ -31,6 +31,8 @@ from __future__ import annotations
 
 import json
 import logging
+import re
+import shutil
 import subprocess
 import threading
 import time
@@ -43,7 +45,7 @@ from .. import __version__
 from ..adapters import ADAPTERS, get_adapter
 from ..adapters.base import MemoryAdapter, Record, Retrieved, count_tokens, enforce_budget, records_of
 from ..cases.schema import Case, read_jsonl
-from ..deciders.base import VALID_OUTPUTS, Decider, DecisionInput
+from ..deciders.base import PARSE_ERROR, VALID_OUTPUTS, Decider, DecisionInput
 from ..deciders.model import decider_spec
 from ..gateway.cache import DEFAULT_PATH
 from ..gateway.meter import CALLS, CapReached, Gateway
@@ -52,6 +54,8 @@ from ..scoring import summarise
 from ..scoring.metrics import DEFAULT_CONFIG_LABEL, cell_name
 from . import files as F
 from .freeze import ProtocolError, check_run
+from .ledgers import stamp_spend, validate_ledger
+from .opencode_meter import needs_zen_opener, zen_urllib_opener
 from .views import MAX_INGEST_WORKERS, ViewStore, view_stage, views_path
 
 KIND_ORDER = {"gate": 0, "floor": 1, "view": 2}
@@ -65,6 +69,36 @@ class RunError(RuntimeError):
 
 class ResumeMismatch(RunError):
     """The run directory belongs to a run with a different configuration."""
+
+
+def check_opencode_binary_version(decider: Decider) -> str | None:
+    """Pin check for `opencode_cli` deciders: verify `<cmd> --version` matches cfg['opencode_version'].
+
+    Returns the verified version string (e.g. '2.3.0') for `opencode_cli` deciders, or None for others.
+    Aborts with RunError if the binary version differs or cannot be queried.
+    """
+    cfg = getattr(decider, "cfg", None)
+    if not isinstance(cfg, dict) or cfg.get("transport") != "opencode_cli":
+        return None
+    expected = str(cfg.get("opencode_version") or "2.3.0").strip().lstrip("v")
+    cmd = list(cfg.get("command") or ["opencode"])
+    exe = cmd[0]
+    resolved = shutil.which(exe) or exe
+    try:
+        proc = subprocess.run([exe, "--version"], capture_output=True, text=True, timeout=15)
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise RunError(f"opencode binary check failed for {resolved!r}: {exc}") from None
+    raw = (proc.stdout or proc.stderr or "").strip()
+    if proc.returncode != 0 or not raw:
+        raise RunError(f"opencode binary check failed ({resolved!r}, exit {proc.returncode}): {raw!r}")
+    m = re.search(r"v?(\d+\.\d+\.\d+)", raw)
+    actual = m.group(1) if m else raw
+    if actual != expected:
+        raise RunError(
+            f"opencode binary version mismatch at {resolved!r}: expected {expected!r} "
+            f"(frozen protocol config), got {actual!r} ({raw!r}); aborting run"
+        )
+    return actual
 
 
 @dataclass(kw_only=True)
@@ -91,11 +125,20 @@ class RunConfig:
     ingest_workers: int = 1  # view-stage threads for product adapters, 1..MAX_INGEST_WORKERS (docs/view-stage.md)
     protocol: str | Path | None = None  # protocol/v1.json: run the checks of docs/freeze.md section 4 first
     adapter_files: dict[str, str | Path] = field(default_factory=dict)  # system id ("mem0/k25") -> config file
+    ledger: str | None = None  # optional two-ledger tag ("main" or "sonnet", Round 5 A1)
 
 
 # ---------------------------------------------------------------------------
 # Decide seam
 # ---------------------------------------------------------------------------
+
+def _valid_outputs_for(track: str) -> tuple[str, ...]:
+    if track == "account_review":
+        return VALID_OUTPUTS
+    from ..tracks import get_track
+
+    return (*get_track(track).meta.valid_actions, PARSE_ERROR)
+
 
 def decide_one(decider: Decider, inp: DecisionInput, context: dict | None = None) -> str:
     """One decide call. A decider with `accepts_context` gets the context (kind, system, config_label, budget)
@@ -104,9 +147,10 @@ def decide_one(decider: Decider, inp: DecisionInput, context: dict | None = None
         action = decider.decide(inp, context=context)
     else:
         action = decider.decide(inp)
-    if action not in VALID_OUTPUTS:
+    valid = _valid_outputs_for(getattr(inp, "track", "account_review"))
+    if action not in valid:
         raise RunError(f"decider {decider.id!r} returned {action!r} for case {inp.case_id!r}; "
-                       f"expected one of {VALID_OUTPUTS}")
+                       f"expected one of {valid}")
     return action
 
 
@@ -481,7 +525,7 @@ def _run_case(case: Case, plan: _Plan, decider: Decider, present: set[tuple], tr
         row = {**base, "kind": kind, "system": a.name, "config_label": a.config_label, "budget": budget,
                "repeat": repeat, **vf}
         out.append((row, DecisionInput(case_id=cid, query_text=case.query_text, records_text=v.text,
-                                       record_ids=list(v.record_ids), repeat=repeat)))
+                                       record_ids=list(v.record_ids), repeat=repeat, track=track)))
 
     full = plan.full
     if any(k not in present for k in plan.full_keys(cid)):
@@ -576,16 +620,17 @@ def _spend(config: RunConfig, decider: Decider, adapters: list[MemoryAdapter], u
     product proxy, by_adapter[name].memory_side is the proxy's measured spend, total_usd includes it and
     memory_side_usd is the memory side's total. Without one the shape is unchanged."""
     out = _decider_spend(config, decider, adapters, usage, gateway)
-    if proxy is None:
-        return out
-    mem = proxy.spend()
-    zero = {"calls": 0, "cached_calls": 0, "embed_calls": 0, "input_tokens": 0, "output_tokens": 0, "usd": 0.0}
-    for a in adapters:
-        b = out["by_adapter"].setdefault(a.name, {"usd": 0.0, "calls": 0, "cached_calls": 0, "input_tokens": 0,
-                                                  "output_tokens": 0})
-        b["memory_side"] = dict(mem.get(a.name, zero))
-    out["memory_side_usd"] = proxy.spent_usd()
-    out["total_usd"] = round(out["total_usd"] + out["memory_side_usd"], 6)
+    if proxy is not None:
+        mem = proxy.spend()
+        zero = {"calls": 0, "cached_calls": 0, "embed_calls": 0, "input_tokens": 0, "output_tokens": 0, "usd": 0.0}
+        for a in adapters:
+            b = out["by_adapter"].setdefault(a.name, {"usd": 0.0, "calls": 0, "cached_calls": 0, "input_tokens": 0,
+                                                      "output_tokens": 0})
+            b["memory_side"] = dict(mem.get(a.name, zero))
+        out["memory_side_usd"] = proxy.spent_usd()
+        out["total_usd"] = round(out["total_usd"] + out["memory_side_usd"], 6)
+    if config.ledger is not None:
+        out = stamp_spend(out, config.ledger, run_cap_usd=float(out.get("cap_usd", config.cap_usd)))
     return out
 
 
@@ -624,6 +669,8 @@ def run(config: RunConfig) -> dict:
         names = [spec_name(s) for s in products]
         raise RunError(f"product adapters {names} need the product proxy; pass a memory-side config "
                        f"(bench run --memory-side CONFIG)")
+    if config.ledger is not None:
+        validate_ledger(config.ledger)
     ms_cfg = load_memory_side(config.memory_side) if config.memory_side is not None else None
     grade, protocol = _grade(config)  # before any file or call; a failed check raises ProtocolError
     run_dir = Path(config.out_dir)
@@ -647,8 +694,11 @@ def run(config: RunConfig) -> dict:
     if products:
         allow = bool(config.allow_unpriced or (gateway is not None and gateway.allow_unpriced))
         cache = config.proxy_cache or (gateway.cache_path if gateway is not None else DEFAULT_PATH)
+        proxy_opts = dict(config.proxy_options)
+        if "opener" not in proxy_opts and needs_zen_opener(ms_cfg):
+            proxy_opts["opener"] = zen_urllib_opener
         proxy = ProductProxy(ms_cfg, run_dir=run_dir, cache_path=cache, cap_usd=cap_usd, allow_unpriced=allow,
-                             **config.proxy_options)
+                             **proxy_opts)
     try:
         if proxy is not None:
             proxy.start()
@@ -686,18 +736,34 @@ def _run(config: RunConfig, run_dir: Path, cases: list[Case], cases_path: str | 
          run_id: str, gateway: Gateway | None, cap_usd: float, proxy: ProductProxy | None,
          grade: str = "exploratory", protocol: dict | None = None) -> dict:
     m_path, x_path = run_dir / F.MANIFEST, run_dir / F.METRICS
+    track = config.track
+    if track == "account_review" and cases and getattr(cases[0], "track", "account_review") != "account_review":
+        track = cases[0].track
+    d_spec = decider_spec(decider)
+    oc_bin_ver = check_opencode_binary_version(decider)
+    if oc_bin_ver is not None:
+        d_spec["opencode_binary_version"] = oc_bin_ver
+    meter_step = getattr(decider, "meter_step", None)
+    if meter_step is None:
+        meter_step = getattr(getattr(decider, "transport", None), "meter_step", None)
+    if meter_step is not None:
+        d_spec["meter_step"] = int(meter_step)
     new = {
-        "run_id": run_id, "grade": grade, "protocol": protocol, "track": config.track,
+        "run_id": run_id, "grade": grade, "protocol": protocol, "track": track,
         "cases": {"path": cases_path, "sha256": F.cases_sha256(cases), "n": len(cases)},
-        "deciders": [decider_spec(decider)],
+        "deciders": [d_spec],
         "adapters": [_adapter_entry(a) for a in [full, *adapters]],
-        "budgets": budgets, "repeats": config.repeats,
+        "budgets": budgets, "repeats": config.repeats, "parallel": parallel,
         "bootstrap": {"seed": config.boot_seed, "reps": config.boot_reps},
         "cap_usd": cap_usd,
         "memory_side": memory_side_spec(proxy.cfg) if proxy is not None else None,
         "code": {"version": __version__, "git_commit": _git_commit()},
         "_dir": str(run_dir),
     }
+    if meter_step is not None:
+        new["meter_step"] = int(meter_step)
+    if config.ledger is not None:
+        new["ledger"] = config.ledger
     old = F.read_json(m_path) if m_path.exists() else None
     if old is None and x_path.exists():
         raise RunError(f"{x_path} exists without a manifest.json; refusing to resume")
@@ -763,7 +829,7 @@ def _run(config: RunConfig, run_dir: Path, cases: list[Case], cases_path: str | 
         for case in cases:
             if all(k in present for k in plan.all_keys(case.case_id)):
                 continue
-            rows, _failed = _run_case(case, plan, decider, present, config.track, health, usage, executor, proxy,
+            rows, _failed = _run_case(case, plan, decider, present, track, health, usage, executor, proxy,
                                       store)
             F.append_rows(x_path, rows)
             F.append_jsonl(run_dir / F.TIMINGS, health.take_timings())
@@ -778,7 +844,13 @@ def _run(config: RunConfig, run_dir: Path, cases: list[Case], cases_path: str | 
         F.write_json(run_dir / F.SPEND, _spend(config, decider, adapters, usage, gateway, proxy))
         F.write_json(run_dir / F.HEALTH, health.report(run_id, _cases_done(plan, present)))
         (run_dir / F.TIMINGS).touch()
-        names = [*F.RESULT_FILES, *(n for n in (CALLS, MEMORY_CALLS) if (run_dir / n).exists())]
+        extra_sealed: list[str] = []
+        if views_path(run_dir).exists() and (run_dir / MEMORY_CALLS).exists():
+            from .audit import VIEW_AUDIT, audit_views
+
+            audit_views(run_dir, write=True, seal_manifest=False)
+            extra_sealed.append(VIEW_AUDIT)
+        names = [*F.RESULT_FILES, *(n for n in (CALLS, MEMORY_CALLS) if (run_dir / n).exists()), *extra_sealed]
         manifest.update(state="complete", finished=F.now(), incomplete_cells=_incomplete(plan, present),
                         files={n: F.sha256_file(run_dir / n) for n in names})
         F.write_json(m_path, manifest)

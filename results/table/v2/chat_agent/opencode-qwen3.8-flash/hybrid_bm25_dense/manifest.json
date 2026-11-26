@@ -1,0 +1,117 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "default",
+      "config_sha256": "00304ce1aa7f511eb4c1f29778e1729b3cc15090371c72bfea64fdd43018ced2",
+      "name": "hybrid_bm25_dense",
+      "product_version": "builtin"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 6.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+  },
+  "code": {
+    "git_commit": "7c3e0b1b4ef73b71f23974c1321266e228c14c69",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-24T20:58:50+00:00",
+  "deciders": [
+    {
+      "id": "opencode-qwen3.8-flash",
+      "key_source": null,
+      "meter_step": 5,
+      "model": "opencode/qwen3.8-flash",
+      "opencode_binary_version": "2.3.0",
+      "opencode_version": "2.3.0",
+      "params": {
+        "max_tokens": 2048,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-23",
+        "input_per_m": 0.15,
+        "output_per_m": 0.47,
+        "source": "OpenCode Console pricing recorded 2026-11-23"
+      },
+      "prompt_version": "v1",
+      "snapshot_date": "2026-11-23",
+      "transport": "opencode_cli"
+    }
+  ],
+  "environment": {
+    "ledger_module": "ledger_v2",
+    "packages": {
+      "graphiti-core": "not_installed",
+      "langmem": "not_installed",
+      "mem0ai": "not_installed"
+    },
+    "protocol_step": 8,
+    "python_version": "3.12.13",
+    "table_runner": "scripts/run_phase1_table.py",
+    "table_runner_sha256": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+    "venv_name": "venv"
+  },
+  "error": null,
+  "files": {
+    "calls.jsonl": "b1a935e6a6092d6ba1f5578409cb4fc6fe76cf938fd02499f380920fc33ef58e",
+    "health.json": "de5a330345ee5793bfdea39b3df2121a6712aa4b456aeb4c79e25ba7fcee7489",
+    "memory_calls.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "metrics.jsonl": "52b33ac3a077e839cfd353f05f7be011d150bc505a0f34d64d09bf9b7130c878",
+    "spend.json": "9cf51771ce5cfbc85e42f211a7fab8768ccdaf731d01ae6256bd31387e382522",
+    "summary.json": "32097dcca3b1da33d9a46b49b039dcc28e0e35d4e5b1cff4160c9870156661e4",
+    "timings.jsonl": "16bf442ea7216e35e5ae37f2c934eb6906853b99230cfb832f45775b279eb8a3",
+    "view-audit.json": "e59877bc07888d66a9a1b51051ac83e6e840c660a58a866906da9e3481de317e"
+  },
+  "finished": "2026-11-24T22:16:44+00:00",
+  "grade": "table",
+  "incomplete_cells": [],
+  "ledger": "main",
+  "memory_side": {
+    "chat_model": "deepseek-v4.1-flash",
+    "config_sha256": "6b010a180ff94079b07dc08670e67a8e84f46d1cd75f725f1a48c00561f8b4b4",
+    "embeddings_model": "bge-m3",
+    "id": "opencode-deepseek-v4.1-flash-bge-m3"
+  },
+  "meter_step": 5,
+  "parallel": 4,
+  "protocol": {
+    "budgets_registered_not_run": [
+      4000
+    ],
+    "path": "protocol/v2.json",
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "steps": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "version": "v2"
+  },
+  "repeats": 3,
+  "run_id": "v2-step8-table-opencode-qwen3.8-flash-hybrid_bm25_dense",
+  "started": "2026-11-24T20:58:50+00:00",
+  "state": "complete",
+  "track": "chat_agent"
+}

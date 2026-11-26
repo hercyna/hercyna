@@ -1,0 +1,38 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 2e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T19:57:35+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 2.1e-05
+    },
+    {
+      "cases_done": 300,
+      "config_label": "c25",
+      "errors": 0,
+      "ingest_seconds_mean": null,
+      "last_error": null,
+      "last_ok_at": null,
+      "name": "langmem",
+      "ok": true,
+      "product_version": "0.0.30",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": null
+    }
+  ],
+  "run_id": "v2-step8-table-opencode-glm-5.3-flash-langmem",
+  "updated": "2026-11-24T19:57:39+00:00"
+}

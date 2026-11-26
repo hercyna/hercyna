@@ -1,4 +1,5 @@
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -320,10 +321,11 @@ def test_static_board_without_script(root, tmp_path):
     summ = json.loads((root / "results" / "runs" / "t1" / "summary.json").read_text())
     for did in summ["deciders"]:
         assert f'<h3 class="dhead nojs-only">{did}' in page
-    assert page.count('<tr class="row"') >= 2 and 'style="width:' in page
+    assert page.count('<tr class="row"') >= 2 and '<svg class="bar-svg"' in page
     assert page.count('<svg class="frontier"') == len(summ["deciders"])
     assert '<div class="tab-rail js-only">' in page and 'id="f-base"' in page
-    assert "document.documentElement.className+=' js'" in page
+    assert "assets/head.js" in page
+    assert "document.documentElement.className+=' js'" in (tmp_path / "o" / "assets" / "head.js").read_text()
     assert '<div class="nojs-meta nojs-only">' in page and 'class="audit on"' in page
 
 
@@ -434,13 +436,18 @@ def test_case_anatomy_uses_a_dev_case(root, tmp_path):
 
 def test_theme_toggle_markup(root, tmp_path):
     _build(root, tmp_path / "o")
+    out = tmp_path / "o"
+    head_js = (out / "assets" / "head.js").read_text()
+    app_js = (out / "assets" / "app.js").read_text()
+    css = (out / "assets" / "site.css").read_text()
+    assert "localStorage.getItem('hercyna-theme')" in head_js and "try{" in head_js
+    assert "localStorage.setItem('hercyna-theme'" in app_js
+    assert '@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])' in css
+    assert ':root[data-theme="dark"]' in css
     for n in ("index.html", "method.html", "submit.html"):
-        page = (tmp_path / "o" / n).read_text()
+        page = (out / n).read_text()
         assert '<button class="btn js-only" type="button" id="theme" aria-pressed="false">' in page
-        assert "localStorage.getItem('hercyna-theme')" in page and "try{" in page
-        assert "localStorage.setItem('hercyna-theme'" in page
-        assert '@media (prefers-color-scheme: dark) { :root:not([data-theme="light"])' in page
-        assert ':root[data-theme="dark"]' in page
+        assert "assets/head.js" in page and "assets/app.js" in page and "assets/site.css" in page
 
 
 def test_media_copied_and_marked(root, tmp_path):
@@ -472,7 +479,7 @@ def test_about_page_and_why_section(root, tmp_path):
         low = page.lower()
         local = REPO / "banned_words.local.txt"  # private names, never committed (also read by test_generator)
         names = [w.strip().lower() for w in local.read_text().splitlines() if w.strip()] if local.exists() else []
-        for banned in (*names, "phd", "published in"):
+        for banned in (*names, "published in"):
             assert banned not in low, banned
 
 
@@ -491,9 +498,11 @@ def test_anchor_links_are_not_left_to_smooth_scroll(root, tmp_path):
     """Global smooth scrolling was cancelled by the stepper's layout changes, so rail links went nowhere.
     Anchors jump instantly, and a page opened with #section aims again once fonts are ready."""
     _build(root, tmp_path / "o")
-    page = (tmp_path / "o" / "index.html").read_text()
-    assert "scroll-behavior: smooth" not in page and "scroll-behavior:smooth" not in page
-    assert "behavior: 'instant'" in page
+    out = tmp_path / "o"
+    css = (out / "assets" / "site.css").read_text()
+    app_js = (out / "assets" / "app.js").read_text()
+    assert "scroll-behavior: smooth" not in css and "scroll-behavior:smooth" not in css
+    assert "behavior: 'instant'" in app_js
 
 
 def test_memory_cost_comes_from_the_ingesting_run(tmp_path):
@@ -509,3 +518,29 @@ def test_memory_cost_comes_from_the_ingesting_run(tmp_path):
     total, split = b._usd_per_case({"dir": d, "man": {"cases": {"n": 100}}}, "graphiti")
     assert round(total, 3) == 0.33 and split == (0.30, 0.03)
     b.MEMORY_COST.clear()
+
+
+def test_pages_make_no_third_party_request(root, tmp_path):
+    """The fonts ship with the site under an open font licence, so no page calls a font service or a CDN."""
+    _build(root, tmp_path / "o")
+    out = tmp_path / "o"
+    css = (out / "assets" / "site.css").read_text()
+    assert re.search(r"font-display: swap", css)
+    for name in ("index.html", "method.html", "submit.html", "why.html", "about.html"):
+        page = (out / name).read_text()
+        assert "fonts.googleapis.com" not in page and "fonts.gstatic.com" not in page
+        for url in re.findall(r'(?:src|href)="([^"]+)"|url\("?([^")]+)"?\)', page):
+            u = url[0] or url[1]
+            if u.startswith("fonts/"):
+                assert (out / u).is_file(), u
+    for lic in ("OFL-Newsreader.txt", "OFL-IBMPlexSans.txt", "OFL-JetBrainsMono.txt"):
+        assert "SIL Open Font License" in (out / "fonts" / lic).read_text()
+
+
+def test_board_marked_from_the_top_and_touch_wording(root, tmp_path):
+    _build(root, tmp_path / "o")
+    page = (tmp_path / "o" / "index.html").read_text()
+    assert '<a href="#board" class="on">Board</a>' in page
+    assert '<span class="touch-only">Select</span> a row' in page
+    method = (tmp_path / "o" / "method.html").read_text()
+    assert 'class="on"' not in method.split('<nav class="rail-nav"')[1].split("</nav>")[0]

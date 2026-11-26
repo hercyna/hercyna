@@ -1,0 +1,46 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 2e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T16:16:45+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 2.6e-05
+    },
+    {
+      "cases_done": 298,
+      "config_label": "k25",
+      "errors": 2,
+      "ingest_seconds_mean": 0.108554,
+      "last_error": {
+        "at": "2026-11-24T14:53:20+00:00",
+        "case_id": "ctab2026112302-0110",
+        "error": "AttributeError",
+        "error_sha256": "c3da1a4bdd76a2041547a42ece616fcbf91ab9d75e1312ef8fa949aab6afd557"
+      },
+      "last_ok_at": null,
+      "name": "mem0",
+      "ok": false,
+      "product_version": "2.2.1",
+      "product_warnings": {
+        "by_logger": {
+          "mem0.utils.spacy_models": 2,
+          "mem0.vector_stores.qdrant": 2
+        },
+        "total": 4
+      },
+      "retrieve_seconds_mean": null
+    }
+  ],
+  "run_id": "v2-step8-table-opencode-deepseek-v4.1-flash-mem0",
+  "updated": "2026-11-24T16:16:51+00:00"
+}

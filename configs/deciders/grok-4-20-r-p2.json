@@ -26,5 +26,5 @@
   },
   "timeout_s": 300,
   "retries": 3,
-  "description": "Decider B (Varma, 2026-11-19): second vendor, reasoning (billed as output), pinned dated model id. The transport runs the key command just before each call; no session reads the key. Spend counts against the bench cap only | S9.3 exploratory: the second prompt wording (v2), floor only"
+  "description": "Decider B (2026-11-19): second vendor, reasoning (billed as output), pinned dated model id. The transport runs the key command just before each call; no session reads the key. Spend counts against the bench cap only | S9.3 exploratory: the second prompt wording (v2), floor only"
 }

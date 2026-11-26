@@ -1,0 +1,9 @@
+{
+  "adapter": "langmem",
+  "config_label": "c25",
+  "config": {
+    "records_per_chunk": 25,
+    "embedding_dims": 1024
+  },
+  "description": "LangMem 0.0.30, v2 shared memory side (deepseek-v4.1-flash extractor + bge-m3 1024-dim embedder), 25 records per chunk."
+}

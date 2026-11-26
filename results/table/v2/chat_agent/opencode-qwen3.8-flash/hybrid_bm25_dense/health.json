@@ -1,0 +1,38 @@
+{
+  "adapters": [
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": 2e-06,
+      "last_error": null,
+      "last_ok_at": "2026-11-24T22:16:35+00:00",
+      "name": "full",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": 1.9e-05
+    },
+    {
+      "cases_done": 300,
+      "config_label": "default",
+      "errors": 0,
+      "ingest_seconds_mean": null,
+      "last_error": null,
+      "last_ok_at": null,
+      "name": "hybrid_bm25_dense",
+      "ok": true,
+      "product_version": "builtin",
+      "product_warnings": {
+        "by_logger": {},
+        "total": 0
+      },
+      "retrieve_seconds_mean": null
+    }
+  ],
+  "run_id": "v2-step8-table-opencode-qwen3.8-flash-hybrid_bm25_dense",
+  "updated": "2026-11-24T22:16:44+00:00"
+}

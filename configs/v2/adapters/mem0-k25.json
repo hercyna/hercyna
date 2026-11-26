@@ -1,0 +1,10 @@
+{
+  "adapter": "mem0",
+  "config_label": "k25",
+  "config": {
+    "records_per_add": 25,
+    "embedding_dims": 1024,
+    "reasoning_model": true
+  },
+  "description": "Mem0 2.2.1, v2 shared memory side (deepseek-v4.1-flash reasoning extractor + bge-m3 1024-dim embedder), 25 records per add."
+}

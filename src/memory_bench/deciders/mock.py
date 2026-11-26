@@ -28,7 +28,22 @@ class MockOracleDecider:
     def _oracle(self, inp: DecisionInput) -> str:
         case = self._cases[inp.case_id]
         ids = set(inp.record_ids)
-        return oracle([e for e in case.events if e.id in ids], case.query_period)
+        track = getattr(case, "track", "account_review")
+        if track == "account_review":
+            return oracle([e for e in case.events if e.id in ids], case.query_period)
+        from ..tracks import get_track
+
+        return get_track(track).oracle(case, visible_ids=ids)
+
+    def _committed_actions(self, inp: DecisionInput) -> tuple[str, ...]:
+        case = self._cases[inp.case_id]
+        track = getattr(case, "track", "account_review")
+        if track == "account_review":
+            return COMMITTED
+        from ..tracks import get_track
+
+        meta = get_track(track).meta
+        return tuple(a for a in meta.valid_actions if a != meta.abstention_action)
 
     def decide(self, inp: DecisionInput) -> str:
         return self._oracle(inp)
@@ -55,5 +70,5 @@ class MockNoisyDecider(MockOracleDecider):
         u = int.from_bytes(h[:8], "big") / 2**64
         if u >= self.flip_rate:
             return right
-        others = [a for a in COMMITTED if a != right]
+        others = [a for a in self._committed_actions(inp) if a != right]
         return others[h[8] % len(others)]

@@ -54,14 +54,15 @@ def _lines(p: Path):
                 yield x
 
 
-def _stored_views(run_dir: Path) -> dict[tuple[str, str, str], dict]:
-    """Newest line per key, reduced to the fields the audit needs (the text never leaves this function)."""
-    out: dict[tuple[str, str, str], dict] = {}
+def _stored_views(run_dir: Path) -> dict[tuple[str, str, str, int], dict]:
+    """Newest line per (case_id, system, config_label, ingest_pass), reduced to audit metadata only."""
+    out: dict[tuple[str, str, str, int], dict] = {}
     for line in _lines(views_path(run_dir)):
         cid = line.get("case_id")
         if not isinstance(cid, str):
             continue
-        out[(cid, str(line.get("system")), str(line.get("config_label")))] = {
+        ingest_pass = int(line.get("ingest_pass") or 1)
+        out[(cid, str(line.get("system")), str(line.get("config_label")), ingest_pass)] = {
             "at": _ts(line.get("at")), "ingest_seconds": float(line.get("ingest_seconds") or 0.0),
             "retrieve_seconds": float(line.get("retrieve_seconds") or 0.0)}
     return out
@@ -71,8 +72,10 @@ def _status_key(s: Any) -> str:
     return "none" if s is None else str(s)
 
 
-def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: bool = True) -> dict[str, Any]:
-    """Counts of stored views with a failed memory-side call inside their ingest window. Writes view-audit.json."""
+def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: bool = True,
+                seal_manifest: bool = True) -> dict[str, Any]:
+    """Counts of stored views with a failed memory-side call inside their ingest window. Writes view-audit.json
+    and seals its SHA-256 into manifest.files when a completed manifest is present."""
     run_dir = Path(run_dir)
     vp, cp = views_path(run_dir), run_dir / MEMORY_CALLS
     if not vp.exists():
@@ -81,7 +84,7 @@ def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: b
         raise AuditError(f"{run_dir.name}: no {MEMORY_CALLS} (the run did not use the product proxy)")
     views = _stored_views(run_dir)
 
-    failed: dict[tuple[str, str, str], list[datetime | None]] = {}
+    failed: dict[tuple[str, str, str, int], list[datetime | None]] = {}
     by_status: dict[str, int] = {}
     n_calls = 0
     for c in _lines(cp):
@@ -90,7 +93,8 @@ def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: b
             continue
         sk = _status_key(c.get("status"))
         by_status[sk] = by_status.get(sk, 0) + 1
-        key = (str(c.get("case_id")), str(c.get("adapter")), str(c.get("config_label")))
+        ingest_pass = int(c.get("ingest_pass") or 1)
+        key = (str(c.get("case_id")), str(c.get("adapter")), str(c.get("config_label")), ingest_pass)
         failed.setdefault(key, []).append(_ts(c.get("at")))
 
     systems: dict[str, dict[str, Any]] = {}
@@ -101,7 +105,7 @@ def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: b
             "failed_calls": 0, "failed_calls_by_status": {}, "cases_failed_without_view": [],
             "views_unchecked": 0})
 
-    for (cid, system, label), v in sorted(views.items()):
+    for (cid, system, label, ingest_pass), v in sorted(views.items()):
         s = sys_slot(system, label)
         if v["at"] is None:
             s["views_unchecked"] += 1  # no readable time: the window cannot be drawn
@@ -109,7 +113,7 @@ def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: b
         s["views_checked"] += 1
         end = v["at"]
         start = end - timedelta(seconds=v["ingest_seconds"] + v["retrieve_seconds"] + margin)
-        hits = sum(1 for t in failed.get((cid, system, label), []) if t is not None and start <= t <= end)
+        hits = sum(1 for t in failed.get((cid, system, label, ingest_pass), []) if t is not None and start <= t <= end)
         if hits:
             s["views_with_failed_call"] += 1
             s["case_ids"].append(cid)
@@ -122,16 +126,18 @@ def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: b
         s["failed_calls"] += 1
         sk = _status_key(c.get("status"))
         s["failed_calls_by_status"][sk] = s["failed_calls_by_status"].get(sk, 0) + 1
-    for (cid, system, label) in sorted(failed):
-        if (cid, system, label) not in views:
+    for (cid, system, label, ingest_pass) in sorted(failed):
+        if (cid, system, label, ingest_pass) not in views:
             sys_slot(system, label)["cases_failed_without_view"].append(cid)
 
     for s in systems.values():
         s["failed_calls_by_status"] = dict(sorted(s["failed_calls_by_status"].items()))
         s["n_cases_failed_without_view"] = len(s["cases_failed_without_view"])
+    m_path = run_dir / F.MANIFEST
+    manifest = F.read_json(m_path) if m_path.exists() else {}
     out = {
         "schema": SCHEMA,
-        "run_id": (F.read_json(run_dir / F.MANIFEST) if (run_dir / F.MANIFEST).exists() else {}).get("run_id"),
+        "run_id": manifest.get("run_id"),
         "margin_seconds": margin,
         "memory_calls": n_calls,
         "views_checked": sum(s["views_checked"] for s in systems.values()),
@@ -143,6 +149,9 @@ def audit_views(run_dir: str | Path, *, margin: float = MARGIN_SECONDS, write: b
     }
     if write:
         F.write_json(run_dir / VIEW_AUDIT, out)
+        if seal_manifest and m_path.exists() and isinstance(manifest.get("files"), dict) and manifest["files"]:
+            manifest["files"][VIEW_AUDIT] = F.sha256_file(run_dir / VIEW_AUDIT)
+            F.write_json(m_path, manifest)
     return out
 
 

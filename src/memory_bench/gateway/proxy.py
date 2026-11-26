@@ -209,18 +209,50 @@ def _int(x: Any) -> int | None:
     return x if isinstance(x, int) and not isinstance(x, bool) else None
 
 
+def _parse_sse_usage(reply: bytes) -> tuple[dict[str, Any], int]:
+    """Extract the last usage object and accumulated delta text length from an OpenAI SSE byte stream."""
+    usage: dict[str, Any] = {}
+    delta_chars = 0
+    for raw_line in reply.decode("utf-8", "replace").splitlines():
+        line = raw_line.strip()
+        if not line.startswith("data:"):
+            continue
+        payload = line[5:].strip()
+        if not payload or payload == "[DONE]":
+            continue
+        try:
+            chunk = json.loads(payload)
+        except ValueError:
+            continue
+        if not isinstance(chunk, dict):
+            continue
+        if isinstance(chunk.get("usage"), dict) and chunk["usage"]:
+            usage = chunk["usage"]
+        for ch in chunk.get("choices") or []:
+            if isinstance(ch, dict):
+                delta = ch.get("delta") if isinstance(ch.get("delta"), dict) else {}
+                delta_chars += _content_chars(delta.get("content")) + _content_chars(ch.get("text"))
+    return usage, delta_chars
+
+
 def meter(route: str, req: dict[str, Any], reply: bytes) -> tuple[int, int, bool]:
     """(input_tokens, output_tokens, estimated) of one 2xx reply (design section 3 rule 4).
 
     Chat: input = usage.prompt_tokens; output = max(completion_tokens, total_tokens - prompt_tokens).
     Embeddings: input = usage.prompt_tokens or usage.total_tokens; output 0.
+    Supports SSE streaming payloads (`data: {...}`) when streaming is enabled on the harness gateway.
     A missing part is estimated as ceil(chars / 2.2) and the call is marked estimated."""
+    is_sse = False
+    delta_chars = 0
     try:
         obj = json.loads(reply)
     except ValueError:
         obj = None
     obj = obj if isinstance(obj, dict) else {}
     u = obj.get("usage") if isinstance(obj.get("usage"), dict) else {}
+    if not obj and reply.lstrip().startswith(b"data:"):
+        is_sse = True
+        u, delta_chars = _parse_sse_usage(reply)
     pt, ct, tt = _int(u.get("prompt_tokens")), _int(u.get("completion_tokens")), _int(u.get("total_tokens"))
     if route == "embeddings":
         tin = pt if pt is not None else tt
@@ -238,13 +270,16 @@ def meter(route: str, req: dict[str, Any], reply: bytes) -> tuple[int, int, bool
     elif pt is not None and tt is not None:
         tout = tt - pt
     else:
-        chars = 0
-        for ch in obj.get("choices") or []:
-            if isinstance(ch, dict):
-                msg = ch.get("message") if isinstance(ch.get("message"), dict) else {}
-                chars += _content_chars(msg.get("content")) + _content_chars(ch.get("text"))
-        if not obj:
-            chars = len(reply)
+        if is_sse:
+            chars = delta_chars if delta_chars > 0 else len(reply)
+        else:
+            chars = 0
+            for ch in obj.get("choices") or []:
+                if isinstance(ch, dict):
+                    msg = ch.get("message") if isinstance(ch.get("message"), dict) else {}
+                    chars += _content_chars(msg.get("content")) + _content_chars(ch.get("text"))
+            if not obj:
+                chars = len(reply)
         tout, estimated = _estimate(chars), True
     return int(tin), int(max(tout, 0)), estimated
 
@@ -389,7 +424,8 @@ class _Handler(BaseHTTPRequestHandler):
         except Exception as exc:  # noqa: BLE001 - the product gets a JSON error; no text of the request is kept
             status, out = 500, _err("bench_proxy_error", f"bench proxy internal error: {type(exc).__name__}")
         self.send_response(status)
-        self.send_header("Content-Type", "application/json")
+        ctype = "text/event-stream; charset=utf-8" if (200 <= status < 300 and out.lstrip().startswith(b"data:")) else "application/json"
+        self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(out)))
         self.end_headers()
         self.wfile.write(out)
@@ -426,10 +462,12 @@ class ProductProxy:
                  spent_elsewhere: Callable[[], float] = _no_spend, opener: Opener | None = None,
                  runner: Runner | None = None, clock: Callable[[], float] = time.monotonic,
                  allow_unpriced: bool = False, port: int = 0, sleep: Callable[[float], None] | None = None,
-                 backoff_s: float = 2.0, environ: dict[str, str] | None = None):
+                 backoff_s: float = 2.0, environ: dict[str, str] | None = None,
+                 allow_streaming: bool = False):
         from ..deciders.transports import subprocess_runner, urllib_opener
 
         self.cfg = load_memory_side(memory_side)
+        self.allow_streaming = bool(allow_streaming)
         check_priced(self.cfg, allow_unpriced)
         self.upstreams = {"chat": self.cfg["chat"], "embeddings": self.cfg["embeddings"]}
         self.timeout_s = float(self.cfg.get("timeout_s") or DEFAULT_TIMEOUT_S)
@@ -600,7 +638,10 @@ class ProductProxy:
         if not isinstance(req, dict):
             return 400, _err("invalid_request_error", "request body is not a JSON object")
         if req.get("stream") is True:
-            return 400, _err("invalid_request_error", STREAM_MESSAGE)
+            if not self.allow_streaming:
+                return 400, _err("invalid_request_error", STREAM_MESSAGE)
+            if route == "chat" and "stream_options" not in req:
+                req["stream_options"] = {"include_usage": True}
         up = self.upstreams[route]
         requested = req.get("model")
         req["model"] = up["model"]  # the model is pinned

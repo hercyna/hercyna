@@ -64,14 +64,24 @@ class MemoryAdapter(Protocol):
 def records_of(case: Case) -> list[Record]:
     """The rendered lines of a case in history order, as Records.
 
-    Id and date are parsed from the line itself ("<id> <date> <wording>").
-    Nothing else from the case is passed on.
+    For v1 `account_review`, preserves the exact space-parsed rendering. For v2 tracks,
+    constructs Record(id, date, text) directly from Event fields and track rendering so
+    ISO dates never break on arbitrary text formatting.
     """
-    out: list[Record] = []
-    for _eid, line in rendered(case):
-        rid, date, _rest = str(line).split(" ", 2)
-        out.append(Record(id=str(rid), date=str(date), text=str(line)))
-    return out
+    if getattr(case, "track", "account_review") == "account_review":
+        out: list[Record] = []
+        for _eid, line in rendered(case):
+            rid, date, _rest = str(line).split(" ", 2)
+            out.append(Record(id=str(rid), date=str(date), text=str(line)))
+        return out
+    from ..tracks import get_track, render_v2_record
+
+    try:
+        spec = get_track(case.track)
+        render_fn = lambda ev: spec.render_record(case, ev)
+    except KeyError:
+        render_fn = render_v2_record
+    return [Record(id=str(ev.id), date=str(ev.date), text=str(render_fn(ev))) for ev in case.events]
 
 
 def enforce_budget(retrieved: Retrieved, budget_tokens: int, reference: bool = False) -> Retrieved:

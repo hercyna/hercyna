@@ -16,13 +16,14 @@ from ..gateway.meter import Gateway
 from .base import PARSE_ERROR, Decider, DecisionInput
 from .lifted import PROMPT_VERSIONS, parse_reply
 from .prompts import build_prompt, with_reminder
-from .transports import TRANSPORTS, Opener, Runner, Transport, make_transport
+from .transports import TRANSPORTS, ContextOverflowError, Opener, Runner, Transport, make_transport
 
 __all__ = ["ModelDecider", "load_decider", "load_config", "decider_spec", "CONFIG_KEYS"]
 
 CONFIG_KEYS = frozenset({"id", "transport", "model", "prompt_version", "params", "base_url", "command", "key",
                          "price", "timeout_s", "retries", "assumed_output_tokens", "description",
-                         "env_unset"})
+                         "env_unset", "snapshot_date", "opencode_version", "weights_status", "weights_url",
+                         "max_retry_sleep_s"})
 PARAM_KEYS = frozenset({"max_tokens", "temperature", "effort", "thinking", "num_ctx"})
 
 
@@ -75,8 +76,17 @@ def load_config(path_or_dict: str | Path | dict[str, Any]) -> dict[str, Any]:
             raise ValueError("env_unset must be a list of environment variable names")
         if cfg["transport"] != "anthropic_command":
             raise ValueError("only the anthropic_command transport takes env_unset")
+    if cfg["transport"] == "opencode_cli":
+        cfg.setdefault("command", ["opencode"])
+        if not (isinstance(cfg["command"], list) and cfg["command"] and all(isinstance(a, str) for a in cfg["command"])):
+            raise ValueError("command must be a non-empty list of strings")
     if cfg["transport"] == "openai_compat" and not cfg.get("base_url"):
         raise ValueError("openai_compat needs base_url")
+    if cfg["transport"] == "ollama" and not cfg.get("base_url"):
+        raise ValueError(
+            "ollama transport requires an explicit base_url (e.g. 'http://127.0.0.1:11535') "
+            "so local runs stay off the shared Ollama on :11434"
+        )
     return cfg
 
 
@@ -98,14 +108,55 @@ class ModelDecider:
 
     def decide(self, inp: DecisionInput, context: dict[str, Any] | None = None) -> str:
         ctx = {**(context or {}), "case_id": inp.case_id}
-        messages = build_prompt(inp, self.prompt_version)
-        reply = self.gateway.call(self.cfg, self.transport, messages, repeat=inp.repeat,
-                                  context={**ctx, "reminder": False})
-        parsed = parse_reply(reply.text)
-        if parsed is None:
-            reply = self.gateway.call(self.cfg, self.transport, with_reminder(messages), repeat=inp.repeat,
-                                      context={**ctx, "reminder": True})
+        track_name = getattr(inp, "track", "account_review")
+        if track_name == "account_review":
+            messages = build_prompt(inp, self.prompt_version)
+            reply = self.gateway.call(self.cfg, self.transport, messages, repeat=inp.repeat,
+                                      context={**ctx, "reminder": False})
+            if getattr(reply, "context_truncated", False) and ctx.get("kind") in ("gate", "floor"):
+                raise ContextOverflowError(
+                    f"CONTEXT_OVERFLOW on {ctx.get('kind')} for case {inp.case_id} ({self.id})"
+                )
             parsed = parse_reply(reply.text)
+            if parsed is None:
+                reply = self.gateway.call(self.cfg, self.transport, with_reminder(messages), repeat=inp.repeat,
+                                          context={**ctx, "reminder": True})
+                if getattr(reply, "context_truncated", False) and ctx.get("kind") in ("gate", "floor"):
+                    raise ContextOverflowError(
+                        f"CONTEXT_OVERFLOW on {ctx.get('kind')} reminder for case {inp.case_id} ({self.id})"
+                    )
+                parsed = parse_reply(reply.text)
+            self.last_raw, self.last_parsed = reply.text, parsed
+            return parsed["action"] if parsed else PARSE_ERROR
+
+        from ..tracks import get_track
+
+        spec = get_track(track_name)
+        messages = spec.build_messages(inp, self.prompt_version)
+        schema = spec.action_schema(self.prompt_version)
+        reply = self.gateway.call(
+            self.cfg, self.transport, messages, repeat=inp.repeat,
+            context={**ctx, "reminder": False, "track": track_name},
+            response_schema=schema,
+        )
+        if getattr(reply, "context_truncated", False) and ctx.get("kind") in ("gate", "floor"):
+            raise ContextOverflowError(
+                f"CONTEXT_OVERFLOW on {ctx.get('kind')} for case {inp.case_id} ({self.id})"
+            )
+        parsed = spec.parse_reply(reply.text)
+        if parsed is None:
+            rem_fn = getattr(spec, "with_reminder", None)
+            rem_msgs = rem_fn(messages) if callable(rem_fn) else with_reminder(messages)
+            reply = self.gateway.call(
+                self.cfg, self.transport, rem_msgs, repeat=inp.repeat,
+                context={**ctx, "reminder": True, "track": track_name},
+                response_schema=schema,
+            )
+            if getattr(reply, "context_truncated", False) and ctx.get("kind") in ("gate", "floor"):
+                raise ContextOverflowError(
+                    f"CONTEXT_OVERFLOW on {ctx.get('kind')} reminder for case {inp.case_id} ({self.id})"
+                )
+            parsed = spec.parse_reply(reply.text)
         self.last_raw, self.last_parsed = reply.text, parsed
         return parsed["action"] if parsed else PARSE_ERROR
 
@@ -130,4 +181,7 @@ def decider_spec(decider: Decider) -> dict[str, Any]:
         spec["prompt_version"] = cfg["prompt_version"]
         spec["price"] = copy.deepcopy(cfg.get("price"))
         spec["key_source"] = next(iter(cfg["key"])) if cfg.get("key") else None
+        for snap_key in ("snapshot_date", "opencode_version"):
+            if cfg.get(snap_key) is not None:
+                spec[snap_key] = str(cfg[snap_key])
     return spec

@@ -1,0 +1,72 @@
+{
+  "by_adapter": {
+    "full": {
+      "cached_calls": 1200,
+      "calls": 1200,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "graphiti": {
+      "cached_calls": 24,
+      "calls": 861,
+      "input_tokens": 1185546,
+      "memory_side": {
+        "cached_calls": 314,
+        "calls": 328,
+        "embed_calls": 109,
+        "input_tokens": 15207,
+        "output_tokens": 4349,
+        "usd": 0.003915
+      },
+      "output_tokens": 192293,
+      "usd": 0.214705
+    }
+  },
+  "by_decider": {
+    "haiku-5-5": {
+      "cached_calls": 1224,
+      "calls": 2061,
+      "input_tokens": 1185546,
+      "output_tokens": 192293,
+      "usd": 0.214705
+    }
+  },
+  "by_stage": {
+    "floor": {
+      "cached_calls": 900,
+      "calls": 900,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "gate": {
+      "cached_calls": 300,
+      "calls": 300,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "usd": 0.0
+    },
+    "view": {
+      "cached_calls": 24,
+      "calls": 861,
+      "input_tokens": 1185546,
+      "output_tokens": 192293,
+      "usd": 0.214705
+    }
+  },
+  "cached_calls": 1224,
+  "cached_input_tokens": 7258568,
+  "cached_output_tokens": 429671,
+  "calls": 2061,
+  "cap_usd": 60.0,
+  "estimated_calls": 0,
+  "input_tokens": 1185546,
+  "ledger": "main",
+  "memory_side_usd": 0.003915,
+  "output_tokens": 192293,
+  "run_cap_usd": 3.0,
+  "stop_usd": 55.0,
+  "total_usd": 0.21862,
+  "unpriced_calls": 0
+}

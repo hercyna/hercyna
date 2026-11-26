@@ -2,6 +2,28 @@
 
 All notable changes to Hercyna, the agent-memory benchmark.
 
+## v2.0.0-rc1 (2026-11-25)
+
+Experimental results. See TERMS.md.
+
+### Added
+
+- **Legal & CLI terms gate (`TERMS.md`, `LEGAL.md`, `PRIVACY.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`, `terms.py`):** single-source-of-truth disclaimer, first-run interactive terms prompt (`bench terms`, `--accept-terms`, `HERCYNA_ACCEPT_TERMS=1`, versioned acceptance in `~/.config/hercyna/accepted.json` with zero PII), and per-page site disclaimer bar.
+- **Updates & launch infrastructure (`site/assets_gen.py`, `Caddyfile`, `Dockerfile`, `railway.json`, `docs/deploy-railway.md`):** externalized CSS/JS with zero inline scripts or styles, `Get updates` panel with Atom feed (`feed.xml`), GitHub release link, and optional env-gated email form (`HERCYNA_NEWSLETTER_ACTION`), `changelog.html`, `corrections.html`, `terms.html`, `privacy.html`, `legal.html`, `404.html`, `/v2/` permalinks, neutral embeddable badges (`badge/*.svg`), 1200x630 PNG/SVG share cards, downloadable table CSV/JSON packs, and `robots.txt` / `sitemap.xml` / `.well-known/security.txt`.
+
+- **Protocol v2 (`protocol/v2.json`, Steps 1–9):** `chat_agent` multi-session evaluation track (`300` table cases in `data/v2/chat_agent/table_cases.jsonl`, `6` causal mechanisms `H0–H3`, `HU1–HU2`, `5` discrete actions, balanced workflow slots and override lags).
+- **Shared memory-side proxy & view stage (`Step 6`):** single-pass shared ingestion across deciders (`deepseek-v4.1-flash` + `bge-m3`), per-view audit (`view-audit.json`), and shared view reuse.
+- **Released v2 `chat_agent` table (`results/table/v2/chat_agent/`):** `40` verified, text-free cells (`5` gate-passing deciders across Anthropic Haiku 5.5 and OpenCode DeepSeek V4.1 Flash, GLM 5.3 Flash, MiniMax M3, and Qwen 3.8 Flash x `8` systems at `1,000`-token budget, `3` repeats), plus pooled verdict (`results/verdicts/v2-chat-agent.json`).
+- **Step 9 append-only ledger adjustments (`ledger_v3.py`, `ledger_adjustments.jsonl`):** reconciles every uncached call-log row against `spend.json` within `\$0.005`.
+- **Exploratory v2 Chat UI (`chat.html`):** full-row separating product pairs with `Lower wrong action` / `Higher wrong action` labels (no rank numbers), inclusion-exclusion gated-case split line (`validity fails + ingest errors − both → gated`), decider floors in table headers, Chow decision-cost grid, and ACBI conflict hazard panel.
+- **Offline cause-split diagnostic (`diagnostics/cause_split.py`):** zero-cost cache-replay store dump (`Mem0`, `LangMem`, `Graphiti`) and 4-way cause attribution (`not_stored`, `stored_not_returned`, `returned_not_used`, `conflict_returned`) with paired-bootstrap 95% intervals.
+- **Release metadata:** `CITATION.cff`, `CONTRIBUTING.md`, GitHub Actions workflow (`.github/workflows/ci.yml`), and v2 submission auto-detection in `submit/verify.py`.
+
+### Fixed
+
+- Updated `bench verify` (`submit/verify.py`) to accept valid cumulative v2 step prefixes (Steps 1–8 under Step 9 freeze) and auto-select `protocol/v2.json` and `data/v2/chat_agent/table_cases.jsonl` on v2 packs.
+- Eliminated all em dashes and generated-media phrasing across built site pages (`chat.html`, `index.html`).
+
 ## v1.0.0-rc1 (2026-11-21)
 
 ### Added

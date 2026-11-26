@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Experimental results. See TERMS.md. If you use Hercyna or the released decision-scored benchmark tables in your research or engineering evaluation, please cite it using this metadata."
+title: "Hercyna: Decision-Scored Agent Memory Benchmark"
+version: "2.0.0-rc1"
+date-released: "2026-11-25"
+url: "https://github.com/hercyna/hercyna"
+repository-code: "https://github.com/hercyna/hercyna"
+license: "Apache-2.0"
+authors:
+  - family-names: "Ratnavarma"
+    given-names: "FNU"
+keywords:
+  - agent memory
+  - longitudinal decision evaluation
+  - conflicting constraints
+  - withholding rate
+  - benchmark

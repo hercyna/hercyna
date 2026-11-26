@@ -1,0 +1,136 @@
+{
+  "adapters": [
+    {
+      "config_label": "default",
+      "config_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "name": "full",
+      "product_version": "builtin"
+    },
+    {
+      "config_label": "e25",
+      "config_sha256": "5f518ec0dec05fa92eb4b2bc78c44fffed9285209756b43cf016e795e0c69dbc",
+      "name": "graphiti",
+      "product_version": "0.31.2"
+    }
+  ],
+  "attempts": 1,
+  "bootstrap": {
+    "reps": 1000,
+    "seed": 11
+  },
+  "budgets": [
+    1000
+  ],
+  "cap_usd": 3.0,
+  "cases": {
+    "n": 300,
+    "path": null,
+    "sha256": "48ab661a44a8edeb9b93f38b73d429d97a68433133af99f8c0cff7ea844cd1c0"
+  },
+  "code": {
+    "git_commit": "7c3e0b1b4ef73b71f23974c1321266e228c14c69",
+    "version": "0.0.1"
+  },
+  "created": "2026-11-24T17:55:21+00:00",
+  "deciders": [
+    {
+      "id": "opencode-minimax-m3",
+      "key_source": null,
+      "meter_step": 5,
+      "model": "opencode/minimax-m3",
+      "opencode_binary_version": "2.3.0",
+      "opencode_version": "2.3.0",
+      "params": {
+        "max_tokens": 2048,
+        "temperature": 0
+      },
+      "price": {
+        "as_of": "2026-11-23",
+        "input_per_m": 0.3,
+        "output_per_m": 1.2,
+        "source": "OpenCode Console /zen/v1/models (minimax-m3: $0.30/M input, $1.20/M output)"
+      },
+      "prompt_version": "v1",
+      "snapshot_date": "2026-11-23",
+      "transport": "opencode_cli"
+    }
+  ],
+  "environment": {
+    "ledger_module": "ledger_v2",
+    "packages": {
+      "graphiti-core": "0.31.2",
+      "langmem": "not_installed",
+      "mem0ai": "not_installed"
+    },
+    "protocol_step": 8,
+    "python_version": "3.12.13",
+    "table_runner": "scripts/run_phase1_table.py",
+    "table_runner_sha256": "e1a9e3a51c1bae3e051587ed630432e36883bb68d6b7c123991c7cb8c0f98932",
+    "venv_name": "venv-graphiti"
+  },
+  "error": null,
+  "files": {
+    "calls.jsonl": "4bd12d834450aaa4de937872f9a62ef728a5ba0830531f86c3cd03252f999a97",
+    "health.json": "71432dafca5463acb0f58b46ecdf81e05a9a890ae82a9396260c582aefe5eed4",
+    "memory_calls.jsonl": "e59c552ee482dc7df51227b4a0b89d0ac53966267348ad7bcacd911c5c9cf60a",
+    "metrics.jsonl": "a6e9283fc6c378592ac6ccd564049220d4bc5838243e96612921c7803d27ec87",
+    "spend.json": "3f7c81c12c6263ed11ac30307ea67501147bc3408cee8a9e1232ccb72cc1b275",
+    "summary.json": "e7b19cc0bbefd8e04ef538aee8008dbb0323fca941684094fd5c4804d9d44962",
+    "timings.jsonl": "9ca34fa301d3883d74a7e6f7c82d9130ca1513b8fc383e9555914ee7a8ad5810",
+    "view-audit.json": "2579eacf538b9dc09fc1c2a2c8dae3a5984de285eb89433d963752eb007064e1"
+  },
+  "finished": "2026-11-24T18:42:40+00:00",
+  "grade": "table",
+  "incomplete_cells": [
+    {
+      "cell": "graphiti/e25@1000",
+      "missing_cases": [
+        "ctab2026112302-0036",
+        "ctab2026112302-0044",
+        "ctab2026112302-0047",
+        "ctab2026112302-0065",
+        "ctab2026112302-0072",
+        "ctab2026112302-0079",
+        "ctab2026112302-0085",
+        "ctab2026112302-0124",
+        "ctab2026112302-0173",
+        "ctab2026112302-0186",
+        "ctab2026112302-0199",
+        "ctab2026112302-0214",
+        "ctab2026112302-0250"
+      ]
+    }
+  ],
+  "ledger": "main",
+  "memory_side": {
+    "chat_model": "deepseek-v4.1-flash",
+    "config_sha256": "6b010a180ff94079b07dc08670e67a8e84f46d1cd75f725f1a48c00561f8b4b4",
+    "embeddings_model": "bge-m3",
+    "id": "opencode-deepseek-v4.1-flash-bge-m3"
+  },
+  "meter_step": 5,
+  "parallel": 4,
+  "protocol": {
+    "budgets_registered_not_run": [
+      4000
+    ],
+    "path": "protocol/v2.json",
+    "protocol_sha256": "d43cb44fd25628424d2d836bc8a7d6939d991737f83b73368d5a90a359fb1552",
+    "steps": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "version": "v2"
+  },
+  "repeats": 3,
+  "run_id": "v2-step8-table-opencode-minimax-m3-graphiti",
+  "started": "2026-11-24T17:55:21+00:00",
+  "state": "complete",
+  "track": "chat_agent"
+}

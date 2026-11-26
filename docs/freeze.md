@@ -51,7 +51,7 @@ Sources: charter section 5.
 }
 ```
 
-Step 2 was filled on Day 10 (seed drawn 2026-11-19, Varma's yes). Before that `bench freeze --step 2` refuses while any step-2 value is null or a step-2 file is missing.
+Step 2 was filled on Day 10 (seed drawn 2026-11-19). Before that `bench freeze --step 2` refuses while any step-2 value is null or a step-2 file is missing.
 
 ## 3. `bench freeze`
 
@@ -63,6 +63,7 @@ Step 2 was filled on Day 10 (seed drawn 2026-11-19, Varma's yes). Before that `b
   - `protocol_sha256` at the top = sha256 of the canonical JSON of all frozen steps. It changes when step 2 is added; that is expected and recorded.
 - `bench freeze --check [--protocol protocol/v1.json]`
   - Recomputes every hash of every frozen step. Prints one line per mismatch: path, expected, actual (hashes only, never contents). Exit 0 when all match, 4 otherwise.
+  - **Public export exclusion (`scripts/run_phase1_table.py`):** Protocol v2 Step 8 records the SHA-256 of `scripts/run_phase1_table.py` (`protocol/v2.json`). Because lines 24 and 678 of that frozen maintainer workstation runner contain a local `PATH` prefix and cannot be edited without changing the frozen Step 8 hash, `scripts/run_phase1_table.py` is omitted from the public export. In private checkouts (`scripts/export_public.py` present), `bench freeze --check --protocol protocol/v2.json` requires `scripts/run_phase1_table.py` and verifies its exact SHA-256; in public exports (`scripts/export_public.py` absent), `check_protocol` allows that single documented orchestrator to be missing from disk while strictly verifying its hash if present, every other frozen file hash, `step_sha256`, and `protocol_sha256`.
 
 ## 4. Run grade
 
