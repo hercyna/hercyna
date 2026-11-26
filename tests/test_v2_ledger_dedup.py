@@ -1,4 +1,4 @@
-"""Round 6 tests: Step 8 deduplicated ledger (A1), isolated v2 venvs & runner metadata (A2/A3)."""
+"""v2 tests: Step 8 deduplicated ledger, isolated environments and runner metadata."""
 
 from __future__ import annotations
 

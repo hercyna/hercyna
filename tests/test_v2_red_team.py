@@ -1,4 +1,4 @@
-"""Round 11 regression and red-team verification tests ($0 only)."""
+"""v2 regression and red-team tests."""
 
 from __future__ import annotations
 

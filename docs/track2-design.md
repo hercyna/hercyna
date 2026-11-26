@@ -63,8 +63,8 @@ Pure function of the events and the request (step, date), like Track 1's `oracle
 
 ## 8. Build order when v2 starts
 
-1. Generator and oracle (`[O]`), with the slot and count-balance tests.
-2. Renderer lines and the generic-word test (`[S]`).
-3. Per-track prompt tables and the byte-equality test for Track 1 (`[O]`).
-4. Validity on both deciders, then baselines (`[S]`, the maintainer reads the results).
+1. Generator and oracle, with the slot and count-balance tests.
+2. Renderer lines and the generic-word test.
+3. Per-track prompt tables and the byte-equality test for Track 1.
+4. Validity on both deciders, then baselines (the maintainer reads the results).
 5. v2 freeze, then the table run.

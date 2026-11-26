@@ -1,4 +1,4 @@
-"""Round 5 unit tests: A1 two-ledger caps, A2 Step 5 OpenCode meter (saved Qwen cache-read NDJSON), B1 polish."""
+"""v2 tests: two-ledger caps and the Step 5 OpenCode meter."""
 
 from __future__ import annotations
 

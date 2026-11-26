@@ -1,4 +1,4 @@
-"""Round 12 protocol Step 10, CLI serve, and flagship UI verification tests ($0 only)."""
+"""v2 tests: protocol Step 10, the serve command and site UI checks."""
 
 from __future__ import annotations
 

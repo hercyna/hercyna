@@ -288,12 +288,67 @@ def _valid_site_url(raw: str | None) -> str:
     ):
         return s
     return "https://hercyna.org"
+
+def _page_description(page_html: str) -> str:
+    m = re.search(r'<meta name="description" content="([^"]*)"', page_html)
+    return html.unescape(m.group(1)) if m else ""
+
+
+def _jsonld_tag(obj: dict) -> str:
+    # A JSON-LD block is data, not script: browsers never run it, so script-src 'self' still holds.
+    # "</" is escaped so the payload can never close the tag early.
+    payload = json.dumps(obj, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    return f'<script type="application/ld+json">{payload}</script>'
+
+
+def _inject_jsonld(pages: dict[str, str], site_url: str, sha8: str | None) -> None:
+    """Add schema.org JSON-LD to the home page and the chat table page. Text fields reuse each page's meta description."""
+    base = site_url.rstrip("/")
+    repo = "https://github.com/hercyna/hercyna"
+    author = {"@type": "Person", "name": "FNU Ratnavarma"}
+    org = {"@type": "Organization", "@id": f"{base}/#org", "name": "Hercyna", "url": f"{base}/",
+           "logo": f"{base}/apple-touch-icon.png", "sameAs": [repo]}
+    if "index.html" in pages:
+        graph = [
+            org,
+            {"@type": "WebSite", "@id": f"{base}/#site", "name": "Hercyna", "url": f"{base}/",
+             "description": _page_description(pages["index.html"]), "publisher": {"@id": f"{base}/#org"}},
+            {"@type": "SoftwareSourceCode", "name": "Hercyna memory benchmark", "codeRepository": repo,
+             "programmingLanguage": "Python", "license": "https://www.apache.org/licenses/LICENSE-2.0",
+             "author": author, "url": f"{base}/"},
+        ]
+        tag = _jsonld_tag({"@context": "https://schema.org", "@graph": graph})
+        pages["index.html"] = pages["index.html"].replace("</head>", tag + "</head>", 1)
+    if "chat.html" in pages:
+        stem = f"hercyna-v2-chat-{sha8}" if sha8 else "hercyna-v2-chat"
+        ds = {
+            "@context": "https://schema.org", "@type": "Dataset",
+            "name": "Hercyna v2 chat agent table",
+            "description": _page_description(pages["chat.html"]),
+            "url": f"{base}/chat.html", "creator": author, "publisher": {"@type": "Organization", "name": "Hercyna", "url": f"{base}/"},
+            "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": True,
+            "version": f"protocol v2 {sha8}" if sha8 else "protocol v2",
+            "distribution": [
+                {"@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": f"{base}/data/{stem}.csv"},
+                {"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": f"{base}/data/{stem}.json"},
+            ],
+        }
+        pages["chat.html"] = pages["chat.html"].replace("</head>", _jsonld_tag(ds) + "</head>", 1)
+
 STEPS = (
     ("History", "A dated account history, 100 or 400 records. A rule oracle knows the right action."),
     ("Memory", "The memory product ingests the history in order and returns a view of at most {budget}."),
     ("View", "The agent sees only that view, never the full history and never the oracle."),
     ("Decider", "Two models from two vendors pick one of five actions. Each first passes a validity gate."),
     ("Action", "Right, withheld or wrong. The floor is the decider's own noise on the full history."),
+)
+
+STEPS_V2 = (
+    ('History', 'Each synthetic multi-session user-assistant chat has 55 to 190 dated turns across simulated weeks. A rule oracle knows the right action.'),
+    ('Memory', 'The memory product reads turns in order, returning a view of at most {budget} for the request.'),
+    ('View', 'The agent sees only that view and never sees the full history or the oracle.'),
+    ('Decider', 'Five models from different vendors each pick one of five actions. Each passed a validity gate before the table run; all five read the same stored views three times each.'),
+    ('Action', "Each decision is scored as right, withheld or wrong. The floor is the decider's own wrong-action rate when it reads the full history."),
 )
 
 
@@ -889,7 +944,7 @@ def _hero(vals: dict, *, has_v2_chat: bool = False, root: Path | None = None) ->
     ]
     dl = "".join(f"<div><dt>{E(k)}</dt><dd>{E(v)}</dd></div>" for v, k in meta if v)
     finding = (
-        "Across 5 gate-passing deciders and 300 chat cases, Graphiti makes fewer wrong actions than Mem0 mainly by withholding when facts are missing."
+        'Plain keyword search (BM25) acted right 95 to 99 percent across 5 deciders and 300 chat cases. Mem0 acted right 85-87%, LangMem 73-83%, Graphiti about 40%; Graphiti requested more information in about 54% of cases.'
         if has_v2_chat
         else "Wrong action, withheld action, and right action are measured side by side above each decider's full-history noise floor."
     )
@@ -919,8 +974,7 @@ def _hero_v2(loaded: dict, proto_v2: dict | None, *, root: Path | None = None) -
     ]
     dl = "".join(f"<div><dt>{E(k)}</dt><dd>{E(v)}</dd></div>" for v, k in meta)
     finding = (
-        "Across 5 gate-passing deciders and 300 chat cases, Graphiti makes fewer wrong actions than Mem0 "
-        "mainly by withholding when facts are missing."
+        'Plain keyword search (BM25) acted right 95 to 99 percent across 5 deciders and 300 chat cases. Mem0 acted right 85-87%, LangMem 73-83%, Graphiti about 40%; Graphiti requested more information in about 54% of cases.'
     )
     return (
         '<section class="hero"><div>'
@@ -956,7 +1010,7 @@ def _explainer_section(media: set[str]) -> str:
     clip_note = (
         "29-second walkthrough video, captions, and transcript."
         if "explainer.mp4" in media
-        else "Poster, synchronized WebVTT captions, and transcript are live; the 29-second video clip is held for the maintainer upload."
+        else "Captions and transcript."
     )
     return (
         '<section class="sec" id="explainer" aria-labelledby="exp-h" data-protocol="v2">'
@@ -968,8 +1022,7 @@ def _explainer_section(media: set[str]) -> str:
         f'{src_html}<track kind="captions" src="media/explainer.vtt" srclang="en" label="English" default>'
         '<img src="media/explainer-poster.svg" alt="Poster diagram: 55 to 190 dated turns pass through memory and a 1,000-token view to five deciders." width="1280" height="720">'
         '</video>'
-        '<p class="reel-note">Poster diagram and caption file prepared for the walkthrough; '
-        'caption track at <a href="media/explainer.vtt">media/explainer.vtt</a>.</p>'
+        '<p class="reel-note">Caption track: <a href="media/explainer.vtt">media/explainer.vtt</a>.</p>'
         '<details class="explainer-transcript"><summary>Read full 29-second transcript</summary>'
         '<ol class="terms-list">'
         '<li><strong>00:00 to 00:05:</strong> Hercyna tests agent memory products by the action an agent chooses after reading a truncated view.</li>'
@@ -1081,15 +1134,12 @@ def _how_v2(loaded: dict, proto_v2: dict | None, media: set[str]) -> str:
     deciders = loaded.get("deciders") or {}
     names = sorted(deciders)
     btxt = "1,000 bench tokens"
-    dec_lines = []
-    for did in names[:2]:
-        fl = ((deciders.get(did) or {}).get("floor") or {}).get("wrong_commit")
-        r = _rate(fl)
-        dec_lines.append((did, f"floor {r['t']} wrong" if r else "passes the gate first"))
+    n_dec = len(names)
+    dec_lines = [(f"{n_dec} deciders", "each passes the gate"), ("same view for all", "3 repeats each")]
     stages = "".join(
         f'<div class="stage{" on" if k == 0 else ""}" data-s="{k}" data-cap="{E(text.format(budget=btxt))}">'
         f'<h3><span>{k + 1:02d}</span>{E(name.upper())}</h3><p>{E(text.format(budget=btxt))}</p></div>'
-        for k, (name, text) in enumerate(STEPS))
+        for k, (name, text) in enumerate(STEPS_V2))
     reel_ok = all(v in media and p in media for v, p, _ in MEDIA)
     tabs = ('<div class="studio-bar js-only"><div class="studio-tabs" role="tablist" aria-label="How it works view">'
             '<button class="btn" type="button" role="tab" aria-selected="true" aria-controls="st-step">Stage stepper</button>'
@@ -1098,7 +1148,7 @@ def _how_v2(loaded: dict, proto_v2: dict | None, media: set[str]) -> str:
             + '</div><div class="studio-ctl"><button class="btn" type="button" id="st-play">Pause</button>'
             '<button class="btn" type="button" id="st-next">Next stage</button></div></div>')
     step = (f'<div class="studio-stage" id="st-step" role="tabpanel"><div class="flow-wrap">'
-            f'{figures.flow_svg(dec_lines, "1,000")}</div></div>')
+            f'{figures.flow_svg(dec_lines, "1,000", history_lines=["55 to 190 turns", "a rule oracle knows", "the right action"], title=f"The five stages: history, memory, view, {n_dec} deciders, action.")}</div></div>')
     reel = ""
     if reel_ok:
         vids = "".join(f'<video class="v-{t}" controls muted playsinline preload="none" poster="media/{p}" '
@@ -1237,7 +1287,7 @@ def _method_submit(proto: dict, *, protocol: str = "v1", decider_ids: list[str] 
             f'separation rule and the table seed were hashed before any table run. {synth_note}</p>'
             + (f'<dl class="dl-tight" data-protocol="{E(protocol)}">{rows}</dl>' if rows else "")
             + '<p class="mt-14"><a class="more" href="method.html">Read the method</a></p></div>'
-            '<div><h3>Submit your memory</h3><p>Write the four-method blind adapter (reset, ingest, view, close), '
+            '<div><h3>Submit your memory</h3><p>Write the four-method blind adapter (reset, ingest, retrieve, close), '
             'run the bench, verify the files and open a pull request. A vendor-tuned configuration is run by the maintainer and '
             'published as its own row, labelled exploratory.</p>' + "".join(_job(c) for c in SUBMIT_JOBS)
             + f'<p class="mono row-labels">Row labels: {E(labels)}.</p>'
@@ -1512,7 +1562,8 @@ def _footer(
         synth_note = "All v1 cases are synthetic."
     return (f'<footer class="foot"><span>Hercyna v2.0.0-rc1 · {synth_note}</span>'
             f'<span>{proto_str} · <a href="legal.html">Apache-2.0 / CC BY 4.0</a>'
-            f' · <a href="method.html#citation">Cite</a> · built {E(built_at[:10])} · '
+            f' · <a href="method.html#citation">Cite</a> · <a href="mailto:contact@hercyna.org">contact@hercyna.org</a>'
+            f' · built {E(built_at[:10])} · '
             '<button class="btn-mini js-only" type="button" data-open-updates>Get updates</button></span>'
             '<nav aria-label="Footer">'
             + "".join(f'<a href="{h}"' + (' aria-current="page"' if page and page == current else "") + f">{label}</a>"
@@ -1625,9 +1676,7 @@ def _v2_track_page(
         '<div class="doc">'
         f'<h1>{E(title)}</h1>'
         '<div class="pending" role="note"><strong>exploratory preview</strong>'
-        '<span>Protocol v2 track scaffold. Coding Agent Mode A and Mode B runs are held pending cap approval; '
-        'zero coding run numbers are published. Frozen v1 account-review tables live in '
-        '<a href="v1.html">v1 archive</a>.</span></div>'
+        '<span>' + "The coding agent track is in preparation. No coding results are published yet and the frozen v1 account-review tables are in the v1 archive.".replace('v1 archive', '<a href="v1.html">v1 archive</a>', 1) + '</span></div>'
         '<section class="sec" aria-labelledby="v2-modes-h"><div class="sec-head">'
         f'<h2 id="v2-modes-h">Evaluation design</h2><span class="sub">{E(subtitle)}</span></div>'
         f'<div class="v2-grid">{card_html}</div></section>'
@@ -1672,7 +1721,7 @@ def _coding_page() -> str:
             ),
             (
                 "Open-Weight and Local Matrix",
-                "Separate filters for gate-passing cloud harnesses, local Mac Studio MLX/Ollama runtimes, and quarantined exploratory probes.",
+                "Results are filtered separately for cloud models, open-weight models run locally and exploratory probes.",
             ),
         ],
     )
@@ -2477,9 +2526,9 @@ _CAUSE_COLS = (
     ("by_rule", "By rule"),
 )
 _CAUSE_SENTENCES = {
-    "graphiti": "Graphiti stays silent because it never stored the fact.",
-    "mem0": "Mem0 acts wrong because it returns both the old and the new rule.",
-    "langmem": "LangMem fails from a mix of missing facts, dropped retrieval, and returned conflicts.",
+    "graphiti": "Graphiti mostly withholds because the fact was never stored; this exploratory diagnostic had high replay fidelity.",
+    "mem0": "Mem0's wrong actions likely come from returning both the old and new rule; low-fidelity replay leaves it unproven.",
+    "langmem": "LangMem's failures likely come from missing facts, dropped retrieval and returned conflicts; moderate replay fidelity makes this split likely.",
 }
 _INGEST_LEFT_OUT = {"graphiti": 13, "mem0": 2, "langmem": 0}
 
@@ -3131,7 +3180,6 @@ def _chat_page(root: Path, loaded: dict | None = None) -> str:
             "Shared Extractor Gate Discipline",
             "Every shared memory-side extractor must pass the full-history validity gate before table runs.",
             [
-                "Local private port (127.0.0.1:11535) keeps benchmark sweeps off shared host services",
                 "View-audit seal verifies zero failed memory-side calls inside stored view windows",
                 "Asymmetric conflict cases check whether returning one of two constraints induces wrong action",
             ],
@@ -3152,6 +3200,8 @@ def _chat_page(root: Path, loaded: dict | None = None) -> str:
             'and 8 memory systems (budget 1,000 tokens). Every table on this page remains exploratory until '
             'accepted for release. Archived v1 account-review tables live on <a href="v1.html">v1 archive</a>.</span></div>'
         )
+        banner += ('<div class="pending" role="note" id="shared-memory-side"><strong>Shared memory-side model</strong>'
+                   f'<span>{E("All three memory products build memories with the same memory-side model, DeepSeek V4.1 Flash and the bge-m3 embedder. DeepSeek V4.1 Flash is one of five deciders and its rows read memories written by its own model. Leaving out its rows moves every right, wrong and withheld range by at most 0.2 points. One pair separates alone on each of the four other deciders: Graphiti has fewer wrong actions than Mem0.")}</span></div>')
         stem = f"hercyna-v2-chat-{sha8}" if sha8 else "hercyna-v2-chat"
         data_bar = (
             '<div class="data-bar" id="chat-downloads" data-protocol="v2">'
@@ -3420,7 +3470,7 @@ def build(
     v2_page_tag = "v2" if proto_v2 else "v1"
     v2_page_pv2 = proto_v2 if proto_v2 else None
     coding_chip = (
-        f"Protocol v2 · {str(proto_v2.get('protocol_sha256') or '')[:8]} · Coding held"
+        f"Protocol v2 · {str(proto_v2.get('protocol_sha256') or '')[:8]} · Coding in preparation"
         if proto_v2
         else None
     )
@@ -3647,16 +3697,11 @@ def build(
         rewritten = _apply_v2_prefix(raw_html)
         for k, v in asset_refs.items():
             rewritten = rewritten.replace(f'"{v}"', f'"{v2_refs[k]}"')
-        rewritten = rewritten.replace(
-            f'<link rel="canonical" href="{resolved_site_url.rstrip("/")}/{"" if pname == "index.html" else pname}">',
-            f'<link rel="canonical" href="{resolved_site_url.rstrip("/")}/v2/{"" if pname == "index.html" else pname}">',
-        )
-        rewritten = rewritten.replace(
-            f'<meta property="og:url" content="{resolved_site_url.rstrip("/")}/{"" if pname == "index.html" else pname}">',
-            f'<meta property="og:url" content="{resolved_site_url.rstrip("/")}/v2/{"" if pname == "index.html" else pname}">',
-        )
+        # While v2 is the current version, each /v2/ permalink is a copy of a root page, so its
+        # canonical and og:url stay on the root page. Search engines then index one URL per page.
         v2_pages[f"v2/{pname}"] = rewritten
 
+    _inject_jsonld(pages, resolved_site_url, (str((proto_v2 or {}).get("protocol_sha256") or "")[:8] or None))
     out.mkdir(parents=True, exist_ok=True)
     sizes: dict[str, int] = {}
 
@@ -3716,7 +3761,8 @@ def build(
     # Atom feed + robots.txt + sitemap.xml + .well-known/security.txt
     ch_entries = assets_gen.parse_changelog_entries(root / "CHANGELOG.md")
     _write_blob("feed.xml", assets_gen.build_atom_feed(ch_entries, resolved_site_url, built_at).encode("utf-8"))
-    all_urls = [*pages.keys(), *[f"v2/{p}" for p in v2_ref_names]]
+    # The sitemap lists canonical pages only: no /v2/ copies, no 404 page.
+    all_urls = [p for p in pages.keys() if p != "404.html"]
     for rel_w, blob_w in assets_gen.build_well_known_files(resolved_site_url, all_urls, built_at).items():
         _write_blob(rel_w, blob_w)
 

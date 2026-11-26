@@ -1,6 +1,6 @@
 # Lift manifest
 
-Source: the author's LENS replication bundle, commit `97a622f`, read from a `git archive` export of that commit. Only import paths changed in copied code. No string constant, prompt text, vocabulary, seeding rule or numeric constant was edited.
+Source: the author's LENS replication bundle, commit `97a622f`, read from a `git archive` export of that commit. The same `src/lens/flip/` files are public at https://github.com/ratnavarma/lens-flip-test. Only import paths changed in copied code. No string constant, prompt text, vocabulary, seeding rule or numeric constant was edited.
 
 | Source path | Source commit | sha256 of source file | Target path | Change |
 | --- | --- | --- | --- | --- |
@@ -20,7 +20,7 @@ Source: the author's LENS replication bundle, commit `97a622f`, read from a `git
 | `src/lens/flip/systems/__init__.py` | `97a622f` | `7490454ddda58bc6252f2eed44b04537c276a6a81ef69435b2f0fa56b2fe3544` | `src/memory_bench/adapters/legacy/__init__.py` | rewritten, not copied: get_system limited to full, recent, rag-bm25 |
 | `results/headline-300-v3/summary_v3.json` | `97a622f` | `2a987dc6a3bd8b63a1a7db8b78f4c0e6deb3d591a7df59981d0d69620398b7a8` | `tests/fixtures/summary_v3.json` | copied unchanged (expected values) |
 | `results/headline-300-v3/tables_v3.txt` | `97a622f` | `b129cb4503aaf3bf0460e2ba46b8423ab88951bf31cb43d26065d71acecda3f5` | `tests/fixtures/tables_v3.txt` | copied unchanged (expected values) |
-| `LICENSE` | `97a622f` | `b0e22da7557fd78cca720e84420380ef4b037841ea0c25d7f3fb6ff9b4419384` | `LICENSE` | copied unchanged |
+| `LICENSE` | `97a622f` | `b0e22da7557fd78cca720e84420380ef4b037841ea0c25d7f3fb6ff9b4419384` | `LICENSE` | copyright line moved to `NOTICE`; `LICENSE` is now the standard Apache-2.0 text |
 
 Import changes: `from .schema` became `from ..cases.schema` (or `...cases.schema` under `adapters/legacy/`), likewise for `generator`, `render`, `cache` (now `gateway.cache`), `decider` (now `deciders.lifted`) and `systems.base`. `data/dev/cases.jsonl` is produced by `bench cases dev`; its sha256 equals the released `results/headline-300-v3/cases.jsonl` (R1).
 

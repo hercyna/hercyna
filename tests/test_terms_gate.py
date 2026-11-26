@@ -1,4 +1,4 @@
-"""Round 14 tests for first-run CLI terms acceptance (`bench terms`, prompt, flag, env var, version bump)."""
+"""Tests for the first-run CLI terms gate: prompt, flag, environment variable and version bump."""
 from __future__ import annotations
 
 import json

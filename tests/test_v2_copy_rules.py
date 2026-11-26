@@ -1,4 +1,4 @@
-"""Round 8 tests: no em dashes (A1), gated count split under every ranked row (A2), and D-2 rank labels (A3)."""
+"""v2 tests: no em dashes, gated count split under every row and row labels."""
 
 from __future__ import annotations
 

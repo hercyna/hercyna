@@ -2,11 +2,11 @@ Anybody can add a memory system. Metric files from one run form a submission fol
 
 ## Write an adapter
 
-Four methods belong to an adapter. For each case it resets an empty store. In order it ingests the records. Within a token budget it returns a view for a query. It closes the store. The right action is never seen by the adapter.
+The adapter has four methods: reset, ingest, retrieve and close. For each case, reset starts an empty store; ingest reads the records in order. retrieve returns a view for the request within a token budget. close shuts the store. The adapter never sees the right action.
 
 ## Run it
 
-Run the bench on the table cases with both deciders, using your own keys. In version 1 that makes your run exploratory, because table grade needs the frozen configs. The product points at the local model endpoint of the bench so every product uses that same model. The run writes all its files into one folder.
+Run the bench on the 300 chat table cases with all five deciders, using your own keys. An outside run is labelled exploratory, because table grade needs the frozen configs. Point the product at the bench's shared memory-side model, so every product uses the same model. The run writes all its files into one folder.
 
 ## Pack and verify
 

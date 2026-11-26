@@ -1,4 +1,4 @@
-"""Round 14 launch-readiness tests: strict CSP, external assets, terms gates, newsletter/analytics toggles,
+"""v2 launch tests: strict CSP, external assets, terms gates, newsletter/analytics toggles,
 OG PNG share cards, neutral badges, downloads, feeds, permalinks, and Railway package hygiene.
 """
 from __future__ import annotations
@@ -31,7 +31,7 @@ class _StrictAuditParser(HTMLParser):
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         adict = {k.lower(): (v or "") for k, v in attrs}
-        if tag == "script" and "src" not in adict:
+        if tag == "script" and "src" not in adict and adict.get("type") != "application/ld+json":
             self.inline_scripts += 1
         if tag == "style":
             self.style_tags += 1
@@ -169,7 +169,8 @@ def test_r14_launch_features_og_png_badges_downloads_and_well_known(built_r14: P
     idx = (built_r14 / "index.html").read_text(encoding="utf-8")
     v2_idx = (built_r14 / "v2" / "index.html").read_text(encoding="utf-8")
     assert '<link rel="canonical" href="https://hercyna.org/">' in idx
-    assert '<link rel="canonical" href="https://hercyna.org/v2/">' in v2_idx
+    # While v2 is current, the /v2/ copy points its canonical at the root page (one indexed URL per page).
+    assert '<link rel="canonical" href="https://hercyna.org/">' in v2_idx
     assert '<meta property="og:image" content="https://hercyna.org/og/index.png">' in idx
     assert '<meta name="twitter:card" content="summary_large_image">' in idx
     assert 'id="coming-next"' in idx and "Coding agents (Mode A), in preparation" in idx
@@ -198,7 +199,9 @@ def test_r14_launch_features_og_png_badges_downloads_and_well_known(built_r14: P
 
     assert "<feed " in (built_r14 / "feed.xml").read_text(encoding="utf-8")
     assert "Sitemap: https://hercyna.org/sitemap.xml" in (built_r14 / "robots.txt").read_text(encoding="utf-8")
-    assert "https://hercyna.org/v2/chat.html" in (built_r14 / "sitemap.xml").read_text(encoding="utf-8")
+    smap = (built_r14 / "sitemap.xml").read_text(encoding="utf-8")
+    # The sitemap lists canonical pages only: the root chat page, no /v2/ copies, no 404 page.
+    assert "https://hercyna.org/chat.html" in smap and "/v2/" not in smap and "404.html" not in smap
     sec = (built_r14 / ".well-known" / "security.txt").read_text(encoding="utf-8")
     assert "Contact:" in sec and "Expires:" in sec
     for fav in ("favicon.ico", "favicon.svg", "favicon-32x32.png", "apple-touch-icon.png"):

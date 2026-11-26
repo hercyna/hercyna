@@ -8,7 +8,14 @@
 
 ## Limits
 
-Read the table with these limits in mind.
+- All three products share one memory-side model built with DeepSeek V4.1 Flash and the bge-m3 embedder. DeepSeek V4.1 Flash is also one of the five deciders. Leaving its rows out moves no range by more than 0.2 points.
+- Each product reads each history once and stores the same views for every decider. All five deciders judge the same stored views, so they are five readings of one ingest.
+- Baselines can beat products: BM25 keyword search acts right more often than any product on every decider. Baselines are reference rows. The separation rule does not test them so they carry no rank.
+- LangMem against Mem0 separates only on Qwen 3.8 Flash, so it is reported as not separated. On Haiku its Holm-adjusted p is 0.056, just above 0.05. Graphiti against LangMem separates on MiniMax M3 only.
+
+## Version 1 limits (archive)
+
+These limits apply to the version 1 account-review table on the [v1 archive](v1.html).
 
 - Bench configuration, not vendor defaults. Every product writes 25 records at a time and uses the same memory-side model and embedder. A product's own quickstart may behave differently. A vendor can send a tuned configuration. The maintainer runs it on the table cases and publishes it as its own row, labelled exploratory.
 - One shared memory-side model. All three products build their memories with Grok 4.20 non-reasoning. Its vendor also makes one of the two deciders. Products that rely on tool calls depend on how well this model makes them.
@@ -27,4 +34,4 @@ Read the table with these limits in mind.
 
 Several benchmarks test agent memory. LoCoMo scores question answering over very long conversations. LongMemEval scores question answering over long chat histories. It also scores when to abstain. MemoryAgentBench runs many memory mechanisms through one framework. It scores retrieval, learning, long-range understanding and conflict resolution.
 
-Hercyna asks a narrower question. It scores the action an agent takes from a memory's view. It splits wrong action from withheld action and measures both above the decider's own noise. It reports a product pair as separated only when two deciders from two vendors agree.
+Hercyna asks a narrower question. It scores the action an agent takes from a memory's view. It splits wrong action from withheld action and measures both above the decider's own noise. It reports a product pair as separated only when every decider agrees.

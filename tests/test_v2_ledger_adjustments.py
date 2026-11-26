@@ -1,4 +1,4 @@
-"""Round 7 tests: Step 9 ledger adjustments & call-log reconciliation (A1), plus v2 site build (A2/A4)."""
+"""v2 tests: Step 9 ledger adjustments, call-log reconciliation and the v2 site build."""
 
 from __future__ import annotations
 

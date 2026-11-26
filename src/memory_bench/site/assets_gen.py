@@ -459,6 +459,7 @@ def build_well_known_files(site_url: str, page_paths: list[str], built_at: str) 
     )
     security_txt = (
         f"Contact: https://github.com/hercyna/hercyna/security/advisories/new\n"
+        f"Contact: mailto:contact@hercyna.org\n"
         f"Policy: {base}/legal.html\n"
         f"Canonical: {base}/.well-known/security.txt\n"
         "Preferred-Languages: en\n"

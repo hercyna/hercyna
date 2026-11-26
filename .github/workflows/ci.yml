@@ -50,7 +50,7 @@ jobs:
           assert len(htmls) >= 20
           for p in htmls:
               txt = p.read_text(encoding="utf-8")
-              assert not re.search(r"<script(?![^>]*\bsrc=)", txt, re.I), f"inline script in {p}"
+              assert not re.search(r"<script(?![^>]*\bsrc=)(?![^>]*type=\"application/ld\+json\")", txt, re.I), f"inline script in {p}"
               assert "<style" not in txt.lower(), f"inline style in {p}"
           print(f"CSP asset check passed across {len(htmls)} HTML files.")
           '

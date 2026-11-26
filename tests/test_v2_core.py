@@ -1,4 +1,4 @@
-"""Round 2 tests on memory-bench v2: A1, A2, A3, A4, A6."""
+"""v2 core tests: tracks, metrics, deciders and the kappa plan."""
 
 from __future__ import annotations
 

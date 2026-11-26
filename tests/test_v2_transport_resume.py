@@ -1,4 +1,4 @@
-"""Round 3 unit tests on memory-bench v2: A2 binary pin & 429 resume, A4 extractor probe, A6 secrets seed draw."""
+"""v2 transport tests: binary pin, 429 resume, extractor probe and the seed draw."""
 
 from __future__ import annotations
 

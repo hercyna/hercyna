@@ -1,4 +1,4 @@
-"""Round 4 unit tests on memory-bench v2: Step 3 paid roster, Step 4 labeller, A2 frozen path, B1 exploratory."""
+"""v2 tests: Step 3 paid decider roster, Step 4 labeller record and frozen paths."""
 
 from __future__ import annotations
 

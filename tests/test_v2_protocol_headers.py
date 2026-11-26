@@ -1,4 +1,4 @@
-"""Round 13 checks: clean v2 index, archived v1 board (v1.html), strict per-page protocol headers and tags."""
+"""v2 tests: v2-only front page, v1 archive page and per-page protocol headers."""
 from __future__ import annotations
 
 import re

@@ -1,7 +1,8 @@
-"""Round 10 tests: A1 ingest-error verification, A2/A3 by_rule & fidelity, A4 step prefix, C1-C4 flagship checks."""
+"""v2 tests: ingest-error verification, by-rule causes, replay fidelity and step prefixes."""
 
 from __future__ import annotations
 
+import html
 import json
 import re
 import shutil
@@ -12,6 +13,7 @@ from pathlib import Path
 import pytest
 
 from memory_bench.adapters import ADAPTERS, get_adapter
+from memory_bench.site.build import _CAUSE_SENTENCES
 from memory_bench.cases.schema import Case, Event, REQUEST_INFO
 from memory_bench.diagnostics.cause_split import (
     CAUSE_KEYS,
@@ -239,8 +241,7 @@ def test_r10_c2_c3_c4_front_page_finding_limits_and_positioning(tmp_path):
     # C2: Front-page finding & exploratory cause split
     for phrase in (
         'id="cause-split"',
-        "Graphiti stays silent because it never stored the fact.",
-        "Mem0 acts wrong because it returns both the old and the new rule.",
+        *(html.escape(_CAUSE_SENTENCES[k]) for k in ("graphiti", "mem0", "langmem")),
         "low-fidelity",
         "By rule",
         "exploratory",

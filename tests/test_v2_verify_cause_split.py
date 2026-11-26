@@ -1,4 +1,4 @@
-"""Round 9 tests: A1 verify v2 support, A2 offline cause-split diagnostic, and A3 release readiness."""
+"""v2 tests: verify support, the offline cause-split diagnostic and release files."""
 
 from __future__ import annotations
 

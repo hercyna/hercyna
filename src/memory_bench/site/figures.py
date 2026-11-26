@@ -159,7 +159,8 @@ def whisker_svg(ex: dict | None, ha: dict | None) -> str:
 
 # ---------------------------------------------------------------- stage stepper
 
-def flow_svg(deciders: list[tuple[str, str]], budget: Any) -> str:
+def flow_svg(deciders: list[tuple[str, str]], budget: Any, history_lines: list[str] | None = None,
+             title: str = "The five stages: history, memory, view, two deciders, action.") -> str:
     """The five stages as a line drawing. deciders = [(id, detail line)]; at most two are drawn."""
     b = f"{budget} tokens" if budget is not None else "a fixed budget"
     decs = (deciders + [("decider", "")] * 2)[:2] if deciders else [("decider", ""), ("decider", "")]
@@ -180,10 +181,10 @@ def flow_svg(deciders: list[tuple[str, str]], budget: Any) -> str:
     lethe = "".join(f'<circle cx="{290 + (k * 37) % 46}" cy="{186 + (k * 11) % 9}" r="{2.4 - k * .15:.2f}"/>'
                     for k in range(8))
     return ('<svg class="flow" data-s="0" viewBox="0 0 1080 250" role="img" aria-labelledby="flow-t">'
-            '<title id="flow-t">The five stages: history, memory, view, two deciders, action.</title>'
+            f'<title id="flow-t">{E(title)}</title>'
             + paths
-            + node("n0", 10, 55, 175, 140, "01 HISTORY", "Dated records", ["100 or 400 per case", "a rule oracle knows", "the right action"])
-            + node("n1", 220, 70, 175, 110, "02 MEMORY", "Blind adapter", ["reset, ingest, view", f"at most {b}"])
+            + node("n0", 10, 55, 175, 140, "01 HISTORY", "Dated records", history_lines or ["100 or 400 per case", "a rule oracle knows", "the right action"])
+            + node("n1", 220, 70, 175, 110, "02 MEMORY", "Blind adapter", ["reset, ingest, retrieve", f"at most {b}"])
             + node("n2", 430, 70, 195, 110, "03 VIEW", "What the agent sees", ["only the returned view", "never the oracle"])
             + node("n3", 660, 25, 180, 95, "04 DECIDER", decs[0][0], [decs[0][1]])
             + node("n3", 660, 135, 180, 95, "04 DECIDER", decs[1][0], [decs[1][1]])
